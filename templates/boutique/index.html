@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Boutique — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section">
+    <p class="section-eyebrow reveal">Catalogue</p>
+    <h1 class="section-title reveal">La <em>boutique</em></h1>
+    <p class="section-sub reveal">
+      Fiches détaillées pour chaque produit. Filtres :
+      <a href="{{ url_for('boutique') }}" class="shop-filter {{ 'is-active' if not filter_cat }}">Tout</a>
+      · <a href="{{ url_for('boutique', categorie='alimentaire') }}" class="shop-filter {{ 'is-active' if filter_cat == 'alimentaire' }}">Alimentaire</a>
+      · <a href="{{ url_for('boutique', categorie='cosmetique') }}" class="shop-filter {{ 'is-active' if filter_cat == 'cosmetique' }}">Cosmétique</a>
+    </p>
+
+    <div class="cards-grid shop-grid">
+      {% for p in products %}
+      <a href="{{ url_for('product_detail', slug=p.slug) }}" class="svc-card reveal shop-card">
+        <div class="svc-ico-wrap" aria-hidden="true">{{ '🛒' if p.category == 'alimentaire' else '✨' }}</div>
+        <h2 class="svc-name">{{ p.name }}</h2>
+        <p class="svc-desc">{{ p.summary }}</p>
+        <span class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</span>
+        <span class="svc-arrow">Voir la fiche détaillée →</span>
+      </a>
+      {% else %}
+      <p class="section-sub">Aucun produit pour ce filtre.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

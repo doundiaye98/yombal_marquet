@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Yombal Marché — Accueil{% endblock %}
+{% block main_class %}site-main--home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+  </div>
+  <div class="hero-stripe" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Groupe YOMBAL</p>
+      <h1 class="hero-title">
+        <span class="word" style="animation-delay:0.55s">Courses</span>
+        <span class="word" style="animation-delay:0.62s">et</span>
+        <span class="word italic" style="animation-delay:0.72s">beauté</span><span class="word" style="animation-delay:0.78s">,</span><br>
+        <span class="word" style="animation-delay:0.86s">livraison</span>
+        <span class="word" style="animation-delay:0.94s">à</span>
+        <span class="word" style="animation-delay:1.02s">domicile</span>
+      </h1>
+      <p class="hero-desc">
+        <strong>Yombal Marché</strong> vous propose des <strong>produits alimentaires</strong>, des <strong>produits cosmétiques</strong>, une <strong>livraison à domicile</strong>, des <strong>prix abordables</strong> et une <strong>boutique en ligne</strong> pour commander où vous voulez, quand vous voulez.
+      </p>
+      <div class="hero-btns">
+        <a href="{{ url_for('boutique') }}" class="btn-primary">Commander en ligne <span class="btn-arrow" aria-hidden="true">→</span></a>
+        <a href="{{ url_for('services') }}" class="btn-outline">Nos services</a>
+      </div>
+    </div>
+
+    <div class="hero-right" aria-hidden="true">
+      <div class="float-card fc-main">
+        <p class="fc-tag alim">Alimentaire</p>
+        <p class="fc-title">Épicerie &amp; frais</p>
+        <div class="fc-icon-row">
+          <span class="fc-dot"></span><span class="fc-dot"></span><span class="fc-dot"></span>
+        </div>
+      </div>
+      <div class="float-card fc-cosm">
+        <p class="fc-tag cosm">Cosmétique</p>
+        <p class="fc-title">Soins &amp; hygiène</p>
+        <div class="fc-icon-row">
+          <span class="fc-dot"></span><span class="fc-dot"></span><span class="fc-dot"></span>
+        </div>
+      </div>
+      <div class="float-card fc-stat">
+        <p class="fc-tag stat">Marché</p>
+        <p class="fc-number" data-count="5">0</p>
+        <p class="fc-label">Engagements</p>
+        <div class="fc-icon-row">
+          <span class="fc-dot"></span><span class="fc-dot"></span><span class="fc-dot"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="#services-anchor" class="scroll-hint">
+    <span class="scroll-mouse"><span class="scroll-dot"></span></span>
+    <span class="scroll-label">Découvrir</span>
+  </a>
+</section>
+
+<div class="strip" aria-hidden="true">
+  <div class="strip-inner">
+    <div class="strip-ticker">
+      {% for cat in service_categories %}
+        {% for item in cat.prestations %}
+        <span class="strip-item"><span class="strip-ico">✦</span><span class="strip-txt">{{ item }}</span></span>
+        <span class="strip-sep"></span>
+        {% endfor %}
+      {% endfor %}
+      {% for cat in service_categories %}
+        {% for item in cat.prestations %}
+        <span class="strip-item"><span class="strip-ico">✦</span><span class="strip-txt">{{ item }}</span></span>
+        <span class="strip-sep"></span>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<section class="section" id="services-anchor">
+  <p class="section-eyebrow reveal">Offre</p>
+  <h2 class="section-title reveal">Nos <em>services</em></h2>
+  <p class="section-sub reveal">Cinq engagements au cœur de votre marché — détail et commande sur la page Services.</p>
+
+  <div class="cards-grid">
+    {% set icons = ['🛒', '✨', '🚚', '💶', '🛍️'] %}
+    {% for cat in service_categories %}
+      {% for item in cat.prestations %}
+      <a class="svc-card reveal" href="{{ url_for('services') }}#{{ cat.id }}">
+        <div class="svc-ico-wrap" aria-hidden="true">{{ icons[loop.index0 % (icons|length)] }}</div>
+        <h3 class="svc-name">{{ item }}</h3>
+        <p class="svc-desc">Qualité, transparence et proximité — cliquez pour en savoir plus.</p>
+        <span class="svc-arrow">En savoir plus →</span>
+      </a>
+      {% endfor %}
+    {% endfor %}
+  </div>
+
+  <div class="boutique-band reveal">
+    <div class="bb-left">
+      <h3 class="bb-title">Boutique &amp; livraison</h3>
+      <p class="bb-sub">Passez votre commande ou demandez des informations : nous vous répondons rapidement.</p>
+      <div class="bb-tags">
+        <span class="bb-tag">Alimentaire</span>
+        <span class="bb-tag">Cosmétique</span>
+        <span class="bb-tag">Livraison</span>
+      </div>
+    </div>
+    <a href="{{ url_for('boutique') }}" class="btn-gold">Ouvrir la boutique</a>
+  </div>
+</section>
+
+{% if featured_products %}
+<section class="section">
+  <p class="section-eyebrow reveal">Sélection</p>
+  <h2 class="section-title reveal">Coups de <em>cœur</em></h2>
+  <p class="section-sub reveal">Chaque produit possède une fiche détaillée : description longue, origine, ingrédients et conseils.</p>
+  <div class="shop-grid">
+    {% for p in featured_products %}
+    <article class="shop-card reveal">
+      <div class="shop-card-img" aria-hidden="true"><span>{{ '🛒' if p.category == 'alimentaire' else '✨' }}</span></div>
+      <div class="shop-card-body">
+        <p class="shop-meta">{{ 'Alimentaire' if p.category == 'alimentaire' else 'Cosmétique' }}</p>
+        <h3>{{ p.name }}</h3>
+        <p>{{ p.summary }}</p>
+        <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
+        <div class="shop-card-actions">
+          <a href="{{ url_for('product_detail', slug=p.slug) }}" class="btn-primary">Détails complets</a>
+          <form method="post" action="{{ url_for('panier_ajouter') }}" style="display:inline;">
+            <input type="hidden" name="product_id" value="{{ p.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="next" value="{{ url_for('index') }}">
+            <button type="submit" class="btn-outline">Panier</button>
+          </form>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  <p style="text-align:center;margin-top:32px;" class="reveal">
+    <a href="{{ url_for('boutique') }}" class="btn-primary">Toute la boutique</a>
+  </p>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="quote-block reveal">
+    <p>« Des prix accessibles, des produits choisis avec soin, et la livraison qui vous évite la course du dimanche. »</p>
+    <cite>— Yombal Marché · Groupe YOMBAL</cite>
+  </div>
+</section>
+{% endblock %}

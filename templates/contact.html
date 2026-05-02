@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Contact — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section">
+    <p class="section-eyebrow reveal">Contact</p>
+    <h1 class="section-title reveal">Nous <em>contacter</em></h1>
+    <p class="contact-intro reveal">
+      Pour une commande alimentaire ou cosmétique, la <strong>livraison à domicile</strong>, des infos sur les <strong>prix</strong> ou la <strong>boutique en ligne</strong>, utilisez les coordonnées ci-dessous ou envoyez un e-mail. Les <a href="#modes-paiement" class="payment-intro-link">modes de paiement</a> sont détaillés sur cette même page.
+    </p>
+
+    <div class="contact-grid">
+      <div class="c-card reveal">
+        <h2 class="c-title">Horaires</h2>
+        <p class="c-day">Lundi – vendredi</p>
+        <p class="c-hours">8h30 – 13h30 · 15h30 – 19h30</p>
+        <p class="c-day">Samedi</p>
+        <p class="c-hours">8h – 19h30</p>
+        <p class="c-day">Dimanche</p>
+        <p class="c-hours">9h – 13h</p>
+      </div>
+
+      <div class="c-card reveal">
+        <h2 class="c-title">Adresse</h2>
+        <address class="c-addr">
+          Yombal Marché<br>
+          Place du marché (à compléter)<br>
+          Code postal · Ville
+        </address>
+        <p class="c-note">Modifiez l’adresse dans <code>templates/contact.html</code>.</p>
+      </div>
+
+      <div class="c-card full reveal">
+        <h2 class="c-title">Message</h2>
+        <p class="c-msg">Pour un formulaire envoyé par e-mail, on peut ajouter Flask-Mail ou une API — indiquez-le si vous en avez besoin.</p>
+        <a href="mailto:contact@yombal-marche.local" class="c-email">contact@yombal-marche.local →</a>
+      </div>
+    </div>
+
+    <div id="modes-paiement" class="payment-section reveal" tabindex="-1">
+      <p class="section-eyebrow payment-eyebrow">Commande</p>
+      <h2 class="payment-heading">Modes de paiement</h2>
+      <p class="payment-lead">Après validation du panier sur le site, la page <strong>paiement</strong> vous permet de choisir Stripe (carte), PayPal, virement ou espèces à la livraison. Vous pouvez aussi nous écrire pour d’autres modes :</p>
+      <ul class="payment-methods" role="list">
+        <li class="payment-method">
+          <span class="payment-method-name">Espèces à la livraison</span>
+          <span class="payment-method-desc">À sélectionner sur la page paiement après commande, ou au point de retrait / magasin.</span>
+        </li>
+        <li class="payment-method">
+          <span class="payment-method-name">Carte bancaire (Stripe)</span>
+          <span class="payment-method-desc">Sur le site si Stripe est configuré ; sinon lien ou terminal selon nous.</span>
+        </li>
+        <li class="payment-method">
+          <span class="payment-method-name">PayPal</span>
+          <span class="payment-method-desc">Choisissez « PayPal » sur la page paiement : instructions et référence de commande s’affichent.</span>
+        </li>
+        <li class="payment-method">
+          <span class="payment-method-name">Virement bancaire</span>
+          <span class="payment-method-desc">Choisissez « Virement » sur la page paiement : RIB et référence <code>YOMBAL-CMD-…</code>.</span>
+        </li>
+        <li class="payment-method">
+          <span class="payment-method-name">Mobile money</span>
+          <span class="payment-method-desc">Wave, Orange Money, MTN Money ou autres selon nos lignes actives — précisez-le dans votre message.</span>
+        </li>
+      </ul>
+      <p class="payment-footnote">Pour Wave, Orange Money, MTN, etc., indiquez le mode dans votre message — nous vous répondons avec les coordonnées à utiliser.</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

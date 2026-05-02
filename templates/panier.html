@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Panier — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section section--cart">
+    <p class="section-eyebrow reveal">Panier</p>
+    <h1 class="section-title reveal">Vos <em>articles</em></h1>
+
+    {% if items %}
+    <ul class="cart-list reveal">
+      {% for row in items %}
+      <li class="cart-item">
+        <div class="cart-item-media" aria-hidden="true">{{ '🛒' if row.product.category == 'alimentaire' else '✨' }}</div>
+        <div class="cart-item-info">
+          <a href="{{ url_for('product_detail', slug=row.product.slug) }}" class="cart-item-title">{{ row.product.name }}</a>
+          <p class="cart-item-unit-line">
+            <span class="cart-item-price-unit">{{ '%.2f'|format(row.product.price_euros()) }} €</span>
+            <span class="cart-item-unit-suffix">/ unité</span>
+          </p>
+        </div>
+        <div class="cart-item-qty-wrap">
+          <label class="cart-item-qty-label" for="qty-{{ row.product.id }}">Quantité</label>
+          <form class="cart-item-qty-form" method="post" action="{{ url_for('panier_modifier') }}">
+            <input type="hidden" name="product_id" value="{{ row.product.id }}">
+            <input id="qty-{{ row.product.id }}" class="cart-item-qty-input" type="number" name="quantity" value="{{ row.quantity }}" min="1" max="99" inputmode="numeric" autocomplete="off">
+            <button type="submit" class="cart-item-update">Mettre à jour</button>
+          </form>
+        </div>
+        <div class="cart-item-subtotal-wrap">
+          <span class="cart-item-sub-label">Sous-total</span>
+          <strong class="cart-item-sub-amount">{{ '%.2f'|format(row.product.price_euros() * row.quantity) }} €</strong>
+        </div>
+        <form class="cart-item-remove-form" method="post" action="{{ url_for('panier_modifier') }}">
+          <input type="hidden" name="product_id" value="{{ row.product.id }}">
+          <input type="hidden" name="quantity" value="0">
+          <button type="submit" class="cart-item-remove">
+            <span class="cart-item-remove-icon" aria-hidden="true">×</span>
+            Retirer
+          </button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div class="cart-summary reveal">
+      <div class="cart-summary-row">
+        <span class="cart-summary-label">Total TTC <span class="cart-summary-hint">(indicatif)</span></span>
+        <span class="cart-summary-total">{{ '%.2f'|format(total_cents / 100) }} €</span>
+      </div>
+      <div class="cart-summary-actions">
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('checkout') }}" class="btn-primary">Valider la commande</a>
+        {% else %}
+        <p class="cart-login-hint">Pour payer sur le site, <a href="{{ url_for('login', next=url_for('checkout')) }}">connectez-vous</a> ou <a href="{{ url_for('register') }}">créez un compte</a>.</p>
+        <a href="{{ url_for('login', next=url_for('checkout')) }}" class="btn-primary">Connexion</a>
+        {% endif %}
+        <a href="{{ url_for('boutique') }}" class="btn-outline">Continuer les achats</a>
+      </div>
+    </div>
+    {% else %}
+    <p class="section-sub reveal">Votre panier est vide.</p>
+    <a href="{{ url_for('boutique') }}" class="btn-primary reveal">Découvrir la boutique</a>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

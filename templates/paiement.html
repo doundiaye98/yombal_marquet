@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% block title %}Paiement — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section">
+    <p class="section-eyebrow reveal">Paiement</p>
+    <h1 class="section-title reveal">Commande #{{ order.id }}</h1>
+    {% set pm_labels = {
+      'wire': 'Virement bancaire',
+      'paypal': 'PayPal',
+      'cash_delivery': 'Espèces à la livraison',
+      'stripe': 'Carte (Stripe)',
+      'demo': 'Simulation démo'
+    } %}
+    <p class="section-sub reveal">
+      Montant : <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong>
+      {% if order.payment_method %}
+      · Mode : <strong>{{ pm_labels.get(order.payment_method, order.payment_method) }}</strong>
+      {% endif %}
+    </p>
+
+    <ul class="checkout-list reveal">
+      {% for line in order.items %}
+      <li class="checkout-line">
+        <span>{{ line.product.name }} × {{ line.quantity }}</span>
+        <span>{{ '%.2f'|format(line.unit_price_cents * line.quantity / 100) }} €</span>
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% if payment_phase == 'manual_instructions' %}
+    <div class="payment-confirmed-panel reveal">
+      <h2 class="payment-confirmed-title">Étape suivante — votre mode de paiement</h2>
+
+      {% if order.status == 'awaiting_wire' %}
+      <div class="payment-instructions">
+        <p><strong>Virement bancaire</strong> — utilisez impérativement cette référence dans le libellé :</p>
+        <p class="payment-ref-box"><code>YOMBAL-CMD-{{ order.id }}</code></p>
+        {% if bank.iban %}
+        <dl class="payment-bank-dl">
+          {% if bank.name %}<dt>Banque</dt><dd>{{ bank.name }}</dd>{% endif %}
+          {% if bank.holder %}<dt>Titulaire</dt><dd>{{ bank.holder }}</dd>{% endif %}
+          <dt>IBAN</dt><dd><code>{{ bank.iban }}</code></dd>
+          {% if bank.bic %}<dt>BIC / SWIFT</dt><dd><code>{{ bank.bic }}</code></dd>{% endif %}
+        </dl>
+        <p class="payment-note muted-small">Votre commande sera préparée après réception du virement (ou selon nos délais habituels une fois le paiement identifié).</p>
+        {% else %}
+        <p class="payment-note payment-note--warn">
+          Les coordonnées bancaires ne sont pas encore renseignées sur le serveur (variable <code>BANK_IBAN</code> vide ou fichier <code>.env</code> absent).
+        </p>
+        <p class="payment-note">
+          <strong>Côté boutique :</strong> créez ou complétez le fichier <code>.env</code> à la racine du projet (copie de <code>.env.example</code>), ajoutez au minimum <code>BANK_IBAN</code>, <code>BANK_HOLDER</code>, puis <strong>redémarrez</strong> l’application Flask pour recharger les variables.
+        </p>
+        <p class="payment-note muted-small">
+          <strong>Côté client :</strong> pour obtenir le RIB en attendant, écrivez à
+          <a href="mailto:{{ shop_contact_email }}?subject=Virement%20YOMBAL-CMD-{{ order.id }}">{{ shop_contact_email }}</a>
+          en indiquant la référence <code>YOMBAL-CMD-{{ order.id }}</code>.
+        </p>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if order.status == 'awaiting_paypal' %}
+      <div class="payment-instructions">
+        <p><strong>PayPal</strong> — envoyez le montant exact avec cette référence dans le message :</p>
+        <p class="payment-ref-box"><code>YOMBAL-CMD-{{ order.id }}</code></p>
+        {% if paypal.email %}
+        <p>Compte à utiliser : <strong>{{ paypal.email }}</strong></p>
+        {% endif %}
+        {% if paypal.me_url %}
+        <p><a href="{{ paypal.me_url }}" class="btn-primary" target="_blank" rel="noopener noreferrer">Ouvrir PayPal / lien de paiement</a></p>
+        {% endif %}
+        {% if not paypal.email and not paypal.me_url %}
+        <p class="payment-note payment-note--warn">
+          Configurez <code>PAYPAL_EMAIL</code> ou <code>PAYPAL_ME_URL</code> dans <code>.env</code> pour afficher vos coordonnées PayPal ici, ou écrivez-nous depuis la page Contact.
+        </p>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if order.status == 'cod_confirmed' %}
+      <div class="payment-instructions">
+        <p><strong>Espèces à la livraison</strong></p>
+        <p>Vous réglerez <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong> au livreur ou au point de retrait, selon ce qui vous aura été confirmé par message.</p>
+        <p class="payment-note muted-small">Référence commande : <code>YOMBAL-CMD-{{ order.id }}</code></p>
+      </div>
+      {% endif %}
+
+      <p class="payment-actions-footer">
+        <a href="{{ url_for('boutique') }}" class="btn-outline">Retour à la boutique</a>
+        <a href="{{ url_for('contact') }}" class="btn-outline">Une question ? Contact</a>
+      </p>
+    </div>
+
+    {% else %}
+    {# Sélection type marketplace (liste + détail) #}
+    {% if stripe_ok and stripe_pi_error %}
+    <div class="payment-note payment-note--warn reveal" role="alert">
+      Carte indisponible pour le moment : {{ stripe_pi_error }}
+    </div>
+    {% endif %}
+
+    {% if stripe_ok and stripe_client_secret %}
+      {% set default_pay = 'card' %}
+    {% else %}
+      {% set default_pay = 'paypal' %}
+    {% endif %}
+
+    <div class="payment-mp reveal">
+      <div class="payment-mp-head">
+        <h2 class="payment-mp-title">Mode de paiement</h2>
+        <p class="payment-mp-subtitle">Sélectionnez une option — le détail s’affiche en dessous (comme sur une place de marché).</p>
+        <p class="payment-mp-total-bar">
+          Total à payer : <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong>
+        </p>
+      </div>
+
+      <div class="payment-mp-shell">
+        <fieldset class="payment-mp-fieldset">
+          <legend class="sr-only">Choix du mode de paiement</legend>
+
+          {% if stripe_ok and stripe_client_secret %}
+          <label class="payment-mp-row">
+            <input class="payment-mp-input" type="radio" name="pay_mode" value="card" {% if default_pay == 'card' %}checked{% endif %}>
+            <span class="payment-mp-icon" aria-hidden="true">💳</span>
+            <span class="payment-mp-label">
+              <span class="payment-mp-name">Carte bancaire</span>
+              <span class="payment-mp-hint">Visa, Mastercard, CB… — saisie sécurisée Stripe</span>
+              <span class="payment-mp-badges"><span>CB</span><span>VISA</span><span>MC</span></span>
+            </span>
+            <span class="payment-mp-check" aria-hidden="true"></span>
+          </label>
+          {% else %}
+          <label class="payment-mp-row payment-mp-row--muted">
+            <input class="payment-mp-input" type="radio" name="pay_mode" value="" disabled>
+            <span class="payment-mp-icon" aria-hidden="true">💳</span>
+            <span class="payment-mp-label">
+              <span class="payment-mp-name">Carte bancaire</span>
+              <span class="payment-mp-hint">À activer avec Stripe (<code>.env</code>)</span>
+            </span>
+            <span class="payment-mp-check" aria-hidden="true"></span>
+          </label>
+          {% endif %}
+
+          <label class="payment-mp-row">
+            <input class="payment-mp-input" type="radio" name="pay_mode" value="paypal" {% if default_pay == 'paypal' %}checked{% endif %}>
+            <span class="payment-mp-icon payment-mp-icon--pp" aria-hidden="true">P</span>
+            <span class="payment-mp-label">
+              <span class="payment-mp-name">PayPal</span>
+              <span class="payment-mp-hint">Instructions après confirmation</span>
+            </span>
+            <span class="payment-mp-check" aria-hidden="true"></span>
+          </label>
+
+          <label class="payment-mp-row">
+            <input class="payment-mp-input" type="radio" name="pay_mode" value="wire" {% if default_pay == 'wire' %}checked{% endif %}>
+            <span class="payment-mp-icon" aria-hidden="true">🏦</span>
+            <span class="payment-mp-label">
+              <span class="payment-mp-name">Virement bancaire</span>
+              <span class="payment-mp-hint">RIB + référence commande</span>
+            </span>
+            <span class="payment-mp-check" aria-hidden="true"></span>
+          </label>
+
+          <label class="payment-mp-row">
+            <input class="payment-mp-input" type="radio" name="pay_mode" value="cod" {% if default_pay == 'cod' %}checked{% endif %}>
+            <span class="payment-mp-icon" aria-hidden="true">💶</span>
+            <span class="payment-mp-label">
+              <span class="payment-mp-name">Paiement à la livraison</span>
+              <span class="payment-mp-hint">Espèces au livreur ou au retrait</span>
+            </span>
+            <span class="payment-mp-check" aria-hidden="true"></span>
+          </label>
+
+          <label class="payment-mp-row payment-mp-row--demo">
+            <input class="payment-mp-input" type="radio" name="pay_mode" value="demo" {% if default_pay == 'demo' %}checked{% endif %}>
+            <span class="payment-mp-icon" aria-hidden="true">🧪</span>
+            <span class="payment-mp-label">
+              <span class="payment-mp-name">Simulation (démo)</span>
+              <span class="payment-mp-hint">Sans prélèvement — tests uniquement</span>
+            </span>
+            <span class="payment-mp-check" aria-hidden="true"></span>
+          </label>
+        </fieldset>
+
+        <div class="payment-mp-detail">
+          {% if stripe_ok and stripe_client_secret %}
+          <div class="payment-mp-panel" data-panel="card" {% if default_pay != 'card' %}hidden{% endif %}>
+            <p class="payment-mp-panel-lead">
+              Saisissez les informations de carte dans le cadre ci-dessous. Elles sont traitées par <strong>Stripe</strong> et ne transitent pas par nos serveurs.
+            </p>
+            <form id="stripe-payment-form">
+              <div id="payment-element"></div>
+              <button type="submit" id="stripe-submit" class="btn-primary payment-stripe-submit">
+                Payer {{ '%.2f'|format(order.total_cents / 100) }} €
+              </button>
+              <p id="stripe-error-message" class="payment-note payment-note--warn" role="alert" hidden></p>
+            </form>
+          </div>
+          {% endif %}
+
+          <div class="payment-mp-panel" data-panel="paypal" {% if default_pay != 'paypal' %}hidden{% endif %}>
+            <p class="payment-mp-panel-lead">Vous recevrez les instructions PayPal et la référence de commande sur la page suivante.</p>
+            <form method="post" action="{{ url_for('paiement_valider_manuel', order_id=order.id) }}">
+              <input type="hidden" name="methode" value="paypal">
+              <button type="submit" class="btn-primary payment-mp-cta">Confirmer — PayPal</button>
+            </form>
+          </div>
+
+          <div class="payment-mp-panel" data-panel="wire" {% if default_pay != 'wire' %}hidden{% endif %}>
+            <p class="payment-mp-panel-lead">Confirmez le virement : le RIB et la référence <code>YOMBAL-CMD-{{ order.id }}</code> s’afficheront ensuite.</p>
+            <form method="post" action="{{ url_for('paiement_valider_manuel', order_id=order.id) }}">
+              <input type="hidden" name="methode" value="virement">
+              <button type="submit" class="btn-primary payment-mp-cta">Confirmer — virement</button>
+            </form>
+          </div>
+
+          <div class="payment-mp-panel" data-panel="cod" {% if default_pay != 'cod' %}hidden{% endif %}>
+            <p class="payment-mp-panel-lead">Vous paierez en espèces à la livraison (ou au retrait). Récapitulatif après confirmation.</p>
+            <form method="post" action="{{ url_for('paiement_valider_manuel', order_id=order.id) }}">
+              <input type="hidden" name="methode" value="especes_livraison">
+              <button type="submit" class="btn-outline payment-mp-cta">Confirmer — paiement à la livraison</button>
+            </form>
+          </div>
+
+          <div class="payment-mp-panel" data-panel="demo" {% if default_pay != 'demo' %}hidden{% endif %}>
+            <p class="payment-mp-panel-lead">Marque la commande comme payée en local (aucun prélèvement réel).</p>
+            <form method="post" action="{{ url_for('paiement_demo', order_id=order.id) }}">
+              <button type="submit" class="btn-gold payment-mp-cta">Lancer la simulation</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <p class="payment-mp-footnote muted-small">
+        Mobile money ou autres modes : <a href="{{ url_for('contact') }}#modes-paiement">page Contact</a>.
+      </p>
+    </div>
+
+    {% if stripe_ok and stripe_client_secret %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+    (function () {
+      var stripePublishable = {{ stripe_publishable|tojson }};
+      var clientSecret = {{ stripe_client_secret|tojson }};
+      var returnUrl = {{ stripe_return_url|tojson }};
+      var stripe = Stripe(stripePublishable);
+      var appearance = {
+        theme: 'stripe',
+        variables: {
+          colorPrimary: '#c8503a',
+          borderRadius: '10px',
+          fontFamily: '"DM Sans", system-ui, sans-serif'
+        }
+      };
+      var elements = null;
+      var mounted = false;
+      window.__yombalMountStripe = function () {
+        if (mounted) return;
+        mounted = true;
+        elements = stripe.elements({ clientSecret: clientSecret, appearance: appearance, locale: 'fr' });
+        elements.create('payment').mount('#payment-element');
+      };
+      var form = document.getElementById('stripe-payment-form');
+      var submitBtn = document.getElementById('stripe-submit');
+      var errEl = document.getElementById('stripe-error-message');
+      if (form && submitBtn && errEl) {
+        form.addEventListener('submit', async function (ev) {
+          ev.preventDefault();
+          if (!elements) return;
+          submitBtn.disabled = true;
+          errEl.hidden = true;
+          var result = await stripe.confirmPayment({
+            elements: elements,
+            confirmParams: { return_url: returnUrl }
+          });
+          if (result.error) {
+            errEl.textContent = result.error.message;
+            errEl.hidden = false;
+            submitBtn.disabled = false;
+          }
+        });
+      }
+    })();
+    </script>
+    {% endif %}
+
+    <script>
+    (function () {
+      function syncPanels() {
+        var row = document.querySelector('input[name="pay_mode"]:checked');
+        if (!row || !row.value) return;
+        var val = row.value;
+        document.querySelectorAll('.payment-mp-panel').forEach(function (panel) {
+          panel.hidden = panel.getAttribute('data-panel') !== val;
+        });
+        if (val === 'card' && typeof window.__yombalMountStripe === 'function') {
+          window.__yombalMountStripe();
+        }
+      }
+      document.querySelectorAll('input[name="pay_mode"]').forEach(function (radio) {
+        radio.addEventListener('change', syncPanels);
+      });
+      syncPanels();
+    })();
+    </script>
+
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

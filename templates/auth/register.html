@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Inscription — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper auth-page">
+  <section class="section section--narrow">
+    <p class="section-eyebrow reveal">Espace client</p>
+    <h1 class="section-title reveal">Créer un compte</h1>
+    <p class="section-sub reveal">Un compte est nécessaire pour régler votre commande sur le site.</p>
+
+    <form class="auth-form reveal c-card" method="post" action="{{ url_for('register') }}">
+      <div class="field">
+        <label class="field-label" for="name">Prénom ou pseudo (optionnel)</label>
+        <input class="field-input" type="text" id="name" name="name" autocomplete="name" value="{{ request.form.get('name', '') }}">
+      </div>
+      <div class="field">
+        <label class="field-label" for="email">E-mail</label>
+        <input class="field-input" type="email" id="email" name="email" required autocomplete="email" value="{{ request.form.get('email', '') }}">
+      </div>
+      <div class="field">
+        <label class="field-label" for="password">Mot de passe</label>
+        <input class="field-input" type="password" id="password" name="password" required minlength="6" autocomplete="new-password">
+        <span class="field-hint">Au moins 6 caractères.</span>
+      </div>
+      <button type="submit" class="btn-primary auth-submit">S’inscrire</button>
+      <p class="auth-alt">Déjà inscrit ? <a href="{{ url_for('login') }}">Connexion</a></p>
+    </form>
+  </section>
+</div>
+{% endblock %}

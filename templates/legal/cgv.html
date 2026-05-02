@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}CGV — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section section--cart">
+    <p class="section-eyebrow reveal">Vente en ligne</p>
+    <h1 class="section-title reveal">Conditions générales <em>de vente</em></h1>
+    <div class="payment-confirmed-panel reveal" style="max-width:720px;margin-left:auto;margin-right:auto;">
+      <p><strong>1. Objet</strong><br>
+      Les présentes CGV régulent les ventes réalisées via le site Yombal Marché (produits alimentaires et cosmétiques, livraison selon modalités annoncées).</p>
+
+      <p><strong>2. Prix et paiement</strong><br>
+      Les prix sont indiqués en euros TTC lorsque applicable. Les modes de paiement proposés figurent à la commande (carte via Stripe, PayPal, virement, espèces à la livraison selon configuration).</p>
+
+      <p><strong>3. Commande</strong><br>
+      Toute commande vaut acceptation des prix et descriptions des produits disponibles au moment de la validation du panier.</p>
+
+      <p><strong>4. Livraison</strong><br>
+      Délais et zones : <em>à préciser</em> (commune, créneaux, frais éventuels).</p>
+
+      <p><strong>5. Rétractation &amp; réclamations</strong><br>
+      Pour les produits périssables ou ouverts, les règales légales applicables s’appliquent. Réclamations : {{ shop_contact_email }}.</p>
+
+      <p><strong>6. Litiges</strong><br>
+      En cas de différend, une solution amiable est recherchée ; à défaut, tribunaux compétents <em>à compléter</em>.</p>
+
+      <p class="payment-note muted-small">Texte type à faire valider juridiquement selon votre statut (auto-entrepreneur, SARL, etc.).</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

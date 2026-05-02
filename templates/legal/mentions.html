@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Mentions légales — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section section--cart">
+    <p class="section-eyebrow reveal">Informations légales</p>
+    <h1 class="section-title reveal">Mentions <em>légales</em></h1>
+    <div class="payment-confirmed-panel reveal" style="max-width:720px;margin-left:auto;margin-right:auto;">
+      <p><strong>Éditeur du site</strong><br>
+      Yombal Marché — Groupe YOMBAL<br>
+      Adresse : <em>à compléter</em><br>
+      E-mail : <a href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }}</a></p>
+
+      <p><strong>Directeur de la publication</strong><br><em>à compléter</em></p>
+
+      <p><strong>Hébergement</strong><br><em>à compléter (nom, adresse du prestataire)</em></p>
+
+      <p><strong>Propriété intellectuelle</strong><br>
+      Les contenus du site (textes, visuels, marque) sont protégés. Toute reproduction non autorisée est interdite.</p>
+
+      <p><strong>Données personnelles</strong><br>
+      Les données collectées (compte client, commandes) servent à la gestion des ventes et livraisons.
+      Pour exercer vos droits (accès, rectification, suppression), contactez : {{ shop_contact_email }}.</p>
+
+      <p class="payment-note muted-small">Modèle à adapter avec votre juriste ou le portail officiel des formalités (INSEE, société, etc.).</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Commande — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section">
+    <p class="section-eyebrow reveal">Commande</p>
+    <h1 class="section-title reveal">Récapitulatif</h1>
+    <p class="section-sub reveal">En confirmant, votre panier devient une commande en attente de paiement.</p>
+
+    <ul class="checkout-list reveal">
+      {% for row in items %}
+      <li class="checkout-line">
+        <span>{{ row.product.name }} × {{ row.quantity }}</span>
+        <span>{{ '%.2f'|format(row.product.price_euros() * row.quantity) }} €</span>
+      </li>
+      {% endfor %}
+      <li class="checkout-line checkout-total">
+        <strong>Total</strong>
+        <strong>{{ '%.2f'|format(total_cents / 100) }} €</strong>
+      </li>
+    </ul>
+
+    <form method="post" class="checkout-actions reveal">
+      <button type="submit" class="btn-primary">Confirmer et payer</button>
+      <a href="{{ url_for('panier') }}" class="btn-outline">Modifier le panier</a>
+    </form>
+  </section>
+</div>
+{% endblock %}

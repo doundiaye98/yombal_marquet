@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Connexion — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper auth-page">
+  <section class="section section--narrow">
+    <p class="section-eyebrow reveal">Espace client</p>
+    <h1 class="section-title reveal">Connexion</h1>
+    <p class="section-sub reveal">Connectez-vous pour payer en ligne après avoir confirmé votre panier.</p>
+
+    <form class="auth-form reveal c-card" method="post" action="{{ url_for('login') }}">
+      <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+      <div class="field">
+        <label class="field-label" for="email">E-mail</label>
+        <input class="field-input" type="email" id="email" name="email" required autocomplete="email" value="{{ request.form.get('email', '') }}">
+      </div>
+      <div class="field">
+        <label class="field-label" for="password">Mot de passe</label>
+        <input class="field-input" type="password" id="password" name="password" required autocomplete="current-password">
+      </div>
+      <label class="field-check"><input type="checkbox" name="remember" value="1"> Rester connecté</label>
+      <button type="submit" class="btn-primary auth-submit">Se connecter</button>
+      <p class="auth-alt">Pas encore de compte ? <a href="{{ url_for('register') }}">Créer un compte</a></p>
+    </form>
+  </section>
+</div>
+{% endblock %}

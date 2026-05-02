@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Nos services — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section">
+    <p class="section-eyebrow reveal">Catalogue</p>
+    <h1 class="section-title reveal">Produits, cosmétiques &amp; <em>livraison</em></h1>
+    <p class="section-sub reveal">
+      <strong>Yombal Marché</strong> propose une boutique en ligne avec <strong>paiement sécurisé</strong> après commande.
+      Parcourez les catégories ci-dessous : chaque produit dispose d’une <strong>fiche détaillée</strong> (description, origine, ingrédients, conservation).
+    </p>
+
+    <div class="cards-grid">
+      {% set icons = ['🛒', '✨', '🚚', '💶', '🛍️'] %}
+      {% for sec in sections %}
+      <a class="svc-card reveal" href="#svc-{{ loop.index0 }}">
+        <div class="svc-ico-wrap" aria-hidden="true">{{ icons[loop.index0 % (icons|length)] }}</div>
+        <h2 class="svc-name">{{ sec.title }}</h2>
+        <p class="svc-desc">
+          {% if sec.has_products %}
+          {{ sec.products|length }} référence{{ 's' if sec.products|length > 1 else '' }} — voir les produits et commandez en ligne.
+          {% else %}
+          Informations et modalités — cliquez pour les détails de notre offre.
+          {% endif %}
+        </p>
+        <span class="svc-arrow">Voir le détail →</span>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% for sec in sections %}
+    <div class="services-detail reveal" id="svc-{{ loop.index0 }}">
+      <h2>{{ sec.title }}</h2>
+
+      {% if sec.has_products %}
+      <div class="shop-grid" style="margin-top: 24px;">
+        {% set sec_idx = loop.index0 %}
+        {% for p in sec.products %}
+        <article class="shop-card reveal">
+          <div class="shop-card-img" aria-hidden="true">
+            <span>{{ '🛒' if p.category == 'alimentaire' else '✨' }}</span>
+          </div>
+          <div class="shop-card-body">
+            <p class="shop-meta">{{ 'Alimentaire' if p.category == 'alimentaire' else 'Cosmétique' }}</p>
+            <h3>{{ p.name }}</h3>
+            <p>{{ p.summary }}</p>
+            <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
+            <div class="shop-card-actions">
+              <a href="{{ url_for('product_detail', slug=p.slug) }}" class="btn-primary">Fiche complète</a>
+              <form method="post" action="{{ url_for('panier_ajouter') }}" style="display:inline;">
+                <input type="hidden" name="product_id" value="{{ p.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <input type="hidden" name="next" value="{{ url_for('services') }}#svc-{{ sec_idx }}">
+                <button type="submit" class="btn-outline">Au panier</button>
+              </form>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <ul>
+        {% if sec.title == 'Livraison à domicile' %}
+        <li>Courses préparées avec soin et livraison sur créneaux selon votre commune.</li>
+        <li>Suivi par message après validation de commande sur le site.</li>
+        {% elif sec.title == 'Prix abordables' %}
+        <li>Gamme pensée pour des prix justes sur l’alimentaire et la cosmétique du quotidien.</li>
+        <li>Tarifs affichés TTC sur la boutique ; pas de mauvaise surprise au paiement.</li>
+        {% elif sec.title == 'Boutique en ligne' %}
+        <li>Panier, compte client, validation puis paiement Stripe (carte) ou mode démo sans carte si les clés ne sont pas configurées.</li>
+        <li>Pour un besoin spécifique, le formulaire Contact reste disponible.</li>
+        {% else %}
+        <li>Découvrez nos engagements sur cette thématique et commandez via la boutique.</li>
+        {% endif %}
+      </ul>
+      {% endif %}
+
+      <div class="service-actions">
+        {% if sec.has_products %}
+        <a href="{{ url_for('boutique') }}" class="btn-commande">Voir toute la boutique</a>
+        {% endif %}
+        <a href="{{ url_for('contact') }}#modes-paiement" class="btn-outline" data-toast="Modes de paiement : consultez la page Contact.">Modes de paiement</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('checkout') }}" class="btn-outline">Finaliser une commande</a>
+        {% else %}
+        <a href="{{ url_for('login', next=url_for('checkout')) }}" class="btn-outline">Connexion pour payer</a>
+        {% endif %}
+        <a href="{{ url_for('contact') }}" class="btn-outline">Nous écrire</a>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="boutique-band reveal">
+      <div class="bb-left">
+        <h3 class="bb-title">Commander et payer sur le site</h3>
+        <p class="bb-sub">Ajoutez des produits au panier, créez un compte ou connectez-vous, puis réglez en ligne après validation de la commande.</p>
+        <div class="bb-tags">
+          <span class="bb-tag">Panier</span>
+          <span class="bb-tag">Compte client</span>
+          <span class="bb-tag">Paiement sécurisé</span>
+        </div>
+      </div>
+      <a href="{{ url_for('boutique') }}" class="btn-gold">Ouvrir la boutique</a>
+    </div>
+  </section>
+</div>
+{% endblock %}

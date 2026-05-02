@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Commande #{{ order.id }} — Admin{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section section--cart">
+    <p class="section-eyebrow reveal"><a href="{{ url_for('admin_orders') }}">← Commandes</a></p>
+    <h1 class="section-title reveal">Commande #{{ order.id }}</h1>
+
+    <div class="payment-confirmed-panel reveal" style="max-width:none;">
+      <p><strong>Client :</strong> {{ customer.email if customer else '—' }} {% if customer and customer.name %}({{ customer.name }}){% endif %}</p>
+      <p><strong>Statut :</strong> <code>{{ order.status }}</code></p>
+      <p><strong>Mode paiement :</strong> {{ order.payment_method or '—' }}</p>
+      <p><strong>Total :</strong> {{ '%.2f'|format(order.total_cents / 100) }} €</p>
+      <p><strong>Créée le :</strong> {{ order.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</p>
+      {% if order.stripe_session_id %}
+      <p><strong>Réf. Stripe / PI :</strong> <code>{{ order.stripe_session_id }}</code></p>
+      {% endif %}
+
+      <h2 class="payment-choice-title" style="margin-top:28px;">Lignes</h2>
+      <ul class="checkout-list">
+        {% for line in order.items %}
+        <li class="checkout-line">
+          <span>{{ line.product.name }} × {{ line.quantity }}</span>
+          <span>{{ '%.2f'|format(line.unit_price_cents * line.quantity / 100) }} €</span>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <h2 class="payment-choice-title" style="margin-top:24px;">Changer le statut</h2>
+      <form method="post" class="admin-status-form">
+        <label class="sr-only" for="new_status">Nouveau statut</label>
+        <select id="new_status" name="new_status" class="cart-item-qty-input" style="width:auto;min-width:220px;text-align:left;">
+          {% for s in allowed_status %}
+          <option value="{{ s }}" {% if order.status == s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" name="action" value="set_status" class="btn-primary">Enregistrer</button>
+      </form>
+      <p class="payment-note muted-small">
+        Utilisez <code>paid_manual</code> lorsque vous avez bien reçu un virement ou un paiement hors Stripe : un e-mail de confirmation peut être envoyé au client.
+      </p>
+    </div>
+  </section>
+</div>
+{% endblock %}

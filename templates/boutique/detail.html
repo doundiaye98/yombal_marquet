@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <article class="section product-detail">
+    <nav class="product-breadcrumb reveal" aria-label="Fil d’Ariane">
+      <a href="{{ url_for('boutique') }}">Boutique</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ product.name }}</span>
+    </nav>
+
+    <div class="product-detail-grid reveal">
+      <div class="product-detail-visual" aria-hidden="true">
+        <span>{{ '🛒' if product.category == 'alimentaire' else '✨' }}</span>
+      </div>
+
+      <div class="product-detail-main">
+        <p class="section-eyebrow">{{ 'Alimentaire' if product.category == 'alimentaire' else 'Cosmétique' }}</p>
+        <h1>{{ product.name }}</h1>
+        <p class="product-detail-price">{{ '%.2f'|format(product.price_euros()) }} €</p>
+        <p class="product-detail-desc">{{ product.summary }}</p>
+
+        <div class="product-detail-meta">
+          {% if product.weight_info %}
+          <div class="detail-block">
+            <h3>Conditionnement</h3>
+            <p>{{ product.weight_info }}</p>
+          </div>
+          {% endif %}
+          {% if product.origin %}
+          <div class="detail-block">
+            <h3>Origine &amp; traçabilité</h3>
+            <p>{{ product.origin }}</p>
+          </div>
+          {% endif %}
+
+          <div class="detail-block">
+            <h3>Description complète</h3>
+            {% for block in product.description.split('\n\n') %}
+            {% if block.strip() %}
+            <p>{{ block.strip() }}</p>
+            {% endif %}
+            {% endfor %}
+          </div>
+
+          {% if product.ingredients %}
+          <div class="detail-block">
+            <h3>Ingrédients</h3>
+            <p>{{ product.ingredients }}</p>
+          </div>
+          {% endif %}
+
+          {% if product.allergens %}
+          <div class="detail-block">
+            <h3>Allergènes</h3>
+            <p>{{ product.allergens }}</p>
+          </div>
+          {% endif %}
+
+          {% if product.usage_tips %}
+          <div class="detail-block">
+            <h3>Conseils d’utilisation</h3>
+            <p>{{ product.usage_tips }}</p>
+          </div>
+          {% endif %}
+
+          {% if product.conservation %}
+          <div class="detail-block">
+            <h3>Conservation</h3>
+            <p>{{ product.conservation }}</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <form class="product-add-form checkout-form" method="post" action="{{ url_for('panier_ajouter') }}" style="margin-top: 28px;">
+          <input type="hidden" name="next" value="{{ url_for('product_detail', slug=product.slug) }}">
+          <input type="hidden" name="product_id" value="{{ product.id }}">
+          <div class="field-group field-inline" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;">
+            <div>
+              <label for="qty-detail">Quantité</label>
+              <input id="qty-detail" class="num-input" type="number" name="quantity" value="1" min="1" max="20">
+            </div>
+            <button type="submit" class="btn-primary">Ajouter au panier</button>
+            <a href="{{ url_for('panier') }}" class="btn-outline">Voir le panier</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if related %}
+    <aside class="product-related reveal" style="margin-top: 56px;">
+      <h2 class="section-title" style="font-size: clamp(1.35rem, 2.5vw, 1.85rem); margin-bottom: 24px;">Vous aimerez aussi</h2>
+      <div class="shop-grid">
+        {% for p in related %}
+        <a href="{{ url_for('product_detail', slug=p.slug) }}" class="shop-card" style="text-decoration: none; color: inherit;">
+          <div class="shop-card-img" aria-hidden="true"><span>{{ '🛒' if p.category == 'alimentaire' else '✨' }}</span></div>
+          <div class="shop-card-body">
+            <h3>{{ p.name }}</h3>
+            <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
+            <span class="shop-meta" style="margin-top: auto;">Fiche détaillée →</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </aside>
+    {% endif %}
+  </article>
+</div>
+{% endblock %}

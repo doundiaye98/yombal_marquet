@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Admin — Commandes{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <section class="section section--cart">
+    <p class="section-eyebrow reveal">Administration</p>
+    <h1 class="section-title reveal">Commandes</h1>
+    <p class="section-sub reveal">Liste des commandes récentes (250 max). Filtrez par statut.</p>
+
+    <form class="admin-filter reveal" method="get" action="{{ url_for('admin_orders') }}">
+      <label class="cart-item-qty-label" for="f-status">Statut</label>
+      <select id="f-status" name="status" class="admin-filter-select" onchange="this.form.submit()">
+        <option value="" {% if not status_filter %}selected{% endif %}>Tous</option>
+        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>pending</option>
+        <option value="awaiting_wire" {% if status_filter == 'awaiting_wire' %}selected{% endif %}>awaiting_wire</option>
+        <option value="awaiting_paypal" {% if status_filter == 'awaiting_paypal' %}selected{% endif %}>awaiting_paypal</option>
+        <option value="cod_confirmed" {% if status_filter == 'cod_confirmed' %}selected{% endif %}>cod_confirmed</option>
+        <option value="paid_stripe" {% if status_filter == 'paid_stripe' %}selected{% endif %}>paid_stripe</option>
+        <option value="paid_demo" {% if status_filter == 'paid_demo' %}selected{% endif %}>paid_demo</option>
+        <option value="paid_manual" {% if status_filter == 'paid_manual' %}selected{% endif %}>paid_manual</option>
+        <option value="shipped" {% if status_filter == 'shipped' %}selected{% endif %}>shipped</option>
+        <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>cancelled</option>
+      </select>
+      <noscript><button type="submit" class="btn-outline">Filtrer</button></noscript>
+    </form>
+
+    <div class="cart-table-wrap reveal" style="margin-top:24px;">
+      <table class="cart-table admin-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Montant</th>
+            <th>Statut</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in orders %}
+          {% set u = o.user %}
+          <tr>
+            <td>{{ o.id }}</td>
+            <td>{{ o.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ u.email if u else '—' }}</td>
+            <td>{{ '%.2f'|format(o.total_cents / 100) }} €</td>
+            <td><code class="admin-code">{{ o.status }}</code></td>
+            <td><a href="{{ url_for('admin_order_detail', order_id=o.id) }}">Détail</a></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6">Aucune commande.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}
