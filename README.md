@@ -48,6 +48,15 @@ Sur Render, le disque d’un **Web Service gratuit** est **réinitialisé** au r
 
 Sans Postgres (tests uniquement), ne pas compter sur la persistance des données après un redeploy.
 
+### Déploiement automatique (chaque `git push`)
+
+Render ne peut pas être « branché » depuis le dépôt tout seul : il faut une fois **lier GitHub** au service.
+
+1. **Web Service** : après avoir connecté le dépôt et la branche `main`, ouvrez **Settings** → **Build & Deploy** → **Auto-Deploy** et choisissez **On commit** (c’est en général le défaut). Chaque push sur `main` lance alors un build + déploiement.
+2. **Blueprint** : **New +** → **Blueprint** → dépôt + branche `main`. Tant que **Auto Sync** reste activé sur la fiche du Blueprint, un push qui modifie (entre autres) `render.yaml` resynchronise les ressources ; le service web associé est redéployé avec les derniers commits.
+
+Pour **ne pas** déclencher de déploiement sur un commit ponctuel : message de commit contenant `[skip render]` ou `[render skip]`.
+
 ### Étapes (méthode manuelle, sans Blueprint)
 
 1. Pousser le code sur **GitHub** (branche `main`).
@@ -55,7 +64,8 @@ Sans Postgres (tests uniquement), ne pas compter sur la persistance des données
 3. Réglages suggérés :
    - **Runtime** : Python  
    - **Build command** : `pip install -r requirements.txt`  
-   - **Start command** : `gunicorn --bind 0.0.0.0:$PORT app:app`  
+   - **Start command** : `gunicorn --bind 0.0.0.0:$PORT --timeout 120 --graceful-timeout 30 app:app`  
+   - **Health check path** : `/healthz`  
    - **Region** : *Frankfurt* (Europe) ou autre selon vous  
    - **Instance type** : *Free* (cold starts après inactivité)
 4. **Environment** → ajouter les variables (repères dans `.env.example`) au minimum :
