@@ -18,7 +18,25 @@ Production locale avec Waitress : `run_waitress.bat` ou voir `wsgi.py`.
 
 ## Configuration
 
-Copier `.env.example` vers `.env` et renseigner au minimum `FLASK_SECRET_KEY`, coordonnées banque / PayPal si besoin, clés Stripe pour la carte, `ADMIN_EMAILS` pour l’espace admin, SMTP pour les e-mails transactionnels.
+### Variables d’environnement
+
+Elles sont **lues dans le code** via `os.environ` (`app.py`, `mailer.py`) — pas besoin d’autre mécanisme.
+
+| Variable | Rôle |
+|----------|------|
+| `FLASK_SECRET_KEY` | Secret Flask (sessions) — **obligatoire en production** |
+| `DATABASE_URL` | PostgreSQL (ex. Render) ; sinon SQLite local |
+| `STRIPE_*` | Paiement carte + webhook |
+| `BANK_*`, `CONTACT_EMAIL` | Virement, mentions contact |
+| `PAYPAL_*` | Instructions PayPal |
+| `ADMIN_EMAILS` | Accès `/admin/commandes` |
+| `MAIL_*` | Envoi des e-mails transactionnels |
+
+**Local :** copier `.env.example` vers `.env` et remplir les valeurs.
+
+**Render (ou autre hôte) :** dans **Environment / Variables**, créez les **mêmes noms de clés** que dans `.env.example` et collez les valeurs (surtout les **secrets** : Stripe, SMTP, `FLASK_SECRET_KEY`). Ne commitez jamais `.env`.
+
+La liste commentée et les détails sont dans **`.env.example`**.
 
 Le fichier `.env` n’est pas versionné (voir `.gitignore`).
 

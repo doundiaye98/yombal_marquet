@@ -303,4 +303,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   focusPaymentSection();
   window.addEventListener("hashchange", focusPaymentSection);
+
+  /* Si IntersectionObserver ne déclenche pas (viewport atypique), éviter du contenu invisible. */
+  window.setTimeout(() => {
+    document.querySelectorAll(".reveal:not(.visible)").forEach((el) => el.classList.add("visible"));
+  }, 2800);
 });

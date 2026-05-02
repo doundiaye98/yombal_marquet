@@ -153,6 +153,12 @@ def ensure_session_cart():
     session.setdefault("cart", {})
 
 
+@app.route("/healthz")
+def healthz():
+    """Réponse minimale pour les health checks Render (sans accès DB)."""
+    return "ok", 200, {"Cache-Control": "no-store"}
+
+
 def _migrate_orders_payment_method():
     """Ajoute la colonne payment_method si la base existait déjà sans elle."""
     from sqlalchemy import inspect, text

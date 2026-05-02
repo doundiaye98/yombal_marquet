@@ -2283,5 +2283,29 @@ a.shop-filter.is-active {
   .blob { opacity: 0.6; }
   .nav { animation: none; transform: translateY(0); }
   .page-wrapper { animation: none; opacity: 1; transform: none; }
+  /* Sans ces règles, le hero reste en opacity:0 si le navigateur désactive les animations. */
+  .hero-eyebrow,
+  .hero-title .word,
+  .hero-desc,
+  .hero-btns,
+  .scroll-hint {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .hero-right {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .float-card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
