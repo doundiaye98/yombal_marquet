@@ -30,7 +30,10 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY") or "dev-secret-change-me"
 _sqlite_path = os.path.join(app.instance_path, "yombal.sqlite").replace("\\", "/")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL") or ("sqlite:///" + _sqlite_path)
+_db_url = (os.environ.get("DATABASE_URL") or "").strip()
+if _db_url.startswith("postgres://"):
+    _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = _db_url or ("sqlite:///" + _sqlite_path)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
