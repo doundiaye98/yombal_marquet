@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Commande {{ order.public_ref }} — Suivi{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">
+      <a href="{{ url_for('suivi_commande') }}" class="admin-back-link">← Suivi commande</a>
+    </p>
+    <h1 class="section-title reveal">Commande <em>{{ order.public_ref }}</em></h1>
+    <p class="section-sub reveal">
+      Passée le {{ order.created_at.strftime('%d/%m/%Y à %H:%M') }}
+      · {{ '%.2f'|format(order.total_cents / 100) }} €
+    </p>
+  </header>
+
+  <section class="section section--flush-top">
+  {% if order.status == 'cancelled' %}
+    <div class="tracking-status-banner tracking-status-banner--cancelled reveal" role="status">
+      <strong>{{ order_status_labels.get(order.status, order.status) }}</strong>
+      <p>{{ order_status_hints.get(order.status, '') }}</p>
+    </div>
+  {% else %}
+    <div class="tracking-progress reveal" aria-label="Progression de la commande">
+      {% for step in order_tracking_steps %}
+      <div class="tracking-step {{ 'is-done' if current_step >= step.id else '' }} {{ 'is-current' if current_step == step.id else '' }}">
+        <span class="tracking-step-dot" aria-hidden="true">{{ step.id }}</span>
+        <span class="tracking-step-title">{{ step.title }}</span>
+        <span class="tracking-step-desc">{{ step.desc }}</span>
+      </div>
+      {% if not loop.last %}<span class="tracking-step-line" aria-hidden="true"></span>{% endif %}
+      {% endfor %}
+    </div>
+    <div class="tracking-status-banner reveal" role="status">
+      <strong>{{ order_status_labels.get(order.status, order.status) }}</strong>
+      <p>{{ order_status_hints.get(order.status, '') }}</p>
+    </div>
+  {% endif %}
+
+  <div class="tracking-detail-grid reveal">
+    <div class="form-panel">
+      <h2 class="form-panel-title">Livraison</h2>
+      <p class="tracking-info-line"><strong>{{ order.customer_name() }}</strong></p>
+      <p class="tracking-info-line">{{ order.delivery_formatted() }}</p>
+      {% if order.customer_phone() and order.customer_phone() != '—' %}
+      <p class="tracking-info-line">📞 {{ order.customer_phone() }}</p>
+      {% endif %}
+      <p class="tracking-info-line">✉️ {{ order.customer_email() }}</p>
+    </div>
+
+    <div class="form-panel">
+      <h2 class="form-panel-title">Articles</h2>
+      <ul class="checkout-list">
+        {% for line in order.items %}
+        <li class="checkout-line">
+          <span>{{ line.product_name }} × {{ line.quantity }}</span>
+          <span>{{ '%.2f'|format(line.line_total_cents / 100) }} €</span>
+        </li>
+        {% endfor %}
+        <li class="checkout-line checkout-total">
+          <strong>Total</strong>
+          <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  {% if events %}
+  <div class="form-panel tracking-history reveal">
+    <h2 class="form-panel-title">Historique</h2>
+    <ol class="tracking-timeline">
+      {% for ev in events %}
+      <li class="tracking-timeline-item">
+        <time datetime="{{ ev.created_at.isoformat() }}">{{ ev.created_at.strftime('%d/%m/%Y %H:%M') }}</time>
+        <p>
+          {% if ev.from_status %}
+          <span class="tracking-tl-from">{{ order_status_labels.get(ev.from_status, ev.from_status) }}</span>
+          <span aria-hidden="true"> → </span>
+          {% endif %}
+          <strong>{{ order_status_labels.get(ev.to_status, ev.to_status) }}</strong>
+          {% if ev.note %}<span class="tracking-tl-note"> — {{ ev.note }}</span>{% endif %}
+        </p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  <div class="checkout-actions-footer reveal" style="margin-top:24px;">
+    {% if order.status == 'pending' and not order.is_paid() %}
+    <a href="{{ url_for('paiement', order_id=order.id) }}" class="btn-primary">Finaliser le paiement</a>
+    {% endif %}
+    <a href="{{ url_for('suivi_commande') }}" class="btn-outline">Autre commande</a>
+    <a href="{{ url_for('contact') }}" class="btn-outline">Nous contacter</a>
+  </div>
+  </section>
+</div>
+{% endblock %}

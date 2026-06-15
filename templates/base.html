@@ -16,7 +16,7 @@
   <a href="#main-content" class="skip-link">Aller au contenu</a>
 
   {% set ep = request.endpoint %}
-  {% set nav_shop = ep in ['boutique', 'product_detail', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'admin_orders', 'admin_order_detail'] %}
+  {% set nav_shop = ep in ['boutique', 'product_detail', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'suivi_commande', 'suivi_commande_detail', 'admin_orders', 'admin_order_detail'] %}
 
   <div class="trust-bar" role="complementary" aria-label="Engagements boutique">
     <span><span class="trust-dot" aria-hidden="true"></span> Livraison à domicile</span>
@@ -46,6 +46,7 @@
       <li><a href="{{ url_for('boutique') }}" class="{{ 'active' if nav_shop else '' }}">Boutique</a></li>
       <li><a href="{{ url_for('producteurs') }}" class="{{ 'active' if ep in ['producteurs', 'producteur_detail'] else '' }}">Producteurs</a></li>
       <li><a href="{{ url_for('panier') }}" class="{{ 'active' if ep in ['panier', 'checkout'] else '' }}">Panier{% if cart_count %}<span class="nav-cart-badge">{{ cart_count }}</span>{% endif %}</a></li>
+      <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail'] else '' }}">Suivi</a></li>
       <li><a href="{{ url_for('services') }}" class="{{ 'active' if ep == 'services' else '' }}">Services</a></li>
       <li><a href="{{ url_for('apropos') }}" class="{{ 'active' if ep == 'apropos' else '' }}">À propos</a></li>
       <li><a href="{{ url_for('contact') }}" class="{{ 'active' if ep == 'contact' else '' }}">Contact</a></li>
@@ -95,6 +96,7 @@
         <a href="{{ url_for('producteurs') }}">Nos producteurs</a>
         <a href="{{ url_for('panier') }}">Mon panier</a>
         <a href="{{ url_for('checkout') }}">Commander</a>
+        <a href="{{ url_for('suivi_commande') }}">Suivi de commande</a>
       </nav>
       <nav class="footer-col" aria-label="Informations">
         <h3>Informations</h3>

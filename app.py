@@ -45,6 +45,13 @@ from models import (
     User,
 )
 from models.constants import PRODUCT_CATEGORIES, SHOP_CATEGORY_ORDER
+from models.constants import (
+    ORDER_STATUS_HINTS,
+    ORDER_STATUS_LABELS,
+    ORDER_STATUS_STEP,
+    ORDER_TRACKING_STEPS,
+)
+from models.order_tracking import find_order_by_reference_and_email
 
 load_dotenv()
 
@@ -64,6 +71,10 @@ migrate.init_app(app, db)
 login_manager.init_app(app)
 app.jinja_env.globals["product_categories"] = PRODUCT_CATEGORIES
 app.jinja_env.globals["shop_category_order"] = SHOP_CATEGORY_ORDER
+app.jinja_env.globals["order_status_labels"] = ORDER_STATUS_LABELS
+app.jinja_env.globals["order_status_hints"] = ORDER_STATUS_HINTS
+app.jinja_env.globals["order_status_step"] = ORDER_STATUS_STEP
+app.jinja_env.globals["order_tracking_steps"] = ORDER_TRACKING_STEPS
 
 try:
     import stripe as stripe_sdk
@@ -205,6 +216,10 @@ def inject_globals():
         "is_shop_admin": _is_shop_admin(),
         "product_categories": PRODUCT_CATEGORIES,
         "shop_category_order": SHOP_CATEGORY_ORDER,
+        "order_status_labels": ORDER_STATUS_LABELS,
+        "order_status_hints": ORDER_STATUS_HINTS,
+        "order_status_step": ORDER_STATUS_STEP,
+        "order_tracking_steps": ORDER_TRACKING_STEPS,
     }
 
 
@@ -512,8 +527,7 @@ def paiement(order_id):
             return redirect(url_for("login", next=request.path))
         abort(403)
     if order.is_paid():
-        flash("Cette commande est déjà réglée.", "info")
-        return redirect(url_for("boutique"))
+        return _redirect_suivi_commande(order.id, "Cette commande est déjà réglée.", "info")
     stripe_key = os.environ.get("STRIPE_SECRET_KEY")
     publishable = (os.environ.get("STRIPE_PUBLISHABLE_KEY") or "").strip()
     stripe_ok = bool(stripe_key and stripe_sdk and publishable)
@@ -559,8 +573,7 @@ def paiement_valider_manuel(order_id):
     if not _can_access_order(order):
         abort(403)
     if order.is_paid():
-        flash("Cette commande est déjà réglée.", "info")
-        return redirect(url_for("boutique"))
+        return _redirect_suivi_commande(order.id, "Cette commande est déjà réglée.", "info")
     manual_states = (ORDER_STATUS_AWAITING_WIRE, ORDER_STATUS_AWAITING_PAYPAL, ORDER_STATUS_COD_CONFIRMED)
     if order.status in manual_states:
         flash("Ce mode de paiement est déjà enregistré pour cette commande.", "info")
@@ -624,14 +637,12 @@ def paiement_stripe_retour():
 
     result = _apply_stripe_pi_to_order(order, pi)
     if result == "already_paid":
-        flash("Cette commande est déjà réglée.", "info")
-        return redirect(url_for("boutique"))
+        return _redirect_suivi_commande(order.id, "Cette commande est déjà réglée.", "info")
     if result == "amount_bad":
         flash("Montant du paiement incompatible avec la commande.", "danger")
         return redirect(url_for("paiement", order_id=order.id))
     if result == "ok":
-        flash("Paiement par carte confirmé. Merci pour votre commande !", "success")
-        return redirect(url_for("boutique"))
+        return _redirect_suivi_commande(order.id, "Paiement par carte confirmé. Merci pour votre commande !")
 
     if redirect_status == "failed":
         flash(
@@ -680,13 +691,19 @@ def paiement_succes():
                 mailer.notify_admin_payment_received(order, contact)
             except Exception:
                 pass
-    flash("Paiement confirmé. Merci pour votre commande !", "success")
-    return redirect(url_for("boutique"))
+    return _redirect_suivi_commande(order.id, "Paiement confirmé. Merci pour votre commande !")
 
 
-@app.route("/webhooks/stripe", methods=["POST"])
+@app.route("/webhooks/stripe", methods=["GET", "POST"])
 def webhooks_stripe():
     """Confirmation automatique des paiements (évite de dépendre uniquement du navigateur)."""
+    if request.method == "GET":
+        return {
+            "ok": True,
+            "endpoint": "stripe_webhook",
+            "message": "Endpoint actif. Stripe envoie des requêtes POST (pas GET depuis le navigateur).",
+        }, 200
+
     if not stripe_sdk:
         abort(501)
     wh_secret = (os.environ.get("STRIPE_WEBHOOK_SECRET") or "").strip()
@@ -747,8 +764,7 @@ def paiement_demo(order_id):
             mailer.notify_admin_payment_received(order, contact)
         except Exception:
             pass
-    flash("Paiement simulé enregistré (mode démonstration, sans prélèvement réel).", "success")
-    return redirect(url_for("boutique"))
+    return _redirect_suivi_commande(order.id, "Paiement simulé enregistré (mode démonstration).")
 
 
 @app.route("/admin/commandes")
@@ -818,6 +834,65 @@ def cgv():
 @app.route("/apropos")
 def apropos():
     return render_template("apropos.html")
+
+
+def _recent_orders_for_user():
+    if current_user.is_authenticated:
+        return (
+            Order.query.filter_by(user_id=current_user.id)
+            .order_by(Order.created_at.desc())
+            .limit(30)
+            .all()
+        )
+    ids = _guest_order_ids()
+    if not ids:
+        return []
+    return (
+        Order.query.filter(Order.id.in_(ids))
+        .order_by(Order.created_at.desc())
+        .all()
+    )
+
+
+def _redirect_suivi_commande(order_id, message=None, category="success"):
+    if message:
+        flash(message, category)
+    return redirect(url_for("suivi_commande_detail", order_id=order_id))
+
+
+@app.route("/suivi-commande", methods=["GET", "POST"])
+def suivi_commande():
+    recent_orders = _recent_orders_for_user()
+    if request.method == "POST":
+        ref = (request.form.get("order_ref") or "").strip()
+        email = (request.form.get("email") or "").strip()
+        if not ref or not email:
+            flash("Indiquez la référence de commande et votre e-mail.", "warning")
+        else:
+            order = find_order_by_reference_and_email(ref, email)
+            if not order:
+                flash("Aucune commande trouvée. Vérifiez la référence et l'e-mail utilisés à la commande.", "danger")
+            else:
+                if not order.user_id:
+                    _remember_guest_order(order.id)
+                return redirect(url_for("suivi_commande_detail", order_id=order.id))
+    return render_template("commandes/suivi.html", recent_orders=recent_orders)
+
+
+@app.route("/suivi-commande/<int:order_id>")
+def suivi_commande_detail(order_id):
+    order = db.session.get(Order, order_id)
+    if not _can_access_order(order):
+        flash("Accès refusé. Utilisez le formulaire de suivi avec votre e-mail de commande.", "warning")
+        return redirect(url_for("suivi_commande"))
+    events = order.status_events.order_by(OrderStatusEvent.created_at.desc()).all()
+    current_step = ORDER_STATUS_STEP.get(order.status, 1)
+    return render_template(
+        "commandes/detail.html",
+        order=order,
+        events=events,
+        current_step=current_step,
+    )
 
 
 @app.route("/contact")

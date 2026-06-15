@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Suivi de commande — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Après votre achat</p>
+    <h1 class="section-title reveal">Suivi de <em>commande</em></h1>
+    <p class="section-sub reveal">
+      Entrez votre référence et l’e-mail utilisé lors de la commande — sans compte obligatoire.
+    </p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="tracking-layout">
+      <div class="form-panel reveal">
+        <h2 class="form-panel-title">Retrouver une commande</h2>
+        <p class="form-panel-hint">
+          Référence : <code>YM-…</code>, <code>YOMBAL-CMD-12</code> ou numéro de commande.
+          L’e-mail doit correspondre à celui saisi au checkout.
+        </p>
+        <form method="post" class="tracking-form">
+          <div class="field-group">
+            <label class="field-label" for="order_ref">Référence commande</label>
+            <input id="order_ref" class="field-input" type="text" name="order_ref" required
+              placeholder="YM-20260615-ABC123 ou YOMBAL-CMD-42"
+              value="{{ request.form.get('order_ref', '') }}">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="email">E-mail</label>
+            <input id="email" class="field-input" type="email" name="email" required autocomplete="email"
+              placeholder="vous@exemple.com"
+              value="{{ request.form.get('email', current_user.email if current_user.is_authenticated else '') }}">
+          </div>
+          <button type="submit" class="btn-primary">Voir le suivi</button>
+        </form>
+      </div>
+
+      {% if recent_orders %}
+      <aside class="tracking-recent reveal">
+        <h2 class="form-panel-title">Vos commandes récentes</h2>
+        <p class="form-panel-hint">Sur cet appareil{% if current_user.is_authenticated %} (compte connecté){% else %} (session invité){% endif %}.</p>
+        <ul class="tracking-order-list">
+          {% for o in recent_orders %}
+          <li>
+            <a href="{{ url_for('suivi_commande_detail', order_id=o.id) }}" class="tracking-order-item">
+              <span class="tracking-order-ref">{{ o.public_ref }}</span>
+              <span class="tracking-order-date">{{ o.created_at.strftime('%d/%m/%Y') }}</span>
+              <span class="tracking-order-status">{{ order_status_labels.get(o.status, o.status) }}</span>
+              <span class="tracking-order-total">{{ '%.2f'|format(o.total_cents / 100) }} €</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </aside>
+      {% endif %}
+    </div>
+
+    <div class="tracking-help reveal">
+      <h3 class="form-panel-title">Besoin d’aide ?</h3>
+      <p class="form-panel-hint">
+        La référence figure dans l’e-mail de confirmation. Questions :
+        <a href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }}</a>
+        ou <a href="{{ url_for('contact') }}">page Contact</a>.
+      </p>
+    </div>
+  </section>
+</div>
+{% endblock %}
