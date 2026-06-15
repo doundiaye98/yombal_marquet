@@ -68,9 +68,11 @@ class Order(TimestampMixin, db.Model):
         return self.guest_name or "—"
 
     def customer_phone(self):
+        if self.guest_phone:
+            return self.guest_phone
         if self.user_id and self.user:
             return self.user.phone or "—"
-        return self.guest_phone or "—"
+        return "—"
 
     def delivery_formatted(self):
         parts = []

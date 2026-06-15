@@ -21,6 +21,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 
 from extensions import db, login_manager, migrate
 import mailer
+import smser
 from database import ensure_database
 from models import (
     ORDER_STATUSES,
@@ -164,6 +165,44 @@ def _order_contact(order):
     return contact
 
 
+def _phone_from_form():
+    return (request.form.get("customer_phone") or request.form.get("guest_phone") or "").strip()
+
+
+def _order_suivi_url(order):
+    return url_for("suivi_commande_detail", order_id=order.id, _external=True)
+
+
+def _notify_order_created(order):
+    contact = _order_contact(order)
+    suivi = _order_suivi_url(order)
+    try:
+        if contact and contact.email:
+            mailer.notify_customer_order_created(order, contact)
+            mailer.notify_admin_new_order(order, contact)
+    except Exception:
+        pass
+    try:
+        smser.notify_customer_order_created(order, suivi_url=suivi)
+    except Exception:
+        pass
+
+
+def _notify_payment_received(order):
+    contact = _order_contact(order)
+    suivi = _order_suivi_url(order)
+    try:
+        if contact and contact.email:
+            mailer.notify_customer_payment_received(order, contact)
+            mailer.notify_admin_payment_received(order, contact)
+    except Exception:
+        pass
+    try:
+        smser.notify_customer_payment_received(order, suivi_url=suivi)
+    except Exception:
+        pass
+
+
 def _guest_order_ids():
     return [int(x) for x in (session.get("guest_orders") or []) if str(x).isdigit()]
 
@@ -199,10 +238,7 @@ def _apply_stripe_pi_to_order(order, pi):
     order.payment_method = PAYMENT_STRIPE
     order.stripe_session_id = getattr(pi, "id", "") or ""
     db.session.commit()
-    contact = _order_contact(order)
-    if contact and contact.email:
-        mailer.notify_customer_payment_received(order, contact)
-        mailer.notify_admin_payment_received(order, contact)
+    _notify_payment_received(order)
     return "ok"
 
 
@@ -462,18 +498,24 @@ def checkout():
             return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
 
         if current_user.is_authenticated:
+            phone = _phone_from_form()
+            if len(phone) < 6:
+                flash("Indiquez un numéro de téléphone pour la livraison et les confirmations SMS.", "danger")
+                return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
             order = Order(
                 user_id=current_user.id,
+                guest_phone=phone,
                 subtotal_cents=total,
                 shipping_cents=0,
                 total_cents=total,
                 status=ORDER_STATUS_PENDING,
             )
+            current_user.phone = phone
             _apply_delivery_to_order(order, delivery)
         else:
             email = (request.form.get("guest_email") or "").strip().lower()
             name = (request.form.get("guest_name") or "").strip()
-            phone = (request.form.get("guest_phone") or "").strip()
+            phone = _phone_from_form()
             if not email or "@" not in email:
                 flash("Indiquez une adresse e-mail valide pour la commande.", "danger")
                 return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
@@ -481,7 +523,7 @@ def checkout():
                 flash("Indiquez votre nom pour la livraison.", "danger")
                 return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
             if len(phone) < 6:
-                flash("Indiquez un numéro de téléphone pour la livraison.", "danger")
+                flash("Indiquez un numéro de téléphone valide (confirmation SMS).", "danger")
                 return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
             order = Order(
                 user_id=None,
@@ -507,13 +549,10 @@ def checkout():
             _remember_guest_order(order.id)
         session["cart"] = {}
         session.modified = True
-        contact = _order_contact(order)
-        if contact and contact.email:
-            try:
-                mailer.notify_customer_order_created(order, contact)
-                mailer.notify_admin_new_order(order, contact)
-            except Exception:
-                pass
+        try:
+            _notify_order_created(order)
+        except Exception:
+            pass
         return redirect(url_for("paiement", order_id=order.id))
     return render_template("checkout.html", items=items, total_cents=total, guest_form=None)
 
@@ -684,13 +723,10 @@ def paiement_succes():
         order.set_status(ORDER_STATUS_PAID_STRIPE, note="Stripe Checkout (legacy)")
         order.payment_method = PAYMENT_STRIPE
         db.session.commit()
-        contact = _order_contact(order)
-        if contact and contact.email:
-            try:
-                mailer.notify_customer_payment_received(order, contact)
-                mailer.notify_admin_payment_received(order, contact)
-            except Exception:
-                pass
+        try:
+            _notify_payment_received(order)
+        except Exception:
+            pass
     return _redirect_suivi_commande(order.id, "Paiement confirmé. Merci pour votre commande !")
 
 
@@ -757,13 +793,10 @@ def paiement_demo(order_id):
     order.set_status(ORDER_STATUS_PAID_DEMO, note="Paiement démonstration")
     order.payment_method = PAYMENT_DEMO
     db.session.commit()
-    contact = _order_contact(order)
-    if contact and contact.email:
-        try:
-            mailer.notify_customer_payment_received(order, contact)
-            mailer.notify_admin_payment_received(order, contact)
-        except Exception:
-            pass
+    try:
+        _notify_payment_received(order)
+    except Exception:
+        pass
     return _redirect_suivi_commande(order.id, "Paiement simulé enregistré (mode démonstration).")
 
 
@@ -800,12 +833,10 @@ def admin_order_detail(order_id):
             )
             if new_status == ORDER_STATUS_PAID_MANUAL and not old.startswith("paid"):
                 order.payment_method = order.payment_method or PAYMENT_WIRE
-                contact = _order_contact(order)
-                if contact and contact.email:
-                    try:
-                        mailer.notify_customer_payment_received(order, contact)
-                    except Exception:
-                        pass
+                try:
+                    _notify_payment_received(order)
+                except Exception:
+                    pass
             db.session.commit()
             flash("Statut de commande mis à jour.", "success")
         else:

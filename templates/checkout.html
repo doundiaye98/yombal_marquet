@@ -42,13 +42,19 @@
           <input id="guest_email" class="field-input" type="email" name="guest_email" required autocomplete="email"
             value="{{ guest_form.get('guest_email', '') if guest_form else '' }}">
         </div>
-        <div class="field-group">
-          <label class="field-label" for="guest_phone">Téléphone</label>
-          <input id="guest_phone" class="field-input" type="tel" name="guest_phone" required autocomplete="tel"
-            value="{{ guest_form.get('guest_phone', '') if guest_form else '' }}">
-        </div>
       </div>
       {% endif %}
+
+      <div class="form-panel">
+        <h2 class="form-panel-title">Téléphone</h2>
+        <p class="form-panel-hint">Pour la livraison et la confirmation de commande par SMS.</p>
+        <div class="field-group">
+          <label class="field-label" for="customer_phone">Numéro de mobile</label>
+          <input id="customer_phone" class="field-input" type="tel" name="customer_phone" required autocomplete="tel"
+            placeholder="06 12 34 56 78 ou +221 77 123 45 67"
+            value="{% if guest_form %}{{ guest_form.get('customer_phone', guest_form.get('guest_phone', '')) }}{% elif current_user.is_authenticated %}{{ current_user.phone or '' }}{% endif %}">
+        </div>
+      </div>
 
       <div class="form-panel">
         <h2 class="form-panel-title">Adresse de livraison</h2>

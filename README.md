@@ -27,6 +27,8 @@ Elles sont **lues dans le code** via `os.environ` (`app.py`, `mailer.py`) — pa
 | `FLASK_SECRET_KEY` | Secret Flask (sessions) — **obligatoire en production** |
 | `DATABASE_URL` | PostgreSQL (ex. Render) ; sinon SQLite local |
 | `STRIPE_*` | Paiement carte + webhook |
+| `TWILIO_*` | SMS via Twilio (alternative) |
+| `AFRICASTALKING_*` | SMS via Africa's Talking (Sénégal / Afrique) |
 | `BANK_*`, `CONTACT_EMAIL` | Virement, mentions contact |
 | `PAYPAL_*` | Instructions PayPal |
 | `ADMIN_EMAILS` | Accès `/admin/commandes` |
@@ -88,6 +90,7 @@ Dans Render : **New +** → **Blueprint** → sélectionner le dépôt et `rende
 - `app.py` — routes et logique
 - `models.py` — utilisateurs, produits, commandes
 - `mailer.py` — notifications e-mail
+- `smser.py` — notifications SMS (Africa's Talking ou Twilio)
 - `templates/` — pages HTML
 - `static/` — CSS, JS
 - `runtime.txt` / `render.yaml` — déploiement Render
