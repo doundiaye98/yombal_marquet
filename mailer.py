@@ -89,9 +89,11 @@ def notify_admin_new_order(order, user):
     if not admins:
         return
     total = order.total_cents / 100.0
+    phone = getattr(order, "guest_phone", None) or ""
+    phone_line = f"\nTél. : {phone}" if phone else ""
     body = (
         f"Nouvelle commande #{order.id}\n"
-        f"Client : {user.email} ({user.name or '—'})\n"
+        f"Client : {user.email} ({user.name or '—'}){phone_line}\n"
         f"Statut : {order.status}\n"
         f"Montant : {total:.2f} €\n\n"
         f"{_format_order_lines(order)}\n"

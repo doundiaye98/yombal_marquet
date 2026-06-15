@@ -1,5 +1,10 @@
-# Déploiement Render — Web Service ou Blueprint (render.yaml à la racine).
-# autoDeployTrigger: commit = un push sur la branche liée redéploie le service.
+# Déploiement Render — Web Service + PostgreSQL (Blueprint ou référence manuelle).
+# Région identique pour la base et le web service (latence + réseau privé).
+databases:
+  - name: yombal-marquet-db
+    plan: free
+    region: frankfurt
+
 services:
   - type: web
     name: yombal-marquet
@@ -8,6 +13,16 @@ services:
     region: frankfurt
     plan: free
     buildCommand: pip install -r requirements.txt
+    preDeployCommand: FLASK_APP=app.py flask db upgrade
     startCommand: gunicorn --bind 0.0.0.0:$PORT --timeout 120 --graceful-timeout 30 app:app
     healthCheckPath: /healthz
     autoDeployTrigger: commit
+    envVars:
+      - key: FLASK_APP
+        value: app.py
+      - key: DATABASE_URL
+        fromDatabase:
+          name: yombal-marquet-db
+          property: connectionString
+      - key: FLASK_SECRET_KEY
+        generateValue: true

@@ -19,9 +19,30 @@ from flask import (
 )
 from flask_login import current_user, login_required, login_user, logout_user
 
-from extensions import db, login_manager
+from extensions import db, login_manager, migrate
 import mailer
-from models import Order, OrderItem, Product, User, seed_products_if_empty
+from database import ensure_database
+from models import (
+    ORDER_STATUSES,
+    ORDER_STATUS_AWAITING_PAYPAL,
+    ORDER_STATUS_AWAITING_WIRE,
+    ORDER_STATUS_COD_CONFIRMED,
+    ORDER_STATUS_PAID_DEMO,
+    ORDER_STATUS_PAID_MANUAL,
+    ORDER_STATUS_PAID_STRIPE,
+    ORDER_STATUS_PENDING,
+    ORDER_STATUS_SHIPPED,
+    PAYMENT_CASH_DELIVERY,
+    PAYMENT_DEMO,
+    PAYMENT_PAYPAL,
+    PAYMENT_STRIPE,
+    PAYMENT_WIRE,
+    Order,
+    OrderItem,
+    OrderStatusEvent,
+    Product,
+    User,
+)
 
 load_dotenv()
 
@@ -37,6 +58,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = _db_url or ("sqlite:///" + _sqlite_path)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
+migrate.init_app(app, db)
 login_manager.init_app(app)
 
 try:
@@ -84,7 +106,7 @@ def _cart_items():
         except (TypeError, ValueError):
             continue
         p = db.session.get(Product, int(pid))
-        if p:
+        if p and p.is_active:
             rows.append({"product": p, "quantity": q})
             total += p.price_cents * q
     return rows, total
@@ -117,23 +139,55 @@ def admin_required(view):
     return wrapped
 
 
+def _order_contact(order):
+    """Utilisateur enregistré ou coordonnées invité pour les e-mails."""
+    if order.user_id:
+        return db.session.get(User, order.user_id)
+    contact = type("GuestContact", (), {})()
+    contact.email = (order.guest_email or "").strip()
+    contact.name = (order.guest_name or "").strip() or None
+    return contact
+
+
+def _guest_order_ids():
+    return [int(x) for x in (session.get("guest_orders") or []) if str(x).isdigit()]
+
+
+def _remember_guest_order(order_id):
+    ids = _guest_order_ids()
+    if order_id not in ids:
+        ids.append(order_id)
+        session["guest_orders"] = ids[-20:]
+        session.modified = True
+
+
+def _can_access_order(order):
+    if not order:
+        return False
+    if current_user.is_authenticated and order.user_id == current_user.id:
+        return True
+    if not order.user_id and order.id in _guest_order_ids():
+        return True
+    return False
+
+
 def _apply_stripe_pi_to_order(order, pi):
     """Marque la commande payée Stripe et envoie les mails (idempotent si déjà payée)."""
-    if order.status.startswith("paid"):
+    if order.is_paid():
         return "already_paid"
     amt = int(getattr(pi, "amount", 0) or 0)
     if amt != int(order.total_cents):
         return "amount_bad"
     if getattr(pi, "status", "") != "succeeded":
         return "not_success"
-    order.status = "paid_stripe"
-    order.payment_method = "stripe"
+    order.set_status(ORDER_STATUS_PAID_STRIPE, note="Paiement Stripe confirmé")
+    order.payment_method = PAYMENT_STRIPE
     order.stripe_session_id = getattr(pi, "id", "") or ""
     db.session.commit()
-    user = db.session.get(User, order.user_id)
-    if user:
-        mailer.notify_customer_payment_received(order, user)
-        mailer.notify_admin_payment_received(order, user)
+    contact = _order_contact(order)
+    if contact and contact.email:
+        mailer.notify_customer_payment_received(order, contact)
+        mailer.notify_admin_payment_received(order, contact)
     return "ok"
 
 
@@ -159,28 +213,6 @@ def healthz():
     return "ok", 200, {"Cache-Control": "no-store"}
 
 
-def _migrate_orders_payment_method():
-    """Ajoute la colonne payment_method si la base existait déjà sans elle."""
-    from sqlalchemy import inspect, text
-
-    insp = inspect(db.engine)
-    if not insp.has_table("orders"):
-        return
-    cols = {c["name"] for c in insp.get_columns("orders")}
-    if "payment_method" in cols:
-        return
-    try:
-        with db.engine.begin() as conn:
-            conn.execute(text("ALTER TABLE orders ADD COLUMN payment_method VARCHAR(40)"))
-    except Exception:
-        pass
-
-
-ORDER_AWAITING_WIRE = "awaiting_wire"
-ORDER_AWAITING_PAYPAL = "awaiting_paypal"
-ORDER_COD_CONFIRMED = "cod_confirmed"
-
-
 def _bank_env():
     return {
         "name": (os.environ.get("BANK_NAME") or "").strip(),
@@ -198,15 +230,32 @@ def _paypal_env():
 
 
 with app.app_context():
-    os.makedirs(app.instance_path, exist_ok=True)
-    db.create_all()
-    _migrate_orders_payment_method()
-    seed_products_if_empty()
+    ensure_database(app)
+
+
+def _product_query_active():
+    return Product.query.filter_by(is_active=True)
+
+
+def _delivery_from_form():
+    return {
+        "delivery_line1": (request.form.get("delivery_line1") or "").strip(),
+        "delivery_line2": (request.form.get("delivery_line2") or "").strip() or None,
+        "delivery_city": (request.form.get("delivery_city") or "").strip(),
+        "delivery_postal_code": (request.form.get("delivery_postal_code") or "").strip(),
+        "delivery_country": (request.form.get("delivery_country") or "FR").strip().upper()[:2],
+        "customer_notes": (request.form.get("customer_notes") or "").strip() or None,
+    }
+
+
+def _apply_delivery_to_order(order, delivery):
+    for key, value in delivery.items():
+        setattr(order, key, value)
 
 
 @app.route("/")
 def index():
-    featured = Product.query.order_by(Product.id).limit(6).all()
+    featured = _product_query_active().order_by(Product.id).limit(6).all()
     return render_template("index.html", featured_products=featured)
 
 
@@ -216,7 +265,7 @@ def services():
     for label in SERVICE_CATEGORIES[0]["prestations"]:
         cat = PRESTATION_CATEGORY.get(label)
         products = (
-            Product.query.filter_by(category=cat).order_by(Product.name).all()
+            _product_query_active().filter_by(category=cat).order_by(Product.name).all()
             if cat
             else []
         )
@@ -227,7 +276,7 @@ def services():
 @app.route("/boutique")
 def boutique():
     cat = request.args.get("categorie")
-    q = Product.query
+    q = _product_query_active()
     if cat:
         q = q.filter_by(category=cat)
     products = q.order_by(Product.category, Product.name).all()
@@ -236,9 +285,10 @@ def boutique():
 
 @app.route("/produit/<slug>")
 def product_detail(slug):
-    product = Product.query.filter_by(slug=slug).first_or_404()
+    product = _product_query_active().filter_by(slug=slug).first_or_404()
     related = (
-        Product.query.filter(Product.category == product.category, Product.id != product.id)
+        _product_query_active()
+        .filter(Product.category == product.category, Product.id != product.id)
         .limit(4)
         .all()
     )
@@ -249,7 +299,11 @@ def product_detail(slug):
 def panier_ajouter():
     pid = request.form.get("product_id", type=int)
     qty = request.form.get("quantity", default=1, type=int) or 1
-    if not pid or not db.session.get(Product, pid):
+    if not pid:
+        flash("Produit introuvable.", "danger")
+        return redirect(request.referrer or url_for("boutique"))
+    product = db.session.get(Product, pid)
+    if not product or not product.is_active:
         flash("Produit introuvable.", "danger")
         return redirect(request.referrer or url_for("boutique"))
     qty = max(1, min(20, qty))
@@ -339,53 +393,93 @@ def logout():
 
 
 @app.route("/checkout", methods=["GET", "POST"])
-@login_required
 def checkout():
     items, total = _cart_items()
     if not items:
         flash("Votre panier est vide.", "warning")
         return redirect(url_for("boutique"))
     if request.method == "POST":
-        order = Order(user_id=current_user.id, total_cents=total, status="pending")
+        delivery = _delivery_from_form()
+        if len(delivery["delivery_line1"]) < 5:
+            flash("Indiquez une adresse de livraison complète.", "danger")
+            return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+        if len(delivery["delivery_city"]) < 2 or len(delivery["delivery_postal_code"]) < 4:
+            flash("Indiquez la ville et le code postal.", "danger")
+            return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+
+        if current_user.is_authenticated:
+            order = Order(
+                user_id=current_user.id,
+                subtotal_cents=total,
+                shipping_cents=0,
+                total_cents=total,
+                status=ORDER_STATUS_PENDING,
+            )
+            _apply_delivery_to_order(order, delivery)
+        else:
+            email = (request.form.get("guest_email") or "").strip().lower()
+            name = (request.form.get("guest_name") or "").strip()
+            phone = (request.form.get("guest_phone") or "").strip()
+            if not email or "@" not in email:
+                flash("Indiquez une adresse e-mail valide pour la commande.", "danger")
+                return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+            if len(name) < 2:
+                flash("Indiquez votre nom pour la livraison.", "danger")
+                return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+            if len(phone) < 6:
+                flash("Indiquez un numéro de téléphone pour la livraison.", "danger")
+                return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+            order = Order(
+                user_id=None,
+                guest_email=email,
+                guest_name=name,
+                guest_phone=phone,
+                subtotal_cents=total,
+                shipping_cents=0,
+                total_cents=total,
+                status=ORDER_STATUS_PENDING,
+            )
+            _apply_delivery_to_order(order, delivery)
+
+        order.status_events.append(
+            OrderStatusEvent(to_status=ORDER_STATUS_PENDING, note="Commande créée")
+        )
         db.session.add(order)
         db.session.flush()
         for row in items:
-            db.session.add(
-                OrderItem(
-                    order_id=order.id,
-                    product_id=row["product"].id,
-                    quantity=row["quantity"],
-                    unit_price_cents=row["product"].price_cents,
-                )
-            )
+            db.session.add(OrderItem.from_product(row["product"], row["quantity"], order.id))
         db.session.commit()
+        if not order.user_id:
+            _remember_guest_order(order.id)
         session["cart"] = {}
         session.modified = True
-        user = db.session.get(User, order.user_id)
-        if user:
+        contact = _order_contact(order)
+        if contact and contact.email:
             try:
-                mailer.notify_customer_order_created(order, user)
-                mailer.notify_admin_new_order(order, user)
+                mailer.notify_customer_order_created(order, contact)
+                mailer.notify_admin_new_order(order, contact)
             except Exception:
                 pass
         return redirect(url_for("paiement", order_id=order.id))
-    return render_template("checkout.html", items=items, total_cents=total)
+    return render_template("checkout.html", items=items, total_cents=total, guest_form=None)
 
 
 @app.route("/paiement/<int:order_id>")
-@login_required
 def paiement(order_id):
     order = db.session.get(Order, order_id)
-    if not order or order.user_id != current_user.id:
+    if not _can_access_order(order):
+        if not current_user.is_authenticated:
+            flash("Connectez-vous ou finalisez une commande invité depuis ce navigateur.", "warning")
+            return redirect(url_for("login", next=request.path))
         abort(403)
-    if order.status.startswith("paid"):
+    if order.is_paid():
         flash("Cette commande est déjà réglée.", "info")
         return redirect(url_for("boutique"))
     stripe_key = os.environ.get("STRIPE_SECRET_KEY")
     publishable = (os.environ.get("STRIPE_PUBLISHABLE_KEY") or "").strip()
     stripe_ok = bool(stripe_key and stripe_sdk and publishable)
 
-    manual_states = (ORDER_AWAITING_WIRE, ORDER_AWAITING_PAYPAL, ORDER_COD_CONFIRMED)
+    manual_states = (ORDER_STATUS_AWAITING_WIRE, ORDER_STATUS_AWAITING_PAYPAL, ORDER_STATUS_COD_CONFIRMED)
     payment_phase = "manual_instructions" if order.status in manual_states else "choose"
 
     stripe_client_secret = None
@@ -399,7 +493,7 @@ def paiement(order_id):
                 automatic_payment_methods={"enabled": True},
                 metadata={
                     "order_id": str(order.id),
-                    "user_id": str(current_user.id),
+                    "user_id": str(order.user_id or ""),
                 },
             )
             stripe_client_secret = intent.client_secret
@@ -421,35 +515,34 @@ def paiement(order_id):
 
 
 @app.route("/paiement/<int:order_id>/manuel", methods=["POST"])
-@login_required
 def paiement_valider_manuel(order_id):
     order = db.session.get(Order, order_id)
-    if not order or order.user_id != current_user.id:
+    if not _can_access_order(order):
         abort(403)
-    if order.status.startswith("paid"):
+    if order.is_paid():
         flash("Cette commande est déjà réglée.", "info")
         return redirect(url_for("boutique"))
-    manual_states = (ORDER_AWAITING_WIRE, ORDER_AWAITING_PAYPAL, ORDER_COD_CONFIRMED)
+    manual_states = (ORDER_STATUS_AWAITING_WIRE, ORDER_STATUS_AWAITING_PAYPAL, ORDER_STATUS_COD_CONFIRMED)
     if order.status in manual_states:
         flash("Ce mode de paiement est déjà enregistré pour cette commande.", "info")
         return redirect(url_for("paiement", order_id=order.id))
 
     methode = (request.form.get("methode") or "").strip()
     mapping = {
-        "virement": (ORDER_AWAITING_WIRE, "wire"),
-        "paypal": (ORDER_AWAITING_PAYPAL, "paypal"),
-        "especes_livraison": (ORDER_COD_CONFIRMED, "cash_delivery"),
+        "virement": (ORDER_STATUS_AWAITING_WIRE, PAYMENT_WIRE),
+        "paypal": (ORDER_STATUS_AWAITING_PAYPAL, PAYMENT_PAYPAL),
+        "especes_livraison": (ORDER_STATUS_COD_CONFIRMED, PAYMENT_CASH_DELIVERY),
     }
     if methode not in mapping:
         flash("Veuillez choisir un mode de paiement valide.", "danger")
         return redirect(url_for("paiement", order_id=order.id))
 
     new_status, pm = mapping[methode]
-    order.status = new_status
+    order.set_status(new_status, note=f"Choix client : {pm}")
     order.payment_method = pm
     db.session.commit()
     try:
-        mailer.notify_admin_manual_payment_choice(order, current_user)
+        mailer.notify_admin_manual_payment_choice(order, _order_contact(order))
     except Exception:
         pass
     flash(
@@ -460,7 +553,6 @@ def paiement_valider_manuel(order_id):
 
 
 @app.route("/paiement/stripe/retour")
-@login_required
 def paiement_stripe_retour():
     """Après saisie carte (3-D Secure inclus), Stripe renvoie ici avec payment_intent=…"""
     pi_id = request.args.get("payment_intent")
@@ -483,8 +575,11 @@ def paiement_stripe_retour():
 
     oid = int(pi.metadata.get("order_id") or 0)
     order = db.session.get(Order, oid)
+    if not order or not _can_access_order(order):
+        flash("Commande introuvable.", "danger")
+        return redirect(url_for("boutique"))
     meta_uid = str(pi.metadata.get("user_id") or "")
-    if not order or order.user_id != current_user.id or meta_uid != str(current_user.id):
+    if meta_uid and order.user_id and meta_uid != str(order.user_id):
         flash("Commande introuvable.", "danger")
         return redirect(url_for("boutique"))
 
@@ -514,7 +609,6 @@ def paiement_stripe_retour():
 
 
 @app.route("/paiement/succes")
-@login_required
 def paiement_succes():
     """Compatibilité : anciennes redirections Stripe Checkout (session_id)."""
     session_id = request.args.get("session_id")
@@ -533,18 +627,18 @@ def paiement_succes():
         return redirect(url_for("boutique"))
     oid = int(checkout_session.metadata.get("order_id") or 0)
     order = db.session.get(Order, oid)
-    if not order or order.user_id != current_user.id:
+    if not order or not _can_access_order(order):
         flash("Commande introuvable.", "danger")
         return redirect(url_for("boutique"))
-    if not order.status.startswith("paid"):
-        order.status = "paid_stripe"
-        order.payment_method = "stripe"
+    if not order.is_paid():
+        order.set_status(ORDER_STATUS_PAID_STRIPE, note="Stripe Checkout (legacy)")
+        order.payment_method = PAYMENT_STRIPE
         db.session.commit()
-        user = db.session.get(User, order.user_id)
-        if user:
+        contact = _order_contact(order)
+        if contact and contact.email:
             try:
-                mailer.notify_customer_payment_received(order, user)
-                mailer.notify_admin_payment_received(order, user)
+                mailer.notify_customer_payment_received(order, contact)
+                mailer.notify_admin_payment_received(order, contact)
             except Exception:
                 pass
     flash("Paiement confirmé. Merci pour votre commande !", "success")
@@ -583,7 +677,7 @@ def webhooks_stripe():
         order = db.session.get(Order, oid)
         if order:
             meta_uid = str(pi.metadata.get("user_id") or "")
-            if meta_uid and meta_uid != str(order.user_id):
+            if meta_uid and order.user_id and meta_uid != str(order.user_id):
                 return "", 200
             _apply_stripe_pi_to_order(order, pi)
 
@@ -591,26 +685,27 @@ def webhooks_stripe():
 
 
 @app.route("/paiement/annule/<int:order_id>")
-@login_required
 def paiement_annule(order_id):
+    order = db.session.get(Order, order_id)
+    if not _can_access_order(order):
+        abort(403)
     flash("Paiement annulé. Vous pouvez réessayer quand vous voulez.", "info")
     return redirect(url_for("paiement", order_id=order_id))
 
 
 @app.route("/paiement/demo/<int:order_id>", methods=["POST"])
-@login_required
 def paiement_demo(order_id):
     order = db.session.get(Order, order_id)
-    if not order or order.user_id != current_user.id:
+    if not _can_access_order(order):
         abort(403)
-    order.status = "paid_demo"
-    order.payment_method = "demo"
+    order.set_status(ORDER_STATUS_PAID_DEMO, note="Paiement démonstration")
+    order.payment_method = PAYMENT_DEMO
     db.session.commit()
-    user = db.session.get(User, order.user_id)
-    if user:
+    contact = _order_contact(order)
+    if contact and contact.email:
         try:
-            mailer.notify_customer_payment_received(order, user)
-            mailer.notify_admin_payment_received(order, user)
+            mailer.notify_customer_payment_received(order, contact)
+            mailer.notify_admin_payment_received(order, contact)
         except Exception:
             pass
     flash("Paiement simulé enregistré (mode démonstration, sans prélèvement réel).", "success")
@@ -638,28 +733,22 @@ def admin_order_detail(order_id):
     order = db.session.get(Order, order_id)
     if not order:
         abort(404)
-    allowed_status = {
-        "pending",
-        "awaiting_wire",
-        "awaiting_paypal",
-        "cod_confirmed",
-        "paid_stripe",
-        "paid_demo",
-        "paid_manual",
-        "shipped",
-        "cancelled",
-    }
+    allowed_status = ORDER_STATUSES
     if request.method == "POST":
         new_status = (request.form.get("new_status") or "").strip()
         if new_status in allowed_status:
             old = order.status
-            order.status = new_status
-            if new_status == "paid_manual" and not old.startswith("paid"):
-                order.payment_method = order.payment_method or "wire"
-                user = db.session.get(User, order.user_id)
-                if user:
+            order.set_status(
+                new_status,
+                note="Mise à jour admin",
+                actor_user_id=current_user.id,
+            )
+            if new_status == ORDER_STATUS_PAID_MANUAL and not old.startswith("paid"):
+                order.payment_method = order.payment_method or PAYMENT_WIRE
+                contact = _order_contact(order)
+                if contact and contact.email:
                     try:
-                        mailer.notify_customer_payment_received(order, user)
+                        mailer.notify_customer_payment_received(order, contact)
                     except Exception:
                         pass
             db.session.commit()
@@ -667,12 +756,13 @@ def admin_order_detail(order_id):
         else:
             flash("Statut invalide.", "danger")
         return redirect(url_for("admin_order_detail", order_id=order.id))
-    customer = db.session.get(User, order.user_id)
+    customer = db.session.get(User, order.user_id) if order.user_id else None
     return render_template(
         "admin/order_detail.html",
         order=order,
         customer=customer,
         allowed_status=sorted(allowed_status),
+        status_events=order.status_events.all(),
     )
 
 

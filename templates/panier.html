@@ -48,11 +48,9 @@
         <span class="cart-summary-total">{{ '%.2f'|format(total_cents / 100) }} €</span>
       </div>
       <div class="cart-summary-actions">
-        {% if current_user.is_authenticated %}
         <a href="{{ url_for('checkout') }}" class="btn-primary">Valider la commande</a>
-        {% else %}
-        <p class="cart-login-hint">Pour payer sur le site, <a href="{{ url_for('login', next=url_for('checkout')) }}">connectez-vous</a> ou <a href="{{ url_for('register') }}">créez un compte</a>.</p>
-        <a href="{{ url_for('login', next=url_for('checkout')) }}" class="btn-primary">Connexion</a>
+        {% if not current_user.is_authenticated %}
+        <p class="cart-login-hint">Sans compte : vos coordonnées seront demandées à l’étape suivante. <a href="{{ url_for('login', next=url_for('checkout')) }}">Se connecter</a> si vous avez déjà un compte.</p>
         {% endif %}
         <a href="{{ url_for('boutique') }}" class="btn-outline">Continuer les achats</a>
       </div>

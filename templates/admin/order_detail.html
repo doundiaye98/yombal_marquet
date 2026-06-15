@@ -7,7 +7,18 @@
     <h1 class="section-title reveal">Commande #{{ order.id }}</h1>
 
     <div class="payment-confirmed-panel reveal" style="max-width:none;">
-      <p><strong>Client :</strong> {{ customer.email if customer else '—' }} {% if customer and customer.name %}({{ customer.name }}){% endif %}</p>
+      <p><strong>Réf. :</strong> <code>{{ order.public_ref }}</code></p>
+      <p><strong>Client :</strong>
+        {% if customer %}
+          {{ customer.email }}{% if customer.name %} ({{ customer.name }}){% endif %}
+        {% else %}
+          {{ order.guest_email or '—' }}{% if order.guest_name %} ({{ order.guest_name }}){% endif %}
+          {% if order.guest_phone %} · {{ order.guest_phone }}{% endif %}
+          <span class="muted-small">— invité</span>
+        {% endif %}
+      </p>
+      <p><strong>Livraison :</strong> {{ order.delivery_formatted() }}</p>
+      {% if order.customer_notes %}<p><strong>Note client :</strong> {{ order.customer_notes }}</p>{% endif %}
       <p><strong>Statut :</strong> <code>{{ order.status }}</code></p>
       <p><strong>Mode paiement :</strong> {{ order.payment_method or '—' }}</p>
       <p><strong>Total :</strong> {{ '%.2f'|format(order.total_cents / 100) }} €</p>
@@ -36,6 +47,17 @@
         </select>
         <button type="submit" name="action" value="set_status" class="btn-primary">Enregistrer</button>
       </form>
+
+      {% if status_events %}
+      <h2 class="payment-choice-title" style="margin-top:28px;">Historique</h2>
+      <ul class="checkout-list">
+        {% for ev in status_events %}
+        <li class="checkout-line">
+          <span>{{ ev.created_at.strftime('%d/%m/%Y %H:%M') }} — <code>{{ ev.from_status or '—' }}</code> → <code>{{ ev.to_status }}</code>{% if ev.note %} · {{ ev.note }}{% endif %}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
       <p class="payment-note muted-small">
         Utilisez <code>paid_manual</code> lorsque vous avez bien reçu un virement ou un paiement hors Stripe : un e-mail de confirmation peut être envoyé au client.
       </p>

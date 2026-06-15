@@ -29,6 +29,7 @@
         <thead>
           <tr>
             <th>#</th>
+            <th>Réf.</th>
             <th>Date</th>
             <th>Client</th>
             <th>Montant</th>
@@ -38,17 +39,17 @@
         </thead>
         <tbody>
           {% for o in orders %}
-          {% set u = o.user %}
           <tr>
             <td>{{ o.id }}</td>
+            <td><code class="admin-code">{{ o.public_ref }}</code></td>
             <td>{{ o.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
-            <td>{{ u.email if u else '—' }}</td>
+            <td>{{ o.customer_email() }}</td>
             <td>{{ '%.2f'|format(o.total_cents / 100) }} €</td>
             <td><code class="admin-code">{{ o.status }}</code></td>
             <td><a href="{{ url_for('admin_order_detail', order_id=o.id) }}">Détail</a></td>
           </tr>
           {% else %}
-          <tr><td colspan="6">Aucune commande.</td></tr>
+          <tr><td colspan="7">Aucune commande.</td></tr>
           {% endfor %}
         </tbody>
       </table>
