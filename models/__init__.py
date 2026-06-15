@@ -19,18 +19,22 @@ from models.constants import (
     PAYMENT_WIRE,
 )
 from models.order import Order, OrderItem, OrderStatusEvent
+from models.producer import Producer
 from models.product import Product
 from models.seed import seed_products_if_empty
+from models.seed_producers import seed_producers
 from models.user import Address, User
 
 __all__ = [
     "Address",
     "User",
     "Product",
+    "Producer",
     "Order",
     "OrderItem",
     "OrderStatusEvent",
     "seed_products_if_empty",
+    "seed_producers",
     "ORDER_STATUSES",
     "ORDER_STATUS_PENDING",
     "ORDER_STATUS_AWAITING_WIRE",

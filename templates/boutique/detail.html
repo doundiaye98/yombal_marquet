@@ -1,21 +1,25 @@
 {% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
+{% from "macros/category_badge.html" import category_badge %}
 {% block title %}{{ product.name }} — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
   <article class="section product-detail">
     <nav class="product-breadcrumb reveal" aria-label="Fil d’Ariane">
       <a href="{{ url_for('boutique') }}">Boutique</a>
-      <span aria-hidden="true">/</span>
+      <span aria-hidden="true"> / </span>
+      <a href="{{ url_for('boutique', categorie=product.category) }}">{{ (product_categories.get(product.category) or {}).get('label', product.category) }}</a>
+      <span aria-hidden="true"> / </span>
       <span>{{ product.name }}</span>
     </nav>
 
     <div class="product-detail-grid reveal">
-      <div class="product-detail-visual" aria-hidden="true">
-        <span>{{ '🛒' if product.category == 'alimentaire' else '✨' }}</span>
+      <div class="product-detail-visual{% if product.image %} product-detail-visual--photo{% endif %}">
+        {{ product_image(product, 'detail') }}
       </div>
 
       <div class="product-detail-main">
-        <p class="section-eyebrow">{{ 'Alimentaire' if product.category == 'alimentaire' else 'Cosmétique' }}</p>
+        {{ category_badge(product) }}
         <h1>{{ product.name }}</h1>
         <p class="product-detail-price">{{ '%.2f'|format(product.price_euros()) }} €</p>
         <p class="product-detail-desc">{{ product.summary }}</p>
@@ -31,6 +35,22 @@
           <div class="detail-block">
             <h3>Origine &amp; traçabilité</h3>
             <p>{{ product.origin }}</p>
+          </div>
+          {% endif %}
+
+          {% if product.producer %}
+          <div class="detail-block producer-teaser-block">
+            <h3>👩🏾‍🌾 Producteur local</h3>
+            <div class="producer-inline">
+              <span class="producer-avatar producer-avatar--sm" aria-hidden="true">{{ product.producer.avatar_emoji }}</span>
+              <div>
+                <p><strong>{{ product.producer.name }}</strong> — {{ product.producer.region }}</p>
+                {% if product.producer.experience %}
+                <p class="producer-meta-line">⏳ {{ product.producer.experience }}</p>
+                {% endif %}
+                <a href="{{ url_for('producteur_detail', slug=product.producer.slug) }}" class="producer-link">Découvrir son histoire →</a>
+              </div>
+            </div>
           </div>
           {% endif %}
 
@@ -72,13 +92,13 @@
           {% endif %}
         </div>
 
-        <form class="product-add-form checkout-form" method="post" action="{{ url_for('panier_ajouter') }}" style="margin-top: 28px;">
+        <form class="product-add-form checkout-form product-detail-actions" method="post" action="{{ url_for('panier_ajouter') }}">
           <input type="hidden" name="next" value="{{ url_for('product_detail', slug=product.slug) }}">
           <input type="hidden" name="product_id" value="{{ product.id }}">
-          <div class="field-group field-inline" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;">
-            <div>
-              <label for="qty-detail">Quantité</label>
-              <input id="qty-detail" class="num-input" type="number" name="quantity" value="1" min="1" max="20">
+          <div class="field-inline">
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label" for="qty-detail">Quantité</label>
+              <input id="qty-detail" class="field-input num-input" type="number" name="quantity" value="1" min="1" max="20" style="width:100px;">
             </div>
             <button type="submit" class="btn-primary">Ajouter au panier</button>
             <a href="{{ url_for('panier') }}" class="btn-outline">Voir le panier</a>
@@ -88,16 +108,18 @@
     </div>
 
     {% if related %}
-    <aside class="product-related reveal" style="margin-top: 56px;">
-      <h2 class="section-title" style="font-size: clamp(1.35rem, 2.5vw, 1.85rem); margin-bottom: 24px;">Vous aimerez aussi</h2>
+    <aside class="product-related reveal">
+      <h2 class="section-title">Vous aimerez aussi</h2>
       <div class="shop-grid">
         {% for p in related %}
-        <a href="{{ url_for('product_detail', slug=p.slug) }}" class="shop-card" style="text-decoration: none; color: inherit;">
-          <div class="shop-card-img" aria-hidden="true"><span>{{ '🛒' if p.category == 'alimentaire' else '✨' }}</span></div>
+        <a href="{{ url_for('product_detail', slug=p.slug) }}" class="shop-card shop-card--link">
+          <div class="shop-card-img{% if p.image %} shop-card-img--photo{% endif %}">
+            {{ product_image(p, 'card') }}
+          </div>
           <div class="shop-card-body">
-            <h3>{{ p.name }}</h3>
+            <h3 class="shop-card-title">{{ p.name }}</h3>
             <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
-            <span class="shop-meta" style="margin-top: auto;">Fiche détaillée →</span>
+            <span class="shop-meta">Fiche détaillée →</span>
           </div>
         </a>
         {% endfor %}

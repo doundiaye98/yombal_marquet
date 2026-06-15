@@ -2,13 +2,15 @@
 {% block title %}Admin — Commandes{% endblock %}
 {% block content %}
 <div class="page-wrapper">
-  <section class="section section--cart">
+  <header class="page-hero page-hero--compact">
     <p class="section-eyebrow reveal">Administration</p>
     <h1 class="section-title reveal">Commandes</h1>
     <p class="section-sub reveal">Liste des commandes récentes (250 max). Filtrez par statut.</p>
+  </header>
 
+  <section class="section section--flush-top section--cart">
     <form class="admin-filter reveal" method="get" action="{{ url_for('admin_orders') }}">
-      <label class="cart-item-qty-label" for="f-status">Statut</label>
+      <label class="field-label" for="f-status">Statut</label>
       <select id="f-status" name="status" class="admin-filter-select" onchange="this.form.submit()">
         <option value="" {% if not status_filter %}selected{% endif %}>Tous</option>
         <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>pending</option>
@@ -24,7 +26,7 @@
       <noscript><button type="submit" class="btn-outline">Filtrer</button></noscript>
     </form>
 
-    <div class="cart-table-wrap reveal" style="margin-top:24px;">
+    <div class="cart-table-wrap admin-table-wrap reveal">
       <table class="cart-table admin-table">
         <thead>
           <tr>
@@ -46,7 +48,7 @@
             <td>{{ o.customer_email() }}</td>
             <td>{{ '%.2f'|format(o.total_cents / 100) }} €</td>
             <td><code class="admin-code">{{ o.status }}</code></td>
-            <td><a href="{{ url_for('admin_order_detail', order_id=o.id) }}">Détail</a></td>
+            <td><a href="{{ url_for('admin_order_detail', order_id=o.id) }}" class="btn-outline admin-btn-detail">Détail</a></td>
           </tr>
           {% else %}
           <tr><td colspan="7">Aucune commande.</td></tr>

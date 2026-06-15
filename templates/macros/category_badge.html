@@ -1,0 +1,6 @@
+{% macro category_badge(product) %}
+  {% set meta = product_categories.get(product.category, {'label': product.category, 'emoji': '🛒'}) %}
+  <span class="cat-badge cat-badge--{{ product.category }}">
+    {{ meta.emoji }} {{ meta.label }}
+  </span>
+{% endmacro %}

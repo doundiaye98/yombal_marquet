@@ -1,0 +1,13 @@
+{% macro product_image(product, variant='card') %}
+  {% if product.image %}
+  <img
+    src="{{ url_for('static', filename=product.image) }}"
+    alt="{{ product.name }}"
+    class="product-photo product-photo--{{ variant }}"
+    loading="lazy"
+    decoding="async"
+  >
+  {% else %}
+  <span class="product-photo-fallback" aria-hidden="true">{{ product.icon or (product_categories.get(product.category) or {}).get('emoji', '🛒') }}</span>
+  {% endif %}
+{% endmacro %}

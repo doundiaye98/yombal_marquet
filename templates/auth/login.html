@@ -1,26 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Connexion — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper auth-page">
-  <section class="section section--narrow">
-    <p class="section-eyebrow reveal">Espace client</p>
-    <h1 class="section-title reveal">Connexion</h1>
-    <p class="section-sub reveal">Connectez-vous pour payer en ligne après avoir confirmé votre panier.</p>
+<div class="page-wrapper auth-shell">
+  <div class="auth-card reveal">
+    <h1>Connexion</h1>
+    <p class="auth-lead">Accédez à votre espace client pour suivre vos commandes et payer en ligne.</p>
 
-    <form class="auth-form reveal c-card" method="post" action="{{ url_for('login') }}">
+    <form method="post" action="{{ url_for('login') }}">
       <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
-      <div class="field">
+      <div class="field-group">
         <label class="field-label" for="email">E-mail</label>
         <input class="field-input" type="email" id="email" name="email" required autocomplete="email" value="{{ request.form.get('email', '') }}">
       </div>
-      <div class="field">
+      <div class="field-group">
         <label class="field-label" for="password">Mot de passe</label>
         <input class="field-input" type="password" id="password" name="password" required autocomplete="current-password">
       </div>
-      <label class="field-check"><input type="checkbox" name="remember" value="1"> Rester connecté</label>
-      <button type="submit" class="btn-primary auth-submit">Se connecter</button>
-      <p class="auth-alt">Pas encore de compte ? <a href="{{ url_for('register') }}">Créer un compte</a></p>
+      <label class="field-check" style="display:flex;align-items:center;gap:8px;margin-bottom:20px;font-size:14px;">
+        <input type="checkbox" name="remember" value="1"> Rester connecté
+      </label>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Se connecter</button>
+      <p class="auth-alt" style="margin-top:20px;font-size:14px;text-align:center;color:var(--text2);">
+        Pas encore de compte ? <a href="{{ url_for('register') }}">Créer un compte</a>
+      </p>
+      <p style="margin-top:16px;font-size:13px;text-align:center;color:var(--text2);">
+        <a href="{{ url_for('checkout') }}">Commander sans compte →</a>
+      </p>
     </form>
-  </section>
+  </div>
 </div>
 {% endblock %}

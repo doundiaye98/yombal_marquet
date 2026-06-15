@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from extensions import db
+from models.catalogue_extended import EXTENDED_CATALOGUE
 from models.product import Product
+from models.product_images import CATALOGUE_SLUGS, PRODUCT_IMAGES
 
 CATALOGUE = [
     {
@@ -168,6 +170,19 @@ CATALOGUE = [
 ]
 
 
+FULL_CATALOGUE = [
+    row for row in (CATALOGUE + EXTENDED_CATALOGUE) if row["slug"] in CATALOGUE_SLUGS
+]
+
+
+def _product_payload(row):
+    data = dict(row)
+    img = PRODUCT_IMAGES.get(data["slug"])
+    if img:
+        data["image"] = img
+    return data
+
+
 def seed_products_if_empty():
     """Charge le catalogue vitrine une seule fois."""
     from sqlalchemy import inspect, text
@@ -180,6 +195,27 @@ def seed_products_if_empty():
         return
     if count > 0:
         return
-    for row in CATALOGUE:
-        db.session.add(Product(**row))
+    for row in FULL_CATALOGUE:
+        db.session.add(Product(**_product_payload(row)))
     db.session.commit()
+
+
+def sync_catalogue():
+    """Ajoute les nouvelles références sans toucher aux produits existants."""
+    from sqlalchemy import inspect
+
+    if not inspect(db.engine).has_table("products"):
+        return
+    changed = False
+    for row in FULL_CATALOGUE:
+        slug = row["slug"]
+        product = Product.query.filter_by(slug=slug).first()
+        if product:
+            if row.get("icon") and not product.icon:
+                product.icon = row["icon"]
+                changed = True
+            continue
+        db.session.add(Product(**_product_payload(row)))
+        changed = True
+    if changed:
+        db.session.commit()

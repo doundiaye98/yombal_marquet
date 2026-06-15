@@ -1,16 +1,22 @@
 {% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
 {% block title %}Panier — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
-  <section class="section section--cart">
+  <header class="page-hero page-hero--compact">
     <p class="section-eyebrow reveal">Panier</p>
     <h1 class="section-title reveal">Vos <em>articles</em></h1>
+    <p class="section-sub reveal">Modifiez les quantités puis validez — commande possible sans créer de compte.</p>
+  </header>
 
+  <section class="section section--cart section--flush-top">
     {% if items %}
     <ul class="cart-list reveal">
       {% for row in items %}
       <li class="cart-item">
-        <div class="cart-item-media" aria-hidden="true">{{ '🛒' if row.product.category == 'alimentaire' else '✨' }}</div>
+        <div class="cart-item-media{% if row.product.image %} cart-item-media--photo{% endif %}">
+          {{ product_image(row.product, 'thumb') }}
+        </div>
         <div class="cart-item-info">
           <a href="{{ url_for('product_detail', slug=row.product.slug) }}" class="cart-item-title">{{ row.product.name }}</a>
           <p class="cart-item-unit-line">

@@ -24,16 +24,21 @@ def ensure_database(app: Flask) -> None:
             except Exception as exc:
                 logger.warning("Alembic upgrade (%s) — repli create_all.", exc)
                 db.create_all()
-                _legacy_patch_schema()
         else:
             db.create_all()
-            _legacy_patch_schema()
 
         db.create_all()
+        _legacy_patch_schema()
 
-        from models import seed_products_if_empty
+        from models import seed_products_if_empty, seed_producers
+        from models.product_images import purge_products_without_images, sync_product_images
+        from models.seed import sync_catalogue
 
         seed_products_if_empty()
+        sync_catalogue()
+        seed_producers()
+        sync_product_images(app.root_path)
+        purge_products_without_images()
 
 
 def _add_columns(table, patches):
@@ -49,18 +54,41 @@ def _add_columns(table, patches):
         try:
             with db.engine.begin() as conn:
                 conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {typ}"))
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("ALTER TABLE %s ADD %s ignoré : %s", table, name, exc)
+
+
+def _backfill_timestamps():
+    from sqlalchemy import inspect, text
+
+    insp = inspect(db.engine)
+    for table in ("users", "products", "orders", "addresses", "order_items", "order_status_events"):
+        if not insp.has_table(table):
+            continue
+        cols = {c["name"] for c in insp.get_columns(table)}
+        for col in ("created_at", "updated_at"):
+            if col not in cols:
+                continue
+            try:
+                with db.engine.begin() as conn:
+                    conn.execute(
+                        text(f"UPDATE {table} SET {col} = CURRENT_TIMESTAMP WHERE {col} IS NULL")
+                    )
+            except Exception as exc:
+                logger.warning("Backfill %s.%s ignoré : %s", table, col, exc)
 
 
 def _legacy_patch_schema():
     """Pont pour bases locales créées avant le schéma actuel."""
+    # SQLite n'accepte pas DEFAULT CURRENT_TIMESTAMP dans ALTER TABLE — colonnes nulles puis backfill.
+    dt = "DATETIME"
     _add_columns(
         "users",
         [
             ("phone", "VARCHAR(40)"),
             ("is_active", "BOOLEAN"),
-            ("updated_at", "DATETIME"),
+            ("created_at", dt),
+            ("updated_at", dt),
         ],
     )
     _add_columns(
@@ -69,7 +97,11 @@ def _legacy_patch_schema():
             ("sku", "VARCHAR(64)"),
             ("stock_qty", "INTEGER"),
             ("is_active", "BOOLEAN"),
-            ("updated_at", "DATETIME"),
+            ("producer_id", "INTEGER"),
+            ("image", "VARCHAR(255)"),
+            ("icon", "VARCHAR(8)"),
+            ("created_at", dt),
+            ("updated_at", dt),
         ],
     )
     _add_columns(
@@ -89,7 +121,8 @@ def _legacy_patch_schema():
             ("currency", "VARCHAR(3)"),
             ("subtotal_cents", "INTEGER"),
             ("shipping_cents", "INTEGER"),
-            ("updated_at", "DATETIME"),
+            ("created_at", dt),
+            ("updated_at", dt),
         ],
     )
     _add_columns(
@@ -100,34 +133,37 @@ def _legacy_patch_schema():
         ],
     )
 
+    _backfill_timestamps()
+
     try:
         from sqlalchemy import inspect, text
 
         if not inspect(db.engine).has_table("orders"):
-            return
-        db.session.execute(
-            text(
-                "UPDATE order_items SET product_name = "
-                "(SELECT name FROM products WHERE products.id = order_items.product_id) "
-                "WHERE product_name IS NULL OR product_name = ''"
+            pass
+        else:
+            db.session.execute(
+                text(
+                    "UPDATE order_items SET product_name = "
+                    "(SELECT name FROM products WHERE products.id = order_items.product_id) "
+                    "WHERE product_name IS NULL OR product_name = ''"
+                )
             )
-        )
-        db.session.execute(
-            text(
-                "UPDATE order_items SET line_total_cents = unit_price_cents * quantity "
-                "WHERE line_total_cents IS NULL"
+            db.session.execute(
+                text(
+                    "UPDATE order_items SET line_total_cents = unit_price_cents * quantity "
+                    "WHERE line_total_cents IS NULL"
+                )
             )
-        )
-        db.session.execute(
-            text("UPDATE products SET is_active = 1 WHERE is_active IS NULL")
-        )
-        db.session.execute(
-            text("UPDATE orders SET subtotal_cents = total_cents WHERE subtotal_cents IS NULL")
-        )
-        db.session.execute(
-            text("UPDATE orders SET shipping_cents = 0 WHERE shipping_cents IS NULL")
-        )
-        db.session.commit()
+            db.session.execute(
+                text("UPDATE products SET is_active = 1 WHERE is_active IS NULL")
+            )
+            db.session.execute(
+                text("UPDATE orders SET subtotal_cents = total_cents WHERE subtotal_cents IS NULL")
+            )
+            db.session.execute(
+                text("UPDATE orders SET shipping_cents = 0 WHERE shipping_cents IS NULL")
+            )
+            db.session.commit()
     except Exception:
         db.session.rollback()
 

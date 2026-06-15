@@ -33,3 +33,37 @@ PAYMENT_DEMO = "demo"
 
 CATEGORY_ALIMENTAIRE = "alimentaire"
 CATEGORY_COSMETIQUE = "cosmetique"
+CATEGORY_BOISSONS = "boissons"
+CATEGORY_CEREALES = "cereales"
+CATEGORY_CONDIMENTS = "condiments"
+CATEGORY_HUILES = "huiles"
+CATEGORY_SNACKS = "snacks"
+CATEGORY_CONSERVES = "conserves"
+CATEGORY_LEGUMINEUSES = "legumineuses"
+CATEGORY_FRUITS_SECS = "fruits_secs"
+
+PRODUCT_CATEGORIES = {
+    CATEGORY_ALIMENTAIRE: {"label": "Alimentaire", "emoji": "🛒"},
+    CATEGORY_COSMETIQUE: {"label": "Cosmétique", "emoji": "✨"},
+    CATEGORY_BOISSONS: {"label": "Boissons", "emoji": "🥤"},
+    CATEGORY_CEREALES: {"label": "Céréales", "emoji": "🌾"},
+    CATEGORY_CONDIMENTS: {"label": "Condiments", "emoji": "🧂"},
+    CATEGORY_HUILES: {"label": "Huiles", "emoji": "🫒"},
+    CATEGORY_SNACKS: {"label": "Snacks & Desserts", "emoji": "🍮"},
+    CATEGORY_CONSERVES: {"label": "Conserves", "emoji": "🫙"},
+    CATEGORY_LEGUMINEUSES: {"label": "Légumineuses", "emoji": "🫘"},
+    CATEGORY_FRUITS_SECS: {"label": "Fruits séchés", "emoji": "🥭"},
+}
+
+SHOP_CATEGORY_ORDER = (
+    CATEGORY_ALIMENTAIRE,
+    CATEGORY_BOISSONS,
+    CATEGORY_CEREALES,
+    CATEGORY_HUILES,
+    CATEGORY_CONDIMENTS,
+    CATEGORY_LEGUMINEUSES,
+    CATEGORY_FRUITS_SECS,
+    CATEGORY_SNACKS,
+    CATEGORY_CONSERVES,
+    CATEGORY_COSMETIQUE,
+)

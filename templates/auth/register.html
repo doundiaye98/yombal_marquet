@@ -1,29 +1,30 @@
 {% extends "base.html" %}
 {% block title %}Inscription — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper auth-page">
-  <section class="section section--narrow">
-    <p class="section-eyebrow reveal">Espace client</p>
-    <h1 class="section-title reveal">Créer un compte</h1>
-    <p class="section-sub reveal">Un compte est nécessaire pour régler votre commande sur le site.</p>
+<div class="page-wrapper auth-shell">
+  <div class="auth-card reveal">
+    <h1>Créer un compte</h1>
+    <p class="auth-lead">Optionnel : commandez aussi sans compte. Un espace client simplifie le suivi de vos commandes.</p>
 
-    <form class="auth-form reveal c-card" method="post" action="{{ url_for('register') }}">
-      <div class="field">
+    <form method="post" action="{{ url_for('register') }}">
+      <div class="field-group">
         <label class="field-label" for="name">Prénom ou pseudo (optionnel)</label>
         <input class="field-input" type="text" id="name" name="name" autocomplete="name" value="{{ request.form.get('name', '') }}">
       </div>
-      <div class="field">
+      <div class="field-group">
         <label class="field-label" for="email">E-mail</label>
         <input class="field-input" type="email" id="email" name="email" required autocomplete="email" value="{{ request.form.get('email', '') }}">
       </div>
-      <div class="field">
+      <div class="field-group">
         <label class="field-label" for="password">Mot de passe</label>
         <input class="field-input" type="password" id="password" name="password" required minlength="6" autocomplete="new-password">
-        <span class="field-hint">Au moins 6 caractères.</span>
+        <span class="field-hint" style="font-size:12px;color:var(--text2);margin-top:6px;display:block;">Au moins 6 caractères.</span>
       </div>
-      <button type="submit" class="btn-primary auth-submit">S’inscrire</button>
-      <p class="auth-alt">Déjà inscrit ? <a href="{{ url_for('login') }}">Connexion</a></p>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">S’inscrire</button>
+      <p class="auth-alt" style="margin-top:20px;font-size:14px;text-align:center;color:var(--text2);">
+        Déjà inscrit ? <a href="{{ url_for('login') }}">Connexion</a>
+      </p>
     </form>
-  </section>
+  </div>
 </div>
 {% endblock %}

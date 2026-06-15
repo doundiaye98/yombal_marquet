@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
+{% from "macros/category_badge.html" import category_badge %}
 {% block title %}Yombal Marché — Accueil{% endblock %}
 {% block main_class %}site-main--home{% endblock %}
 {% block content %}
@@ -27,6 +29,11 @@
       <div class="hero-btns">
         <a href="{{ url_for('boutique') }}" class="btn-primary">Commander en ligne <span class="btn-arrow" aria-hidden="true">→</span></a>
         <a href="{{ url_for('services') }}" class="btn-outline">Nos services</a>
+      </div>
+      <div class="hero-mobile-stats" aria-label="Chiffres clés">
+        <div class="hero-stat"><strong>2</strong><span>Univers</span></div>
+        <div class="hero-stat"><strong>8+</strong><span>Produits</span></div>
+        <div class="hero-stat"><strong>24h</strong><span>Réponse</span></div>
       </div>
     </div>
 
@@ -60,6 +67,31 @@
     <span class="scroll-mouse"><span class="scroll-dot"></span></span>
     <span class="scroll-label">Découvrir</span>
   </a>
+</section>
+
+<section class="features-strip" aria-label="Avantages Yombal Marché">
+  <div class="features-grid">
+    <article class="feature-card reveal">
+      <span class="fc-icon" aria-hidden="true">🛒</span>
+      <h3>Épicerie &amp; frais</h3>
+      <p>Sélection alimentaire soignée, origines tracées et fiches produits détaillées.</p>
+    </article>
+    <article class="feature-card reveal">
+      <span class="fc-icon" aria-hidden="true">✨</span>
+      <h3>Beauté &amp; soins</h3>
+      <p>Cosmétiques naturels, argan, karité et savons traditionnels.</p>
+    </article>
+    <article class="feature-card reveal">
+      <span class="fc-icon" aria-hidden="true">🚚</span>
+      <h3>Livraison</h3>
+      <p>Commande en ligne, suivi par e-mail et livraison à domicile.</p>
+    </article>
+    <article class="feature-card reveal">
+      <span class="fc-icon" aria-hidden="true">💳</span>
+      <h3>Paiement flexible</h3>
+      <p>Carte, PayPal, virement ou espèces à la livraison — sans compte obligatoire.</p>
+    </article>
+  </div>
 </section>
 
 <div class="strip" aria-hidden="true">
@@ -114,6 +146,32 @@
   </div>
 </section>
 
+{% if featured_producers %}
+<section class="section producers-home">
+  <p class="section-eyebrow reveal">Traçabilité</p>
+  <h2 class="section-title reveal">Nos <em>producteurs</em></h2>
+  <p class="section-sub reveal">
+    Derrière chaque référence, un visage et un savoir-faire. Découvrez qui fabrique ce que vous achetez — confiance, émotion et soutien direct aux petits producteurs.
+  </p>
+  <div class="producers-grid producers-grid--home">
+    {% for pr in featured_producers %}
+    <a href="{{ url_for('producteur_detail', slug=pr.slug) }}" class="producer-card producer-card--compact reveal">
+      <span class="producer-avatar producer-avatar--md" aria-hidden="true">{{ pr.avatar_emoji }}</span>
+      <div>
+        <p class="producer-region">📍 {{ pr.region }}</p>
+        <h3 class="producer-name">{{ pr.name }}</h3>
+        <p class="producer-flagship">🌿 {{ pr.flagship_product }}</p>
+        <span class="producer-link">Voir la fiche →</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  <p style="text-align:center;margin-top:32px;" class="reveal">
+    <a href="{{ url_for('producteurs') }}" class="btn-outline">Toute la vitrine producteurs</a>
+  </p>
+</section>
+{% endif %}
+
 {% if featured_products %}
 <section class="section">
   <p class="section-eyebrow reveal">Sélection</p>
@@ -122,9 +180,11 @@
   <div class="shop-grid">
     {% for p in featured_products %}
     <article class="shop-card reveal">
-      <div class="shop-card-img" aria-hidden="true"><span>{{ '🛒' if p.category == 'alimentaire' else '✨' }}</span></div>
+      <div class="shop-card-img{% if p.image %} shop-card-img--photo{% endif %}">
+        {{ product_image(p, 'card') }}
+      </div>
       <div class="shop-card-body">
-        <p class="shop-meta">{{ 'Alimentaire' if p.category == 'alimentaire' else 'Cosmétique' }}</p>
+        {{ category_badge(p) }}
         <h3>{{ p.name }}</h3>
         <p>{{ p.summary }}</p>
         <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>

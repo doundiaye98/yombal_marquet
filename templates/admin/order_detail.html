@@ -2,12 +2,14 @@
 {% block title %}Commande #{{ order.id }} — Admin{% endblock %}
 {% block content %}
 <div class="page-wrapper">
-  <section class="section section--cart">
-    <p class="section-eyebrow reveal"><a href="{{ url_for('admin_orders') }}">← Commandes</a></p>
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal"><a href="{{ url_for('admin_orders') }}" class="admin-back-link">← Retour aux commandes</a></p>
     <h1 class="section-title reveal">Commande #{{ order.id }}</h1>
+    <p class="section-sub reveal">Réf. <code>{{ order.public_ref }}</code> · {{ '%.2f'|format(order.total_cents / 100) }} €</p>
+  </header>
 
-    <div class="payment-confirmed-panel reveal" style="max-width:none;">
-      <p><strong>Réf. :</strong> <code>{{ order.public_ref }}</code></p>
+  <section class="section section--flush-top section--cart">
+    <div class="payment-confirmed-panel admin-detail-panel reveal">
       <p><strong>Client :</strong>
         {% if customer %}
           {{ customer.email }}{% if customer.name %} ({{ customer.name }}){% endif %}
@@ -21,13 +23,12 @@
       {% if order.customer_notes %}<p><strong>Note client :</strong> {{ order.customer_notes }}</p>{% endif %}
       <p><strong>Statut :</strong> <code>{{ order.status }}</code></p>
       <p><strong>Mode paiement :</strong> {{ order.payment_method or '—' }}</p>
-      <p><strong>Total :</strong> {{ '%.2f'|format(order.total_cents / 100) }} €</p>
       <p><strong>Créée le :</strong> {{ order.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</p>
       {% if order.stripe_session_id %}
       <p><strong>Réf. Stripe / PI :</strong> <code>{{ order.stripe_session_id }}</code></p>
       {% endif %}
 
-      <h2 class="payment-choice-title" style="margin-top:28px;">Lignes</h2>
+      <h2 class="payment-choice-title form-panel-title">Lignes</h2>
       <ul class="checkout-list">
         {% for line in order.items %}
         <li class="checkout-line">
@@ -37,10 +38,10 @@
         {% endfor %}
       </ul>
 
-      <h2 class="payment-choice-title" style="margin-top:24px;">Changer le statut</h2>
+      <h2 class="payment-choice-title form-panel-title">Changer le statut</h2>
       <form method="post" class="admin-status-form">
         <label class="sr-only" for="new_status">Nouveau statut</label>
-        <select id="new_status" name="new_status" class="cart-item-qty-input" style="width:auto;min-width:220px;text-align:left;">
+        <select id="new_status" name="new_status" class="admin-filter-select">
           {% for s in allowed_status %}
           <option value="{{ s }}" {% if order.status == s %}selected{% endif %}>{{ s }}</option>
           {% endfor %}
@@ -49,7 +50,7 @@
       </form>
 
       {% if status_events %}
-      <h2 class="payment-choice-title" style="margin-top:28px;">Historique</h2>
+      <h2 class="payment-choice-title form-panel-title">Historique</h2>
       <ul class="checkout-list">
         {% for ev in status_events %}
         <li class="checkout-line">

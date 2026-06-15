@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Producteurs locaux — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Traçabilité &amp; confiance</p>
+    <h1 class="section-title reveal">Vitrine des <em>producteurs</em></h1>
+    <p class="section-sub reveal">
+      Derrière chaque produit, un visage, une région et un savoir-faire. Découvrez qui cultive, transforme et prépare ce que vous achetez — soutien direct aux petits producteurs.
+    </p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="producers-benefits reveal">
+      <article class="producer-benefit">
+        <span aria-hidden="true">🤝</span>
+        <h3>Confiance</h3>
+        <p>Vous savez exactement d’où vient ce que vous mettez dans votre panier.</p>
+      </article>
+      <article class="producer-benefit">
+        <span aria-hidden="true">❤️</span>
+        <h3>Valeur émotionnelle</h3>
+        <p>Chaque achat raconte une histoire humaine et un terroir.</p>
+      </article>
+      <article class="producer-benefit">
+        <span aria-hidden="true">🌱</span>
+        <h3>Différenciation</h3>
+        <p>Une alternative authentique face aux grandes surfaces.</p>
+      </article>
+      <article class="producer-benefit">
+        <span aria-hidden="true">👩🏾‍🌾</span>
+        <h3>Soutien visible</h3>
+        <p>Les producteurs locaux sont mis en avant, pas anonymes.</p>
+      </article>
+    </div>
+
+    {% if producers %}
+    <div class="producers-grid">
+      {% for p in producers %}
+      <article class="producer-card reveal">
+        <div class="producer-card-visual" aria-hidden="true">
+          <span class="producer-avatar">{{ p.avatar_emoji }}</span>
+        </div>
+        <div class="producer-card-body">
+          <p class="producer-region">📍 {{ p.region }}</p>
+          <h2 class="producer-name">{{ p.name }}</h2>
+          <p class="producer-flagship">🌿 {{ p.flagship_product }}</p>
+          {% if p.experience %}
+          <p class="producer-meta-line">⏳ {{ p.experience }}</p>
+          {% endif %}
+          {% if p.method %}
+          <p class="producer-meta-line producer-meta-line--method">🌱 {{ p.method }}</p>
+          {% endif %}
+          {% if p.monthly_production %}
+          <p class="producer-meta-line">📦 {{ p.monthly_production }}</p>
+          {% endif %}
+          <p class="producer-teaser">{{ p.story.split('\n\n')[0] }}</p>
+          <a href="{{ url_for('producteur_detail', slug=p.slug) }}" class="btn-primary">Découvrir {{ p.name.split(' ')[0] }} →</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="section-sub reveal">Les fiches producteurs seront bientôt disponibles.</p>
+    {% endif %}
+
+    <div class="boutique-band reveal" style="margin-top:48px;">
+      <div class="bb-left">
+        <h3 class="bb-title">Goûtez leurs produits</h3>
+        <p class="bb-sub">Chaque fiche producteur est liée au catalogue : commandez en ligne et soutenez directement leur travail.</p>
+      </div>
+      <a href="{{ url_for('boutique') }}" class="btn-gold">Voir la boutique</a>
+    </div>
+  </section>
+</div>
+{% endblock %}

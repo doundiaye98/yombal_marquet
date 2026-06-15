@@ -40,9 +40,11 @@ from models import (
     Order,
     OrderItem,
     OrderStatusEvent,
+    Producer,
     Product,
     User,
 )
+from models.constants import PRODUCT_CATEGORIES, SHOP_CATEGORY_ORDER
 
 load_dotenv()
 
@@ -60,6 +62,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 migrate.init_app(app, db)
 login_manager.init_app(app)
+app.jinja_env.globals["product_categories"] = PRODUCT_CATEGORIES
+app.jinja_env.globals["shop_category_order"] = SHOP_CATEGORY_ORDER
 
 try:
     import stripe as stripe_sdk
@@ -199,6 +203,8 @@ def inject_globals():
         "cart_count": _cart_count(),
         "shop_contact_email": (os.environ.get("CONTACT_EMAIL") or "contact@yombal-marche.local").strip(),
         "is_shop_admin": _is_shop_admin(),
+        "product_categories": PRODUCT_CATEGORIES,
+        "shop_category_order": SHOP_CATEGORY_ORDER,
     }
 
 
@@ -237,6 +243,10 @@ def _product_query_active():
     return Product.query.filter_by(is_active=True)
 
 
+def _producer_query_active():
+    return Producer.query.filter_by(is_active=True)
+
+
 def _delivery_from_form():
     return {
         "delivery_line1": (request.form.get("delivery_line1") or "").strip(),
@@ -256,7 +266,12 @@ def _apply_delivery_to_order(order, delivery):
 @app.route("/")
 def index():
     featured = _product_query_active().order_by(Product.id).limit(6).all()
-    return render_template("index.html", featured_products=featured)
+    featured_producers = _producer_query_active().order_by(Producer.id).limit(4).all()
+    return render_template(
+        "index.html",
+        featured_products=featured,
+        featured_producers=featured_producers,
+    )
 
 
 @app.route("/services")
@@ -280,7 +295,18 @@ def boutique():
     if cat:
         q = q.filter_by(category=cat)
     products = q.order_by(Product.category, Product.name).all()
-    return render_template("boutique/index.html", products=products, filter_cat=cat)
+    shop_counts = {
+        key: _product_query_active().filter_by(category=key).count()
+        for key in SHOP_CATEGORY_ORDER
+    }
+    total_products = _product_query_active().count()
+    return render_template(
+        "boutique/index.html",
+        products=products,
+        filter_cat=cat,
+        shop_counts=shop_counts,
+        total_products=total_products,
+    )
 
 
 @app.route("/produit/<slug>")
@@ -293,6 +319,19 @@ def product_detail(slug):
         .all()
     )
     return render_template("boutique/detail.html", product=product, related=related)
+
+
+@app.route("/producteurs")
+def producteurs():
+    producers = _producer_query_active().order_by(Producer.name).all()
+    return render_template("producteurs/index.html", producers=producers)
+
+
+@app.route("/producteur/<slug>")
+def producteur_detail(slug):
+    producer = _producer_query_active().filter_by(slug=slug).first_or_404()
+    products = producer.active_products().all()
+    return render_template("producteurs/detail.html", producer=producer, products=products)
 
 
 @app.route("/panier/ajouter", methods=["POST"])

@@ -2,33 +2,67 @@
 {% block title %}À propos — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
-  <section class="section">
+  <header class="page-hero page-hero--compact">
     <p class="section-eyebrow reveal">À propos</p>
     <h1 class="section-title reveal">Yombal Marché · <em>Groupe YOMBAL</em></h1>
+    <p class="section-sub reveal contact-intro">
+      Une enseigne de proximité qui rapproche épicerie fine, cosmétiques naturels et livraison à domicile — avec une boutique en ligne simple et transparente.
+    </p>
+  </header>
 
+  <section class="section section--flush-top">
     <div class="apropos-grid">
       <div class="reveal">
-        <p class="apropos-p contact-intro" style="margin-bottom:28px;font-size:18px;">
-          <strong>Yombal Marché</strong> est une enseigne du <strong>Groupe YOMBAL</strong> dédiée au commerce de proximité.
+        <p class="apropos-p" style="margin-bottom:24px;font-size:1.1rem;line-height:1.8;">
+          <strong>Yombal Marché</strong> fait partie du <strong>Groupe YOMBAL</strong>. Notre mission : proposer des produits alimentaires et cosmétiques de qualité, à des prix accessibles, avec un service chaleureux et une expérience digitale soignée.
         </p>
         <p class="apropos-p">
-          <strong>Produits alimentaires</strong>, <strong>produits cosmétiques</strong>, <strong>livraison à domicile</strong>, <strong>prix abordables</strong> et <strong>boutique en ligne</strong> : nous construisons une expérience simple et chaleureuse, pensée pour votre quotidien.
+          Chaque référence du catalogue dispose d’une fiche détaillée : origine, composition, allergènes, conservation et conseils d’utilisation. Vous commandez en quelques clics, avec ou sans compte client.
         </p>
         <p class="apropos-p">
-          Pour une commande ou une question sur les disponibilités, rendez-vous sur la page Contact — nous vous répondons dans les meilleurs délais.
+          Une question sur une commande ou une disponibilité ? <a href="{{ url_for('contact') }}">Contactez-nous</a> — nous répondons dans les meilleurs délais.
         </p>
-        <p class="apropos-p note">
-          Ce site est une vitrine Flask ; vous pouvez y brancher votre catalogue, vos paiements et vos mentions légales lorsque la boutique publique sera finalisée.
-        </p>
+
+        <div class="values-grid">
+          <div class="value-item">
+            <span aria-hidden="true">🌿</span>
+            <div>
+              <h3>Qualité &amp; traçabilité</h3>
+              <p>Produits choisis avec soin, informations claires sur chaque fiche.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <span aria-hidden="true">🤝</span>
+            <div>
+              <h3>Proximité</h3>
+              <p>Un marché digital qui garde l’esprit du commerce de quartier.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <span aria-hidden="true">💶</span>
+            <div>
+              <h3>Prix justes</h3>
+              <p>Des tarifs lisibles, sans surprise au moment du paiement.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <span aria-hidden="true">🔒</span>
+            <div>
+              <h3>Confiance</h3>
+              <p>Paiements sécurisés, commandes suivies et support réactif.</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <aside class="aside-box reveal">
-        <h2 class="aside-title">Ce que nous proposons</h2>
+        <h2 class="aside-title">Notre offre</h2>
         <div class="aside-item"><span class="aside-ico" aria-hidden="true">🛒</span> Produits alimentaires</div>
         <div class="aside-item"><span class="aside-ico" aria-hidden="true">✨</span> Produits cosmétiques</div>
         <div class="aside-item"><span class="aside-ico" aria-hidden="true">🚚</span> Livraison à domicile</div>
-        <div class="aside-item"><span class="aside-ico" aria-hidden="true">💶</span> Prix abordables</div>
-        <div class="aside-item"><span class="aside-ico" aria-hidden="true">🛍️</span> Boutique en ligne</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">🛍️</span> Boutique en ligne 24h/24</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">📦</span> Commande sans compte</div>
+        <a href="{{ url_for('boutique') }}" class="btn-primary" style="margin-top:24px;display:inline-flex;">Découvrir la boutique</a>
       </aside>
     </div>
   </section>

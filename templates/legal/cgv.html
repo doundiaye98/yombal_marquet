@@ -2,27 +2,31 @@
 {% block title %}CGV — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
-  <section class="section section--cart">
+  <header class="page-hero page-hero--compact">
     <p class="section-eyebrow reveal">Vente en ligne</p>
     <h1 class="section-title reveal">Conditions générales <em>de vente</em></h1>
-    <div class="payment-confirmed-panel reveal" style="max-width:720px;margin-left:auto;margin-right:auto;">
+    <p class="section-sub reveal">Modalités applicables aux achats sur la boutique Yombal Marché (alimentaire et cosmétique).</p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="legal-panel reveal">
       <p><strong>1. Objet</strong><br>
       Les présentes CGV régulent les ventes réalisées via le site Yombal Marché (produits alimentaires et cosmétiques, livraison selon modalités annoncées).</p>
 
       <p><strong>2. Prix et paiement</strong><br>
-      Les prix sont indiqués en euros TTC lorsque applicable. Les modes de paiement proposés figurent à la commande (carte via Stripe, PayPal, virement, espèces à la livraison selon configuration).</p>
+      Les prix sont indiqués en euros TTC lorsque applicable. Les modes de paiement proposés figurent à la commande : carte via Stripe, PayPal, virement bancaire, espèces à la livraison — selon configuration active au moment de la validation.</p>
 
       <p><strong>3. Commande</strong><br>
-      Toute commande vaut acceptation des prix et descriptions des produits disponibles au moment de la validation du panier.</p>
+      Toute commande vaut acceptation des prix et descriptions des produits disponibles au moment de la validation du panier. La commande peut être passée avec ou sans création de compte client.</p>
 
       <p><strong>4. Livraison</strong><br>
-      Délais et zones : <em>à préciser</em> (commune, créneaux, frais éventuels).</p>
+      Délais et zones : à préciser selon votre commune (créneaux, frais éventuels). Contactez-nous à <a href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }}</a> pour toute question logistique.</p>
 
       <p><strong>5. Rétractation &amp; réclamations</strong><br>
-      Pour les produits périssables ou ouverts, les règales légales applicables s’appliquent. Réclamations : {{ shop_contact_email }}.</p>
+      Pour les produits périssables ou ouverts, les règles légales applicables s’appliquent. Réclamations : <a href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }}</a>.</p>
 
       <p><strong>6. Litiges</strong><br>
-      En cas de différend, une solution amiable est recherchée ; à défaut, tribunaux compétents <em>à compléter</em>.</p>
+      En cas de différend, une solution amiable est recherchée en priorité ; à défaut, tribunaux compétents du ressort du siège social (à compléter selon votre statut juridique).</p>
 
       <p class="payment-note muted-small">Texte type à faire valider juridiquement selon votre statut (auto-entrepreneur, SARL, etc.).</p>
     </div>

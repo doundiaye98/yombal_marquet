@@ -1,14 +1,17 @@
 {% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
 {% block title %}Nos services — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
-  <section class="section">
-    <p class="section-eyebrow reveal">Catalogue</p>
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Offre complète</p>
     <h1 class="section-title reveal">Produits, cosmétiques &amp; <em>livraison</em></h1>
     <p class="section-sub reveal">
-      <strong>Yombal Marché</strong> propose une boutique en ligne avec <strong>paiement sécurisé</strong> après commande.
-      Parcourez les catégories ci-dessous : chaque produit dispose d’une <strong>fiche détaillée</strong> (description, origine, ingrédients, conservation).
+      <strong>Yombal Marché</strong> : boutique en ligne, fiches produits détaillées et paiement sécurisé après commande.
     </p>
+  </header>
+
+  <section class="section section--flush-top">
 
     <div class="cards-grid">
       {% set icons = ['🛒', '✨', '🚚', '💶', '🛍️'] %}
@@ -37,8 +40,8 @@
         {% set sec_idx = loop.index0 %}
         {% for p in sec.products %}
         <article class="shop-card reveal">
-          <div class="shop-card-img" aria-hidden="true">
-            <span>{{ '🛒' if p.category == 'alimentaire' else '✨' }}</span>
+          <div class="shop-card-img{% if p.image %} shop-card-img--photo{% endif %}">
+            {{ product_image(p, 'card') }}
           </div>
           <div class="shop-card-body">
             <p class="shop-meta">{{ 'Alimentaire' if p.category == 'alimentaire' else 'Cosmétique' }}</p>
@@ -93,10 +96,10 @@
     <div class="boutique-band reveal">
       <div class="bb-left">
         <h3 class="bb-title">Commander et payer sur le site</h3>
-        <p class="bb-sub">Ajoutez des produits au panier, créez un compte ou connectez-vous, puis réglez en ligne après validation de la commande.</p>
+        <p class="bb-sub">Ajoutez des produits au panier, validez sans compte si vous le souhaitez, puis réglez en ligne (carte, PayPal, virement ou espèces).</p>
         <div class="bb-tags">
           <span class="bb-tag">Panier</span>
-          <span class="bb-tag">Compte client</span>
+          <span class="bb-tag">Sans compte</span>
           <span class="bb-tag">Paiement sécurisé</span>
         </div>
       </div>

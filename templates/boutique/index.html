@@ -1,30 +1,74 @@
 {% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
+{% from "macros/category_badge.html" import category_badge %}
 {% block title %}Boutique — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
-  <section class="section">
-    <p class="section-eyebrow reveal">Catalogue</p>
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Catalogue en ligne</p>
     <h1 class="section-title reveal">La <em>boutique</em></h1>
     <p class="section-sub reveal">
-      Fiches détaillées pour chaque produit. Filtres :
-      <a href="{{ url_for('boutique') }}" class="shop-filter {{ 'is-active' if not filter_cat }}">Tout</a>
-      · <a href="{{ url_for('boutique', categorie='alimentaire') }}" class="shop-filter {{ 'is-active' if filter_cat == 'alimentaire' }}">Alimentaire</a>
-      · <a href="{{ url_for('boutique', categorie='cosmetique') }}" class="shop-filter {{ 'is-active' if filter_cat == 'cosmetique' }}">Cosmétique</a>
+      Épicerie sénégalaise, boissons, céréales, huiles, condiments et produits du terroir —
+      fiches détaillées et commande sans compte.
     </p>
-
-    <div class="cards-grid shop-grid">
-      {% for p in products %}
-      <a href="{{ url_for('product_detail', slug=p.slug) }}" class="svc-card reveal shop-card">
-        <div class="svc-ico-wrap" aria-hidden="true">{{ '🛒' if p.category == 'alimentaire' else '✨' }}</div>
-        <h2 class="svc-name">{{ p.name }}</h2>
-        <p class="svc-desc">{{ p.summary }}</p>
-        <span class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</span>
-        <span class="svc-arrow">Voir la fiche détaillée →</span>
+    <nav class="filter-row reveal" aria-label="Filtrer par catégorie">
+      <a href="{{ url_for('boutique') }}" class="filter-pill {{ 'is-active' if not filter_cat else '' }}">
+        Tout <span class="pill-count">{{ total_products if not filter_cat else '—' }}</span>
       </a>
-      {% else %}
-      <p class="section-sub">Aucun produit pour ce filtre.</p>
+      {% for cat_key in shop_category_order %}
+      {% if shop_counts.get(cat_key, 0) > 0 %}
+      {% set meta = product_categories[cat_key] %}
+      <a href="{{ url_for('boutique', categorie=cat_key) }}" class="filter-pill {{ 'is-active' if filter_cat == cat_key else '' }}">
+        {{ meta.emoji }} {{ meta.label }}
+        <span class="pill-count">{{ shop_counts[cat_key] }}</span>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </nav>
+  </header>
+
+  <section class="section section--flush-top">
+    {% if products %}
+    <p class="section-sub reveal shop-result-count">
+      <strong>{{ products|length }}</strong> référence{{ 's' if products|length > 1 else '' }}
+      {% if filter_cat and product_categories.get(filter_cat) %}
+      — {{ product_categories[filter_cat].label }}
+      {% endif %}
+    </p>
+    <div class="shop-grid">
+      {% for p in products %}
+      <article class="shop-card reveal">
+        <div class="shop-card-img{% if p.image %} shop-card-img--photo{% endif %}">
+          {{ product_image(p, 'card') }}
+        </div>
+        <div class="shop-card-body">
+          {{ category_badge(p) }}
+          <h2 class="svc-name shop-card-title">{{ p.name }}</h2>
+          <p>{{ p.summary }}</p>
+          {% if p.producer %}
+          <p class="shop-producer-line">👩🏾‍🌾 <a href="{{ url_for('producteur_detail', slug=p.producer.slug) }}">{{ p.producer.name }}</a></p>
+          {% endif %}
+          <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
+          <div class="shop-card-actions">
+            <a href="{{ url_for('product_detail', slug=p.slug) }}" class="btn-primary">Voir la fiche</a>
+            <form method="post" action="{{ url_for('panier_ajouter') }}">
+              <input type="hidden" name="product_id" value="{{ p.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <input type="hidden" name="next" value="{{ url_for('boutique', categorie=filter_cat) if filter_cat else url_for('boutique') }}">
+              <button type="submit" class="btn-outline">Panier</button>
+            </form>
+          </div>
+        </div>
+      </article>
       {% endfor %}
     </div>
+    {% else %}
+    <div class="form-panel reveal" style="max-width:480px;text-align:center;">
+      <p class="form-panel-title">Aucun produit</p>
+      <p class="form-panel-hint">Ce filtre ne retourne aucune référence pour le moment.</p>
+      <a href="{{ url_for('boutique') }}" class="btn-primary">Voir tout le catalogue</a>
+    </div>
+    {% endif %}
   </section>
 </div>
 {% endblock %}

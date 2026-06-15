@@ -3,20 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Yombal Marché — épicerie fine, cosmétiques et livraison à domicile. Boutique en ligne du Groupe YOMBAL.">
+  <meta name="theme-color" content="#1a3d2b">
   <title>{% block title %}Yombal Marché{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Aller au contenu</a>
+
   {% set ep = request.endpoint %}
   {% set nav_shop = ep in ['boutique', 'product_detail', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'admin_orders', 'admin_order_detail'] %}
+
+  <div class="trust-bar" role="complementary" aria-label="Engagements boutique">
+    <span><span class="trust-dot" aria-hidden="true"></span> Livraison à domicile</span>
+    <span><span class="trust-dot" aria-hidden="true"></span> Paiement sécurisé</span>
+    <span><span class="trust-dot" aria-hidden="true"></span> Sans compte possible</span>
+  </div>
+
+  <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
   <div id="progress-bar" class="scroll-progress" aria-hidden="true"></div>
   <div id="cursor-dot" aria-hidden="true"></div>
   <div id="cursor-ring" aria-hidden="true"></div>
   <div id="grain" aria-hidden="true"></div>
-
   <div id="toast-root" class="toast-root" role="status" aria-live="polite"></div>
 
   <header class="nav" role="banner">
@@ -32,6 +44,7 @@
     <ul id="primary-nav" class="nav-links">
       <li><a href="{{ url_for('index') }}" class="{{ 'active' if ep == 'index' else '' }}">Accueil</a></li>
       <li><a href="{{ url_for('boutique') }}" class="{{ 'active' if nav_shop else '' }}">Boutique</a></li>
+      <li><a href="{{ url_for('producteurs') }}" class="{{ 'active' if ep in ['producteurs', 'producteur_detail'] else '' }}">Producteurs</a></li>
       <li><a href="{{ url_for('panier') }}" class="{{ 'active' if ep in ['panier', 'checkout'] else '' }}">Panier{% if cart_count %}<span class="nav-cart-badge">{{ cart_count }}</span>{% endif %}</a></li>
       <li><a href="{{ url_for('services') }}" class="{{ 'active' if ep == 'services' else '' }}">Services</a></li>
       <li><a href="{{ url_for('apropos') }}" class="{{ 'active' if ep == 'apropos' else '' }}">À propos</a></li>
@@ -40,7 +53,7 @@
       {% if is_shop_admin %}
       <li><a href="{{ url_for('admin_orders') }}" class="{{ 'active' if ep in ['admin_orders', 'admin_order_detail'] else '' }}">Admin</a></li>
       {% endif %}
-      <li><a href="{{ url_for('logout') }}" class="{{ 'active' if ep == 'logout' else '' }}">Déconnexion</a></li>
+      <li><a href="{{ url_for('logout') }}">Déconnexion</a></li>
       {% else %}
       <li><a href="{{ url_for('login') }}" class="{{ 'active' if ep == 'login' else '' }}">Connexion</a></li>
       {% endif %}
@@ -54,7 +67,7 @@
     </div>
   </header>
 
-  <main class="site-main {% block main_class %}{% endblock %}">
+  <main id="main-content" class="site-main {% block main_class %}{% endblock %}">
     {% with flashes = get_flashed_messages(with_categories=true) %}
     {% if flashes %}
     <div class="flash-stack" role="alert">
@@ -68,18 +81,26 @@
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
-      <div>
+    <div class="footer-inner footer-grid">
+      <div class="footer-col">
         <p class="footer-brand">Yombal Marché</p>
-        <p class="footer-tagline">Produits alimentaires et cosmétiques, livraison à domicile, prix abordables et boutique en ligne.</p>
+        <p class="footer-tagline">Produits alimentaires et cosmétiques, livraison à domicile et boutique en ligne — une enseigne du <strong>Groupe YOMBAL</strong>.</p>
+        <p class="footer-contact-line">📧 <a href="mailto:{{ shop_contact_email }}" class="footer-email-link">{{ shop_contact_email }}</a></p>
       </div>
-      <nav class="footer-links" aria-label="Liens pied de page">
-        <a href="{{ url_for('index') }}">Accueil</a>
-        <a href="{{ url_for('boutique') }}">Boutique</a>
-        <a href="{{ url_for('panier') }}">Panier</a>
+      <nav class="footer-col" aria-label="Navigation boutique">
+        <h3>Boutique</h3>
+        <a href="{{ url_for('boutique') }}">Catalogue</a>
+        <a href="{{ url_for('boutique', categorie='alimentaire') }}">Alimentaire</a>
+        <a href="{{ url_for('boutique', categorie='cosmetique') }}">Cosmétique</a>
+        <a href="{{ url_for('producteurs') }}">Nos producteurs</a>
+        <a href="{{ url_for('panier') }}">Mon panier</a>
+        <a href="{{ url_for('checkout') }}">Commander</a>
+      </nav>
+      <nav class="footer-col" aria-label="Informations">
+        <h3>Informations</h3>
         <a href="{{ url_for('services') }}">Services</a>
         <a href="{{ url_for('apropos') }}">À propos</a>
-        <a href="{{ url_for('contact') }}">Contact</a>
+        <a href="{{ url_for('contact') }}">Contact &amp; paiement</a>
         <a href="{{ url_for('mentions_legales') }}">Mentions légales</a>
         <a href="{{ url_for('cgv') }}">CGV</a>
       </nav>
@@ -93,11 +114,11 @@
           <span class="footer-diaspora-monogram">Sigle · UD</span>
           <p class="footer-diaspora-credit">
             Conception, expérience utilisateur et développement technique de cette boutique en ligne
-            pour <strong>Yombal Marché</strong> — une réalisation <strong>Univers Diaspora</strong>, au service du <strong>Groupe YOMBAL</strong>.
+            pour <strong>Yombal Marché</strong> — une réalisation <strong>Univers Diaspora</strong>.
           </p>
         </div>
       </div>
-      <span class="footer-badge">Flask · Python</span>
+      <span class="footer-badge">Responsive · Sécurisé</span>
     </div>
   </footer>
 

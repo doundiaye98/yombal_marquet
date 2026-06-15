@@ -22,8 +22,12 @@ class Product(TimestampMixin, db.Model):
     usage_tips = db.Column(db.Text)
     conservation = db.Column(db.String(300))
     stock_qty = db.Column(db.Integer)  # None = stock non suivi
+    image = db.Column(db.String(255))  # chemin relatif sous static/
+    icon = db.Column(db.String(8))  # emoji vitrine si pas de photo
     is_active = db.Column(db.Boolean, nullable=False, default=True, server_default="1")
+    producer_id = db.Column(db.Integer, db.ForeignKey("producers.id", ondelete="SET NULL"), index=True)
 
+    producer = db.relationship("Producer", back_populates="products")
     order_items = db.relationship("OrderItem", back_populates="product", lazy="dynamic")
 
     def price_euros(self):

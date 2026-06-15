@@ -2,7 +2,7 @@
 {% block title %}Paiement — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
-  <section class="section">
+  <header class="page-hero page-hero--compact payment-page-hero">
     <p class="section-eyebrow reveal">Paiement</p>
     <h1 class="section-title reveal">Commande #{{ order.id }}</h1>
     {% set pm_labels = {
@@ -12,12 +12,16 @@
       'stripe': 'Carte (Stripe)',
       'demo': 'Simulation démo'
     } %}
-    <p class="section-sub reveal">
-      Montant : <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong>
+    <div class="payment-order-meta reveal">
+      <span>Montant : <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong></span>
       {% if order.payment_method %}
-      · Mode : <strong>{{ pm_labels.get(order.payment_method, order.payment_method) }}</strong>
+      <span>Mode : <strong>{{ pm_labels.get(order.payment_method, order.payment_method) }}</strong></span>
       {% endif %}
-    </p>
+      <span>Réf. : <strong><code>YOMBAL-CMD-{{ order.id }}</code></strong></span>
+    </div>
+  </header>
+
+  <section class="section section--flush-top">
 
     <ul class="checkout-list reveal">
       {% for line in order.items %}
@@ -251,7 +255,7 @@
         variables: {
           colorPrimary: '#c8503a',
           borderRadius: '10px',
-          fontFamily: '"DM Sans", system-ui, sans-serif'
+          fontFamily: '"Outfit", system-ui, sans-serif'
         }
       };
       var elements = null;

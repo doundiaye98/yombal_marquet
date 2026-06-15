@@ -10,16 +10,32 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ─── Menu mobile + toasts (Flask) ─── */
   const navToggle = document.getElementById("nav-toggle");
   const navMenu = document.getElementById("primary-nav");
+  const navBackdrop = document.getElementById("nav-backdrop");
+
+  function setNavOpen(open) {
+    if (!navMenu || !navToggle) return;
+    navMenu.classList.toggle("is-open", open);
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    navToggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+    if (navBackdrop) {
+      navBackdrop.classList.toggle("is-visible", open);
+      navBackdrop.setAttribute("aria-hidden", open ? "false" : "true");
+    }
+    document.body.style.overflow = open ? "hidden" : "";
+  }
+
   if (navToggle && navMenu) {
     navToggle.addEventListener("click", () => {
-      const open = navMenu.classList.toggle("is-open");
-      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      setNavOpen(!navMenu.classList.contains("is-open"));
     });
     navMenu.querySelectorAll("a").forEach((a) => {
-      a.addEventListener("click", () => {
-        navMenu.classList.remove("is-open");
-        navToggle.setAttribute("aria-expanded", "false");
-      });
+      a.addEventListener("click", () => setNavOpen(false));
+    });
+    if (navBackdrop) {
+      navBackdrop.addEventListener("click", () => setNavOpen(false));
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setNavOpen(false);
     });
   }
 
@@ -143,19 +159,18 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ─── NAVBAR SCROLL STYLE ─── */
   const nav = document.querySelector(".nav");
   if (nav && motionOk) {
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (window.scrollY > 60) {
-          nav.style.background = "rgba(245,237,224,0.96)";
-          nav.style.boxShadow = "0 4px 40px rgba(26,61,43,0.1)";
-        } else {
-          nav.style.background = "rgba(245,237,224,0.82)";
-          nav.style.boxShadow = "none";
-        }
-      },
-      { passive: true }
-    );
+    const onScrollNav = () => {
+      nav.classList.toggle("is-scrolled", window.scrollY > 24);
+      if (window.scrollY > 60) {
+        nav.style.background = "rgba(255, 252, 248, 0.96)";
+        nav.style.boxShadow = "0 4px 40px rgba(26,61,43,0.1)";
+      } else {
+        nav.style.background = "";
+        nav.style.boxShadow = "";
+      }
+    };
+    window.addEventListener("scroll", onScrollNav, { passive: true });
+    onScrollNav();
   }
 
   /* ─── COUNTERS ─── */
