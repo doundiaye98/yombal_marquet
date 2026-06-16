@@ -46,8 +46,8 @@
       <li><a href="{{ url_for('index') }}" class="{{ 'active' if ep == 'index' else '' }}">Accueil</a></li>
       <li><a href="{{ url_for('boutique') }}" class="{{ 'active' if nav_shop else '' }}">Boutique</a></li>
       <li><a href="{{ url_for('producteurs') }}" class="{{ 'active' if ep in ['producteurs', 'producteur_detail'] else '' }}">Producteurs</a></li>
-      <li class="nav-item nav-item--dropdown{% if nav_discover %} nav-item--dropdown--active{% endif %}">
-        <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_discover else '' }}" aria-expanded="{{ 'true' if nav_discover else 'false' }}" aria-controls="nav-discover-menu" aria-haspopup="true">
+      <li class="nav-item nav-item--dropdown">
+        <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_discover else '' }}" aria-expanded="false" aria-controls="nav-discover-menu" aria-haspopup="true">
           Découvrir <span class="nav-chevron" aria-hidden="true">▾</span>
         </button>
         <ul id="nav-discover-menu" class="nav-dropdown" role="menu">

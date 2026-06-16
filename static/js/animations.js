@@ -25,7 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".nav-item--dropdown.is-open").forEach((item) => {
         item.classList.remove("is-open");
         const trigger = item.querySelector(".nav-dropdown-trigger");
-        if (trigger) trigger.setAttribute("aria-expanded", "false");
+        if (trigger) {
+          trigger.setAttribute("aria-expanded", "false");
+          trigger.blur();
+        }
       });
     }
     document.body.style.overflow = open ? "hidden" : "";
@@ -61,11 +64,17 @@ document.addEventListener("DOMContentLoaded", () => {
       navDropdowns.forEach((other) => {
         other.classList.remove("is-open");
         const t = other.querySelector(".nav-dropdown-trigger");
-        if (t) t.setAttribute("aria-expanded", "false");
+        if (t) {
+          t.setAttribute("aria-expanded", "false");
+          t.blur();
+        }
       });
       if (!wasOpen) {
         item.classList.add("is-open");
         trigger.setAttribute("aria-expanded", "true");
+      } else {
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.blur();
       }
     });
 
