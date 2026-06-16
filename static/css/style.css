@@ -2249,6 +2249,12 @@ a.shop-filter.is-active {
     padding: 14px 8px;
     border-bottom: 1px solid rgba(26,61,43,0.06);
   }
+  .nav-links > li > a,
+  .nav-links > li > .nav-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
   .nav-links a::after { display: none; }
 
   .hero { padding: 100px 24px 60px; }
