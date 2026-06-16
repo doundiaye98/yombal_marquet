@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Coffrets cadeaux — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper coffrets-page">
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Cadeaux diaspora</p>
+    <h1 class="section-title reveal">Coffrets <em>gourmands</em></h1>
+    <p class="section-sub reveal">
+      Des paniers prêts à offrir — terroir africain, soins naturels et saveurs de retrouvailles.
+    </p>
+  </header>
+
+  <section class="section section--flush-top">
+    <nav class="recipe-filters reveal" aria-label="Filtrer les coffrets">
+      <a href="{{ url_for('coffrets') }}" class="recipe-filter{% if not filter_theme %} is-active{% endif %}">Tous</a>
+      {% for t in themes %}
+      <a href="{{ url_for('coffrets', theme=t) }}" class="recipe-filter{% if filter_theme == t %} is-active{% endif %}">
+        {% if t == 'diaspora' %}Diaspora{% elif t == 'soin' %}Soins{% elif t == 'terroir' %}Terroir{% elif t == 'quotidien' %}Quotidien{% else %}{{ t }}{% endif %}
+      </a>
+      {% endfor %}
+    </nav>
+
+    <div class="coffret-grid">
+      {% for c in coffrets %}
+      <article class="coffret-card reveal">
+        <div class="coffret-card-badge">Cadeau</div>
+        <div class="recipe-card-top">
+          <span class="recipe-card-emoji" aria-hidden="true">{{ c.emoji }}</span>
+          <div>
+            <p class="recipe-card-kind">{{ c.theme_label }}</p>
+            <h2 class="recipe-card-title">
+              <a href="{{ url_for('coffret_detail', slug=c.slug) }}">{{ c.title }}</a>
+            </h2>
+          </div>
+        </div>
+        <p class="coffret-gift-msg">« {{ c.gift_message }} »</p>
+        <p class="recipe-card-summary">{{ c.summary }}</p>
+        <ul class="recipe-card-meta">
+          <li>🎁 {{ c.available_count }} produit{{ 's' if c.available_count > 1 else '' }}</li>
+          <li>🛒 {{ c.available_count }}/{{ c.ingredient_count }} dispo</li>
+        </ul>
+        <div class="recipe-card-footer">
+          <span class="recipe-card-price">{{ '%.2f'|format(c.total_cents / 100) }} €</span>
+          <a href="{{ url_for('coffret_detail', slug=c.slug) }}" class="btn-primary">Voir le coffret</a>
+        </div>
+      </article>
+      {% else %}
+      <p class="section-sub reveal">Aucun coffret dans cette catégorie.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

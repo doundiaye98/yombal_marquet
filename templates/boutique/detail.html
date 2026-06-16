@@ -107,6 +107,27 @@
       </div>
     </div>
 
+    {% if related_recipes %}
+    <aside class="product-related reveal">
+      <h2 class="section-title">Recettes avec ce produit</h2>
+      <div class="recipe-grid recipe-grid--compact">
+        {% for recipe in related_recipes %}
+        <article class="recipe-card recipe-card--compact">
+          <div class="recipe-card-top">
+            <span class="recipe-card-emoji" aria-hidden="true">{{ recipe.emoji }}</span>
+            <div>
+              <h3 class="recipe-card-title">
+                <a href="{{ url_for('recette_detail', slug=recipe.slug) }}">{{ recipe.title }}</a>
+              </h3>
+            </div>
+          </div>
+          <a href="{{ url_for('recette_detail', slug=recipe.slug) }}" class="producer-link">Voir la recette →</a>
+        </article>
+        {% endfor %}
+      </div>
+    </aside>
+    {% endif %}
+
     {% if related %}
     <aside class="product-related reveal">
       <h2 class="section-title">Vous aimerez aussi</h2>

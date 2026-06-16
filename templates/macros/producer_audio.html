@@ -1,0 +1,10 @@
+{% macro producer_story_audio(producer) %}
+{% set story_text = producer.story.replace('\n\n', ' ').replace('\n', ' ') %}
+<div class="story-audio" data-story="{{ story_text | e }}">
+  <button type="button" class="story-audio-btn" aria-pressed="false">
+    <span class="story-audio-icon" aria-hidden="true">🔊</span>
+    <span class="story-audio-label">Écouter l'histoire</span>
+  </button>
+  <p class="story-audio-hint">Lecture audio dans votre navigateur — voix française.</p>
+</div>
+{% endmacro %}

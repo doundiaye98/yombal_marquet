@@ -28,6 +28,13 @@
   </header>
 
   <section class="section section--flush-top">
+    <div class="experiences-strip reveal">
+      <a href="{{ url_for('saveurs') }}" class="experiences-strip-link">🗺️ Carte des saveurs</a>
+      <a href="{{ url_for('recettes') }}" class="experiences-strip-link">🍲 Recettes</a>
+      <a href="{{ url_for('coffrets') }}" class="experiences-strip-link">🎁 Coffrets</a>
+      <a href="{{ url_for('decouvrir') }}" class="experiences-strip-link">✦ Tout découvrir</a>
+    </div>
+
     {% if products %}
     <p class="section-sub reveal shop-result-count">
       <strong>{{ products|length }}</strong> référence{{ 's' if products|length > 1 else '' }}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
+{% block title %}{{ coffret.title }} — Coffret · Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper coffret-detail-page">
+  <article class="section">
+    <nav class="product-breadcrumb reveal" aria-label="Fil d'Ariane">
+      <a href="{{ url_for('coffrets') }}">Coffrets</a>
+      <span aria-hidden="true"> / </span>
+      <span>{{ coffret.title }}</span>
+    </nav>
+
+    <header class="coffret-hero reveal">
+      <span class="coffret-hero-emoji" aria-hidden="true">{{ coffret.emoji }}</span>
+      <div>
+        <p class="section-eyebrow">{{ coffret.theme_label }}</p>
+        <h1 class="section-title" style="margin-bottom:12px;">{{ coffret.title }}</h1>
+        <p class="section-sub" style="margin:0;">{{ coffret.summary }}</p>
+      </div>
+    </header>
+
+    <div class="coffret-gift-card reveal">
+      <p class="coffret-gift-card-label">Message cadeau</p>
+      <p class="coffret-gift-card-text">« {{ coffret.gift_message }} »</p>
+    </div>
+
+    <div class="recette-layout reveal">
+      <div class="recette-steps-panel">
+        <h2>Contenu du coffret</h2>
+        <p class="recette-cart-lead">
+          Une sélection pensée pour faire plaisir — idéal pour la diaspora et les fêtes de famille.
+        </p>
+        <ul class="recette-ingredients">
+          {% for ing in coffret.cart_items %}
+          <li class="recette-ingredient">
+            <div class="recette-ingredient-media">
+              {{ product_image(ing.product, 'thumb') }}
+            </div>
+            <div class="recette-ingredient-main">
+              <a href="{{ url_for('product_detail', slug=ing.product.slug) }}">{{ ing.product.name }}</a>
+              <span class="recette-ingredient-qty">× {{ ing.quantity }} — {{ '%.2f'|format(ing.line_cents / 100) }} €</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <aside class="recette-cart-panel coffret-order-panel">
+        <h2>Offrir ce coffret</h2>
+        <p class="recette-cart-lead">
+          Ajoutez tous les produits au panier en un clic — livraison à domicile, sans compte obligatoire.
+        </p>
+
+        {% if not coffret.is_complete %}
+        <p class="recette-cart-warn">
+          Certains produits sont temporairement indisponibles — le panier contiendra les articles en stock.
+        </p>
+        {% endif %}
+
+        <div class="recette-cart-total">
+          <span>Total coffret</span>
+          <strong>{{ '%.2f'|format(coffret.total_cents / 100) }} €</strong>
+        </div>
+
+        <form method="post" action="{{ url_for('coffret_panier', slug=coffret.slug) }}" class="recette-cart-form">
+          <input type="hidden" name="next" value="{{ url_for('panier') }}">
+          <button type="submit" class="btn-primary btn-recette-cart"{% if not coffret.cart_items %} disabled{% endif %}>
+            Ajouter le coffret au panier
+          </button>
+          <a href="{{ url_for('contact') }}" class="btn-outline">Demander une carte personnalisée</a>
+        </form>
+      </aside>
+    </div>
+  </article>
+</div>
+{% endblock %}

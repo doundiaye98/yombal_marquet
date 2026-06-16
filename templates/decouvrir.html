@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Découvrir — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper decouvrir-page">
+  <header class="page-hero page-hero--editorial">
+    <div class="page-hero-bg" aria-hidden="true"></div>
+    <div class="page-hero-content">
+      <p class="section-eyebrow reveal">Expérience Yombal</p>
+      <h1 class="section-title reveal">Bien plus qu'une <em>boutique</em></h1>
+      <p class="section-sub reveal page-hero-lead">
+        Carte des origines, recettes avec panier intelligent, coffrets diaspora et voix des producteurs —
+        le marché digital qui garde l'âme du terroir.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--flush-top section--compact">
+    <div class="goal-picker reveal" aria-label="Que souhaitez-vous faire ?">
+      <p class="goal-picker-label">Que souhaitez-vous faire ?</p>
+      <div class="goal-picker-grid">
+        <a href="{{ url_for('recettes', type='boisson') }}" class="goal-pill">🥤 Boire frais</a>
+        <a href="{{ url_for('recettes', type='plat') }}" class="goal-pill">🍲 Cuisiner</a>
+        <a href="{{ url_for('recettes', type='soin') }}" class="goal-pill">🧴 Soins naturels</a>
+        <a href="{{ url_for('coffrets') }}" class="goal-pill">🎁 Offrir un cadeau</a>
+      </div>
+    </div>
+
+    <div class="decouvrir-grid">
+      <a href="{{ url_for('saveurs') }}" class="decouvrir-card decouvrir-card--map reveal">
+        <span class="decouvrir-card-num" aria-hidden="true">01</span>
+        <span class="decouvrir-card-icon" aria-hidden="true">🗺️</span>
+        <h2>Carte des saveurs</h2>
+        <p>Cliquez sur une région, découvrez le producteur, écoutez son histoire et commandez ses références.</p>
+        <span class="decouvrir-card-link">Explorer la carte →</span>
+      </a>
+
+      <a href="{{ url_for('recettes') }}" class="decouvrir-card decouvrir-card--recipes reveal">
+        <span class="decouvrir-card-num" aria-hidden="true">02</span>
+        <span class="decouvrir-card-icon" aria-hidden="true">🍲</span>
+        <h2>Recettes &amp; paniers</h2>
+        <p>Bissap, riz gras, rituel hammam… tous les ingrédients du catalogue ajoutés en un clic.</p>
+        <span class="decouvrir-card-link">Voir les recettes →</span>
+      </a>
+
+      <a href="{{ url_for('coffrets') }}" class="decouvrir-card decouvrir-card--gifts reveal">
+        <span class="decouvrir-card-num" aria-hidden="true">03</span>
+        <span class="decouvrir-card-icon" aria-hidden="true">🎁</span>
+        <h2>Coffrets diaspora</h2>
+        <p>Goûters d'enfance, soins maman, terroir sénégalais — paniers prêts à offrir.</p>
+        <span class="decouvrir-card-link">Choisir un coffret →</span>
+      </a>
+
+      <a href="{{ url_for('producteurs') }}" class="decouvrir-card decouvrir-card--producers reveal">
+        <span class="decouvrir-card-num" aria-hidden="true">04</span>
+        <span class="decouvrir-card-icon" aria-hidden="true">👩🏾‍🌾</span>
+        <h2>Vitrine producteurs</h2>
+        <p>Visages, régions, savoir-faire — traçabilité et confiance sur chaque fiche.</p>
+        <span class="decouvrir-card-link">Rencontrer les producteurs →</span>
+      </a>
+    </div>
+
+    <div class="decouvrir-trust reveal">
+      <article>
+        <strong>🔊</strong>
+        <h3>Histoires audio</h3>
+        <p>Écoutez le récit des producteurs sur la carte et leurs fiches détaillées.</p>
+      </article>
+      <article>
+        <strong>🛒</strong>
+        <h3>Sans compte</h3>
+        <p>Commandez librement : panier, coordonnées, paiement sécurisé.</p>
+      </article>
+      <article>
+        <strong>🚚</strong>
+        <h3>Livraison</h3>
+        <p>Courses préparées et livrées selon votre zone.</p>
+      </article>
+    </div>
+
+    <div class="boutique-band reveal decouvrir-cta-band">
+      <div class="bb-left">
+        <h3 class="bb-title">Prêt à commander ?</h3>
+        <p class="bb-sub">Parcourez le catalogue ou laissez-vous guider par une recette ou un coffret.</p>
+      </div>
+      <a href="{{ url_for('boutique') }}" class="btn-gold">Ouvrir la boutique</a>
+    </div>
+  </section>
+</div>
+{% endblock %}

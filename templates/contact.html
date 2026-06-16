@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Contact — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper">
-  <header class="page-hero page-hero--compact">
-    <p class="section-eyebrow reveal">Contact</p>
-    <h1 class="section-title reveal">Nous <em>contacter</em></h1>
-    <p class="contact-intro reveal section-sub">
-      Commande alimentaire ou cosmétique, livraison, tarifs ou boutique en ligne :
-      nos équipes vous répondent rapidement. Les <a href="#modes-paiement" class="payment-intro-link">modes de paiement</a> sont détaillés ci-dessous.
-    </p>
+<div class="page-wrapper contact-page">
+  <header class="page-hero page-hero--editorial">
+    <div class="page-hero-bg" aria-hidden="true"></div>
+    <div class="page-hero-content">
+      <p class="section-eyebrow reveal">Contact</p>
+      <h1 class="section-title reveal">Nous <em>contacter</em></h1>
+      <p class="contact-intro reveal section-sub page-hero-lead">
+        Commande alimentaire ou cosmétique, livraison, tarifs ou boutique en ligne :
+        nos équipes vous répondent rapidement. Consultez la <a href="#faq">FAQ</a> ou les <a href="#modes-paiement" class="payment-intro-link">modes de paiement</a> ci-dessous.
+      </p>
+    </div>
   </header>
 
-  <section class="section section--flush-top">
+  <section class="section section--flush-top section--compact">
     <div class="contact-hero-cards">
       <div class="contact-quick reveal">
         <span class="cq-icon" aria-hidden="true">🕐</span>
@@ -35,6 +38,20 @@
         <h2>E-mail</h2>
         <p>Questions commande, disponibilité produit ou partenariat.</p>
         <a class="c-email" href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }} →</a>
+      </div>
+    </div>
+
+    <div id="faq" class="faq-section reveal" tabindex="-1">
+      <p class="section-eyebrow">Aide</p>
+      <h2 class="payment-heading">Questions fréquentes</h2>
+      <p class="payment-lead">Commande, livraison, paiement et nouvelles expériences du site.</p>
+      <div class="faq-list">
+        {% for item in faq_items %}
+        <details class="faq-item">
+          <summary class="faq-question">{{ item.q }}</summary>
+          <p class="faq-answer">{{ item.a }}</p>
+        </details>
+        {% endfor %}
       </div>
     </div>
 

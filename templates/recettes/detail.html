@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
+{% block title %}{{ recipe.title }} — Recette · Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper recette-detail-page">
+  <article class="section">
+    <nav class="product-breadcrumb reveal" aria-label="Fil d'Ariane">
+      <a href="{{ url_for('recettes') }}">Recettes</a>
+      <span aria-hidden="true"> / </span>
+      <span>{{ recipe.title }}</span>
+    </nav>
+
+    <header class="recette-hero reveal">
+      <span class="recette-hero-emoji" aria-hidden="true">{{ recipe.emoji }}</span>
+      <div>
+        <p class="section-eyebrow">{{ recipe.kind_label }}</p>
+        <h1 class="section-title" style="margin-bottom:12px;">{{ recipe.title }}</h1>
+        <p class="section-sub" style="margin:0;">{{ recipe.summary }}</p>
+        <ul class="recipe-card-meta recipe-card-meta--hero">
+          <li>⏱ {{ recipe.time_minutes }} min</li>
+          <li>🍽 {{ recipe.servings }} personnes</li>
+        </ul>
+      </div>
+    </header>
+
+    <div class="recette-layout reveal">
+      <div class="recette-steps-panel">
+        <h2>Préparation</h2>
+        <ol class="recette-steps">
+          {% for step in recipe.steps %}
+          <li>{{ step }}</li>
+          {% endfor %}
+        </ol>
+      </div>
+
+      <aside class="recette-cart-panel">
+        <h2>Panier intelligent</h2>
+        <p class="recette-cart-lead">
+          Ajoutez les ingrédients disponibles au panier en une seule action.
+        </p>
+
+        <ul class="recette-ingredients">
+          {% for ing in recipe.cart_items %}
+          <li class="recette-ingredient">
+            <div class="recette-ingredient-media">
+              {{ product_image(ing.product, 'thumb') }}
+            </div>
+            <div class="recette-ingredient-main">
+              <a href="{{ url_for('product_detail', slug=ing.product.slug) }}">{{ ing.product.name }}</a>
+              <span class="recette-ingredient-note">{{ ing.note }}</span>
+              <span class="recette-ingredient-qty">× {{ ing.quantity }} — {{ '%.2f'|format(ing.line_cents / 100) }} €</span>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+
+        {% if not recipe.is_complete %}
+        <p class="recette-cart-warn">
+          {{ recipe.ingredient_count - recipe.available_count }} ingrédient(s) indisponible(s) — le panier contiendra les produits en stock.
+        </p>
+        {% endif %}
+
+        <div class="recette-cart-total">
+          <span>Total ingrédients</span>
+          <strong>{{ '%.2f'|format(recipe.total_cents / 100) }} €</strong>
+        </div>
+
+        <form method="post" action="{{ url_for('recette_panier', slug=recipe.slug) }}" class="recette-cart-form">
+          <input type="hidden" name="next" value="{{ url_for('panier') }}">
+          <button type="submit" class="btn-primary btn-recette-cart"{% if not recipe.cart_items %} disabled{% endif %}>
+            Ajouter tout au panier
+          </button>
+          <a href="{{ url_for('boutique') }}" class="btn-outline">Compléter à la boutique</a>
+        </form>
+      </aside>
+    </div>
+  </article>
+</div>
+{% endblock %}

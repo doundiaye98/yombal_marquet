@@ -53,6 +53,9 @@ from models.constants import (
     ORDER_TRACKING_STEPS,
 )
 from models.order_tracking import find_order_by_reference_and_email
+from models.recipes import RECIPES, get_recipe_by_slug, recipes_for_product_slug
+from models.coffrets import COFFRETS, get_coffret_by_slug
+from models.faq import FAQ_ITEMS
 
 load_dotenv()
 
@@ -146,8 +149,7 @@ def admin_required(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
         if not current_user.is_authenticated:
-            flash("Connexion requise.", "warning")
-            return redirect(url_for("login", next=request.path))
+            abort(404)
         if not _is_shop_admin():
             abort(403)
         return view(*args, **kwargs)
@@ -318,10 +320,14 @@ def _apply_delivery_to_order(order, delivery):
 def index():
     featured = _product_query_active().order_by(Product.id).limit(6).all()
     featured_producers = _producer_query_active().order_by(Producer.id).limit(4).all()
+    featured_recipes = [_build_recipe_view(r) for r in RECIPES[:3]]
+    featured_coffrets = [_build_product_bundle(c) for c in COFFRETS[:2]]
     return render_template(
         "index.html",
         featured_products=featured,
         featured_producers=featured_producers,
+        featured_recipes=featured_recipes,
+        featured_coffrets=featured_coffrets,
     )
 
 
@@ -369,7 +375,15 @@ def product_detail(slug):
         .limit(4)
         .all()
     )
-    return render_template("boutique/detail.html", product=product, related=related)
+    related_recipes = [
+        _build_recipe_view(r) for r in recipes_for_product_slug(slug)[:3]
+    ]
+    return render_template(
+        "boutique/detail.html",
+        product=product,
+        related=related,
+        related_recipes=related_recipes,
+    )
 
 
 @app.route("/producteurs")
@@ -383,6 +397,172 @@ def producteur_detail(slug):
     producer = _producer_query_active().filter_by(slug=slug).first_or_404()
     products = producer.active_products().all()
     return render_template("producteurs/detail.html", producer=producer, products=products)
+
+
+# --- Carte des saveurs (expérience traçabilité) ---
+SAVEURS_PIN_DEFS = (
+    # x, y dans un repère 1000x500 (puis converti en % dans la route)
+    {"producer_slug": "aminata-diallo", "x": 260, "y": 330, "label": "Casamance"},
+    {"producer_slug": "fatou-ndiaye", "x": 420, "y": 300, "label": "Thiès"},
+    {"producer_slug": "moussa-kone", "x": 480, "y": 345, "label": "Burkina Faso"},
+    {"producer_slug": "cooperative-tafraout", "x": 420, "y": 165, "label": "Maroc"},
+    {"producer_slug": "atelier-sahel", "x": 390, "y": 205, "label": "Savon noir"},
+    {"producer_slug": "famille-bencherif", "x": 360, "y": 210, "label": "Algérie"},
+    {"producer_slug": "oasis-jericho", "x": 650, "y": 235, "label": "Vallée du Jourdain"},
+    {"producer_slug": "rucher-alpilles", "x": 160, "y": 150, "label": "Alpilles"},
+)
+
+
+def _saveurs_pins():
+    pins = []
+    for d in SAVEURS_PIN_DEFS:
+        producer = _producer_query_active().filter_by(slug=d["producer_slug"]).first()
+        if not producer:
+            continue
+        pins.append(
+            {
+                "producer": producer,
+                "x_pct": round(d["x"] / 1000 * 100, 2),
+                "y_pct": round(d["y"] / 500 * 100, 2),
+                "label": d.get("label") or producer.region,
+                "products": producer.active_products().limit(3).all(),
+            }
+        )
+    return pins
+
+
+@app.route("/decouvrir")
+def decouvrir():
+    return render_template("decouvrir.html")
+
+
+@app.route("/saveurs")
+def saveurs():
+    pins = _saveurs_pins()
+    return render_template("saveurs.html", pins=pins)
+
+
+def _build_product_bundle(bundle_def):
+    """Enrichit un bundle (recette ou coffret) avec les produits du catalogue."""
+    items = []
+    total_cents = 0
+    for ing in bundle_def.get("ingredients", []):
+        product = _product_query_active().filter_by(slug=ing["product_slug"]).first()
+        qty = max(1, min(20, int(ing.get("quantity", 1))))
+        if product:
+            line_cents = product.price_cents * qty
+            items.append({**ing, "product": product, "quantity": qty, "line_cents": line_cents})
+            total_cents += line_cents
+    return {
+        **bundle_def,
+        "cart_items": items,
+        "total_cents": total_cents,
+        "ingredient_count": len(bundle_def.get("ingredients", [])),
+        "available_count": len(items),
+        "is_complete": len(items) == len(bundle_def.get("ingredients", [])),
+    }
+
+
+def _build_recipe_view(recipe_def):
+    return _build_product_bundle(recipe_def)
+
+
+@app.route("/recettes")
+def recettes():
+    kind = request.args.get("type")
+    recipes = [_build_recipe_view(r) for r in RECIPES if not kind or r.get("kind") == kind]
+    kinds = sorted({r.get("kind") for r in RECIPES if r.get("kind")})
+    return render_template("recettes/index.html", recipes=recipes, kinds=kinds, filter_kind=kind)
+
+
+@app.route("/recette/<slug>")
+def recette_detail(slug):
+    recipe_def = get_recipe_by_slug(slug)
+    if not recipe_def:
+        abort(404)
+    recipe = _build_recipe_view(recipe_def)
+    return render_template("recettes/detail.html", recipe=recipe)
+
+
+@app.route("/recette/<slug>/panier", methods=["POST"])
+def recette_panier(slug):
+    recipe_def = get_recipe_by_slug(slug)
+    if not recipe_def:
+        abort(404)
+    recipe = _build_recipe_view(recipe_def)
+    if not recipe["cart_items"]:
+        flash("Aucun ingrédient disponible pour cette recette.", "warning")
+        return redirect(url_for("recette_detail", slug=slug))
+
+    cart = dict(session.get("cart") or {})
+    for ing in recipe["cart_items"]:
+        pid = str(ing["product"].id)
+        qty = ing["quantity"]
+        cart[pid] = min(99, cart.get(pid, 0) + qty)
+    session["cart"] = cart
+    session.modified = True
+
+    added = len(recipe["cart_items"])
+    if recipe["is_complete"]:
+        flash(f"Panier recette prêt : {added} ingrédient(s) ajouté(s) pour « {recipe['title']} ».", "success")
+    else:
+        flash(
+            f"{added} ingrédient(s) ajouté(s) — certains produits sont indisponibles pour le moment.",
+            "warning",
+        )
+    nxt = request.form.get("next") or url_for("panier")
+    if nxt.startswith("/") and not nxt.startswith("//"):
+        return redirect(nxt)
+    return redirect(url_for("panier"))
+
+
+@app.route("/coffrets")
+def coffrets():
+    theme = request.args.get("theme")
+    items = [_build_product_bundle(c) for c in COFFRETS if not theme or c.get("theme") == theme]
+    themes = sorted({c.get("theme") for c in COFFRETS if c.get("theme")})
+    return render_template("coffrets/index.html", coffrets=items, themes=themes, filter_theme=theme)
+
+
+@app.route("/coffret/<slug>")
+def coffret_detail(slug):
+    coffret_def = get_coffret_by_slug(slug)
+    if not coffret_def:
+        abort(404)
+    coffret = _build_product_bundle(coffret_def)
+    return render_template("coffrets/detail.html", coffret=coffret)
+
+
+@app.route("/coffret/<slug>/panier", methods=["POST"])
+def coffret_panier(slug):
+    coffret_def = get_coffret_by_slug(slug)
+    if not coffret_def:
+        abort(404)
+    coffret = _build_product_bundle(coffret_def)
+    if not coffret["cart_items"]:
+        flash("Aucun produit disponible pour ce coffret.", "warning")
+        return redirect(url_for("coffret_detail", slug=slug))
+
+    cart = dict(session.get("cart") or {})
+    for ing in coffret["cart_items"]:
+        pid = str(ing["product"].id)
+        qty = ing["quantity"]
+        cart[pid] = min(99, cart.get(pid, 0) + qty)
+    session["cart"] = cart
+    session.modified = True
+
+    added = len(coffret["cart_items"])
+    if coffret["is_complete"]:
+        flash(f"Coffret ajouté au panier : {added} produit(s) pour « {coffret['title']} ».", "success")
+    else:
+        flash(
+            f"{added} produit(s) ajouté(s) — certains articles sont indisponibles pour le moment.",
+            "warning",
+        )
+    nxt = request.form.get("next") or url_for("panier")
+    if nxt.startswith("/") and not nxt.startswith("//"):
+        return redirect(nxt)
+    return redirect(url_for("panier"))
 
 
 @app.route("/panier/ajouter", methods=["POST"])
@@ -432,46 +612,12 @@ def panier_modifier():
 
 @app.route("/auth/inscription", methods=["GET", "POST"])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for("boutique"))
-    if request.method == "POST":
-        email = (request.form.get("email") or "").strip().lower()
-        password = request.form.get("password") or ""
-        name = (request.form.get("name") or "").strip()
-        if not email or "@" not in email:
-            flash("Adresse e-mail invalide.", "danger")
-        elif len(password) < 6:
-            flash("Mot de passe : au moins 6 caractères.", "danger")
-        elif User.query.filter_by(email=email).first():
-            flash("Un compte existe déjà avec cet e-mail.", "danger")
-        else:
-            u = User(email=email, name=name or None)
-            u.set_password(password)
-            db.session.add(u)
-            db.session.commit()
-            login_user(u)
-            flash("Compte créé. Vous pouvez finaliser votre commande.", "success")
-            return redirect(url_for("boutique"))
-    return render_template("auth/register.html")
+    abort(404)
 
 
 @app.route("/auth/connexion", methods=["GET", "POST"])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for("boutique"))
-    if request.method == "POST":
-        email = (request.form.get("email") or "").strip().lower()
-        password = request.form.get("password") or ""
-        u = User.query.filter_by(email=email).first()
-        if u and u.check_password(password):
-            login_user(u, remember=bool(request.form.get("remember")))
-            flash("Bon retour parmi nous.", "success")
-            nxt = request.form.get("next") or request.args.get("next") or ""
-            if nxt.startswith("/") and not nxt.startswith("//"):
-                return redirect(nxt)
-            return redirect(url_for("boutique"))
-        flash("E-mail ou mot de passe incorrect.", "danger")
-    return render_template("auth/login.html")
+    abort(404)
 
 
 @app.route("/auth/deconnexion")
@@ -562,8 +708,8 @@ def paiement(order_id):
     order = db.session.get(Order, order_id)
     if not _can_access_order(order):
         if not current_user.is_authenticated:
-            flash("Connectez-vous ou finalisez une commande invité depuis ce navigateur.", "warning")
-            return redirect(url_for("login", next=request.path))
+            flash("Finalisez une commande invité depuis ce navigateur pour accéder au paiement.", "warning")
+            return redirect(url_for("checkout"))
         abort(403)
     if order.is_paid():
         return _redirect_suivi_commande(order.id, "Cette commande est déjà réglée.", "info")
@@ -864,7 +1010,15 @@ def cgv():
 
 @app.route("/apropos")
 def apropos():
-    return render_template("apropos.html")
+    featured_producers = _producer_query_active().order_by(Producer.id).limit(3).all()
+    return render_template(
+        "apropos.html",
+        featured_producers=featured_producers,
+        stats={
+            "products": _product_query_active().count(),
+            "producers": _producer_query_active().count(),
+        },
+    )
 
 
 def _recent_orders_for_user():
@@ -928,7 +1082,7 @@ def suivi_commande_detail(order_id):
 
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
+    return render_template("contact.html", faq_items=FAQ_ITEMS)
 
 
 if __name__ == "__main__":

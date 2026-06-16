@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
+{% from "macros/producer_audio.html" import producer_story_audio %}
+{% block title %}Carte des saveurs — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper saveurs-page">
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Traçabilité &amp; découverte</p>
+    <h1 class="section-title reveal">Carte des <em>saveurs</em></h1>
+    <p class="section-sub reveal">
+      Cliquez sur un point pour découvrir le producteur, son histoire et quelques références.
+    </p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="saveurs-grid reveal">
+      <div class="saveurs-map-shell" aria-label="Carte interactive des origines">
+        <div class="saveurs-map-bg" aria-hidden="true">
+          <svg viewBox="0 0 1000 500" preserveAspectRatio="none" width="100%" height="100%">
+            <defs>
+              <linearGradient id="saveursGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="rgba(26,61,43,0.10)" />
+                <stop offset="0.55" stop-color="rgba(200,151,58,0.10)" />
+                <stop offset="1" stop-color="rgba(200,80,58,0.08)" />
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="1000" height="500" fill="url(#saveursGrad)" />
+            <g opacity="0.25">
+              <path d="M80 160 C160 80, 260 70, 330 130 C400 190, 420 250, 380 320 C340 390, 250 420, 170 370 C90 320, 40 240, 80 160 Z" fill="rgba(26,61,43,0.18)"/>
+              <path d="M540 120 C610 60, 710 70, 780 130 C840 180, 860 250, 830 300 C800 350, 720 380, 650 350 C580 320, 500 220, 540 120 Z" fill="rgba(200,80,58,0.12)"/>
+              <path d="M300 310 C360 260, 440 250, 500 290 C570 340, 560 420, 480 440 C410 460, 320 400, 300 310 Z" fill="rgba(200,151,58,0.12)"/>
+              <path d="M760 320 C800 290, 860 295, 910 335 C960 370, 950 430, 900 450 C850 470, 790 430, 760 380 C740 350, 740 345, 760 320 Z" fill="rgba(26,61,43,0.14)"/>
+            </g>
+            <g opacity="0.18">
+              {% for i in range(10) %}
+              <line x1="{{ 50*i }}" y1="0" x2="{{ 50*i }}" y2="500" stroke="rgba(26,61,43,0.55)" stroke-width="1"/>
+              {% endfor %}
+              {% for j in range(7) %}
+              <line x1="0" y1="{{ 70*j }}" x2="1000" y2="{{ 70*j }}" stroke="rgba(26,61,43,0.55)" stroke-width="1"/>
+              {% endfor %}
+            </g>
+          </svg>
+        </div>
+
+        <div class="saveurs-pins" role="list">
+          {% for pin in pins %}
+          <button
+            type="button"
+            class="saveur-pin-btn{% if loop.first %} is-active{% endif %}"
+            data-producer-slug="{{ pin.producer.slug }}"
+            style="left: {{ pin.x_pct }}%; top: {{ pin.y_pct }}%;"
+            aria-label="Voir {{ pin.label }}"
+          >
+            <span class="saveur-pin-emoji" aria-hidden="true">{{ pin.producer.avatar_emoji }}</span>
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <aside class="saveurs-sidebar" aria-label="Détails du producteur">
+        {% if pins %}
+        {% for pin in pins %}
+        <div
+          class="saveur-panel{% if loop.first %} is-active{% endif %}"
+          data-producer-slug="{{ pin.producer.slug }}"
+        >
+          <div class="saveur-panel-head">
+            <span class="saveur-panel-emoji" aria-hidden="true">{{ pin.producer.avatar_emoji }}</span>
+            <div>
+              <p class="saveur-panel-label">{{ pin.label }}</p>
+              <h2 class="saveur-panel-name">{{ pin.producer.name }}</h2>
+            </div>
+          </div>
+
+          <p class="saveur-panel-flagship">
+            <span aria-hidden="true">🌿</span> {{ pin.producer.flagship_product }}
+          </p>
+
+          {% set story_first = pin.producer.story.split('\n\n')[0] %}
+          <p class="saveur-panel-story">{{ story_first }}</p>
+
+          <div class="saveur-panel-audio">
+            {{ producer_story_audio(pin.producer) }}
+          </div>
+
+          <div class="saveur-panel-actions">
+            <a class="btn-primary" href="{{ url_for('producteur_detail', slug=pin.producer.slug) }}">
+              Voir la fiche →
+            </a>
+          </div>
+
+          {% if pin.products %}
+          <div class="saveur-panel-products" aria-label="Produits en vedette">
+            {% for pr in pin.products %}
+            <div class="saveur-product">
+              <div class="saveur-product-media">
+                {{ product_image(pr, 'thumb') }}
+              </div>
+              <div class="saveur-product-main">
+                <a class="saveur-product-name" href="{{ url_for('product_detail', slug=pr.slug) }}">{{ pr.name }}</a>
+                <div class="saveur-product-price">{{ '%.2f'|format(pr.price_euros()) }} €</div>
+                <form method="post" action="{{ url_for('panier_ajouter') }}" class="saveur-product-form">
+                  <input type="hidden" name="product_id" value="{{ pr.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <input type="hidden" name="next" value="{{ url_for('saveurs') }}">
+                  <button type="submit" class="btn-outline btn-saveur-add">Ajouter</button>
+                </form>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="section-sub reveal">Aucun producteur disponible pour la carte pour le moment.</p>
+        {% endif %}
+      </aside>
+    </div>
+
+    <div class="boutique-band reveal" style="margin-top:40px;">
+      <div class="bb-left">
+        <h3 class="bb-title">Envie de cuisiner ?</h3>
+        <p class="bb-sub">Découvrez nos recettes avec panier intelligent — tous les ingrédients en un clic.</p>
+      </div>
+      <a href="{{ url_for('recettes') }}" class="btn-gold">Voir les recettes</a>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function () {
+    const buttons = document.querySelectorAll(".saveur-pin-btn");
+    const panels = document.querySelectorAll(".saveur-panel");
+
+    function setActive(slug) {
+      buttons.forEach((b) => {
+        b.classList.toggle("is-active", b.dataset.producerSlug === slug);
+      });
+      panels.forEach((p) => {
+        p.classList.toggle("is-active", p.dataset.producerSlug === slug);
+      });
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => setActive(btn.dataset.producerSlug));
+    });
+  })();
+</script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/producer-story.js') }}" defer></script>
+{% endblock %}
+

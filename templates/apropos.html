@@ -1,26 +1,30 @@
 {% extends "base.html" %}
 {% block title %}À propos — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper">
-  <header class="page-hero page-hero--compact">
-    <p class="section-eyebrow reveal">À propos</p>
-    <h1 class="section-title reveal">Yombal Marché · <em>Groupe YOMBAL</em></h1>
-    <p class="section-sub reveal contact-intro">
-      Une enseigne de proximité qui rapproche épicerie fine, cosmétiques naturels et livraison à domicile — avec une boutique en ligne simple et transparente.
-    </p>
+<div class="page-wrapper apropos-page">
+  <header class="page-hero page-hero--editorial">
+    <div class="page-hero-bg" aria-hidden="true"></div>
+    <div class="page-hero-content">
+      <p class="section-eyebrow reveal">À propos</p>
+      <h1 class="section-title reveal">Yombal Marché · <em>Groupe YOMBAL</em></h1>
+      <p class="section-sub reveal contact-intro page-hero-lead">
+        Une enseigne de proximité qui rapproche épicerie fine, cosmétiques naturels et livraison à domicile — avec une boutique en ligne simple et transparente.
+      </p>
+    </div>
   </header>
 
-  <section class="section section--flush-top">
+  <section class="section section--flush-top section--compact">
     <div class="apropos-grid">
       <div class="reveal">
-        <p class="apropos-p" style="margin-bottom:24px;font-size:1.1rem;line-height:1.8;">
-          <strong>Yombal Marché</strong> fait partie du <strong>Groupe YOMBAL</strong>. Notre mission : proposer des produits alimentaires et cosmétiques de qualité, à des prix accessibles, avec un service chaleureux et une expérience digitale soignée.
+        <p class="section-eyebrow apropos-block-eyebrow">Notre histoire</p>
+        <p class="apropos-p apropos-p--lead">
+          <strong>Yombal Marché</strong> est l’enseigne alimentaire et cosmétique du <strong>Groupe YOMBAL</strong>. Née de l’envie de rapprocher les saveurs du terroir africain et les soins naturels du quotidien, elle garde l’esprit du marché de quartier tout en offrant une expérience digitale fluide.
         </p>
         <p class="apropos-p">
-          Chaque référence du catalogue dispose d’une fiche détaillée : origine, composition, allergènes, conservation et conseils d’utilisation. Vous commandez en quelques clics, avec ou sans compte client.
+          Notre mission : proposer des produits de qualité, à des prix accessibles, avec un service chaleureux — et des fiches complètes pour décider facilement.
         </p>
         <p class="apropos-p">
-          Une question sur une commande ou une disponibilité ? <a href="{{ url_for('contact') }}">Contactez-nous</a> — nous répondons dans les meilleurs délais.
+          Une question sur une commande ou une disponibilité ? <a href="{{ url_for('contact') }}">Contactez-nous</a> — nous répondons sous 24&nbsp;h en semaine.
         </p>
 
         <div class="values-grid">
@@ -28,28 +32,21 @@
             <span aria-hidden="true">🌿</span>
             <div>
               <h3>Qualité &amp; traçabilité</h3>
-              <p>Produits choisis avec soin, informations claires sur chaque fiche.</p>
+              <p>Produits choisis avec soin, et informations fiables sur chaque fiche.</p>
             </div>
           </div>
           <div class="value-item">
-            <span aria-hidden="true">🤝</span>
+            <span aria-hidden="true">🧾</span>
             <div>
-              <h3>Proximité</h3>
-              <p>Un marché digital qui garde l’esprit du commerce de quartier.</p>
-            </div>
-          </div>
-          <div class="value-item">
-            <span aria-hidden="true">💶</span>
-            <div>
-              <h3>Prix justes</h3>
-              <p>Des tarifs lisibles, sans surprise au moment du paiement.</p>
+              <h3>Fiches produits claires</h3>
+              <p>Origine, ingrédients, allergènes, conservation et conseils d’utilisation.</p>
             </div>
           </div>
           <div class="value-item">
             <span aria-hidden="true">🔒</span>
             <div>
-              <h3>Confiance</h3>
-              <p>Paiements sécurisés, commandes suivies et support réactif.</p>
+              <h3>Commande sereine</h3>
+              <p>Paiement sécurisé, suivi et support réactif — avec ou sans compte.</p>
             </div>
           </div>
         </div>
@@ -62,8 +59,156 @@
         <div class="aside-item"><span class="aside-ico" aria-hidden="true">🚚</span> Livraison à domicile</div>
         <div class="aside-item"><span class="aside-ico" aria-hidden="true">🛍️</span> Boutique en ligne 24h/24</div>
         <div class="aside-item"><span class="aside-ico" aria-hidden="true">📦</span> Commande sans compte</div>
-        <a href="{{ url_for('boutique') }}" class="btn-primary" style="margin-top:24px;display:inline-flex;">Découvrir la boutique</a>
+        <a href="{{ url_for('boutique') }}" class="btn-primary aside-cta">Découvrir la boutique</a>
+        <p class="apropos-p note aside-note">
+          Horaires et point de vente sur la page <a href="{{ url_for('contact') }}">Contact</a>.
+        </p>
       </aside>
+    </div>
+
+    <nav class="experiences-strip experiences-strip--apropos reveal" aria-label="Expériences Yombal">
+      <span class="experiences-strip-label">Aussi sur le site</span>
+      <a href="{{ url_for('decouvrir') }}" class="experiences-strip-link">✦ Tout découvrir</a>
+      <a href="{{ url_for('saveurs') }}" class="experiences-strip-link">🗺️ Carte des saveurs</a>
+      <a href="{{ url_for('recettes') }}" class="experiences-strip-link">🍲 Recettes</a>
+      <a href="{{ url_for('coffrets') }}" class="experiences-strip-link">🎁 Coffrets</a>
+    </nav>
+
+    <div class="apropos-stats reveal" aria-label="Chiffres clés">
+      <div class="apropos-stat">
+        <strong>2</strong>
+        <span>Univers</span>
+        <p>Alimentaire &amp; cosmétique</p>
+      </div>
+      <div class="apropos-stat">
+        <strong>{{ stats.products }}+</strong>
+        <span>Références</span>
+        <p>Catalogue en ligne</p>
+      </div>
+      {% if stats.producers > 0 %}
+      <div class="apropos-stat">
+        <strong>{{ stats.producers }}</strong>
+        <span>Producteur{{ 's' if stats.producers > 1 else '' }}</span>
+        <p>Partenaires locaux</p>
+      </div>
+      {% endif %}
+      <div class="apropos-stat">
+        <strong>24h</strong>
+        <span>Réponse</span>
+        <p>Support client</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--compact">
+    <p class="section-eyebrow reveal">Confiance</p>
+    <h2 class="section-title reveal">Acheter, sans stress</h2>
+    <p class="section-sub reveal section-sub--tight">
+      Paiement sécurisé, informations claires, suivi de commande et support réactif.
+    </p>
+
+    <div class="trust-grid reveal" aria-label="Engagements de confiance">
+      <div class="trust-card">
+        <span class="trust-ico" aria-hidden="true">🔒</span>
+        <h3>Paiement sécurisé</h3>
+        <p>Carte, PayPal, virement et espèces à la livraison — selon le mode choisi.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-ico" aria-hidden="true">🧾</span>
+        <h3>Informations utiles</h3>
+        <p>Origine, composition, allergènes et conseils : tout ce qu’il faut pour choisir.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-ico" aria-hidden="true">📦</span>
+        <h3>Suivi clair</h3>
+        <p>Confirmation et suivi par e-mail après validation de votre commande.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-ico" aria-hidden="true">🤝</span>
+        <h3>Support réactif</h3>
+        <p>Une équipe disponible et un retour rapide en cas de question.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--compact section--alt">
+    <p class="section-eyebrow reveal">Simple &amp; rapide</p>
+    <h2 class="section-title reveal">Comment <em>commander</em></h2>
+    <p class="section-sub reveal section-sub--tight">Trois étapes pour recevoir vos courses et cosmétiques chez vous.</p>
+
+    <ol class="apropos-steps reveal">
+      <li class="apropos-step">
+        <span class="apropos-step-num" aria-hidden="true">1</span>
+        <div>
+          <h3>Parcourir la boutique</h3>
+          <p>Consultez les fiches produits : origine, ingrédients, prix TTC et conseils d’utilisation.</p>
+          <a href="{{ url_for('boutique') }}">Ouvrir le catalogue →</a>
+        </div>
+      </li>
+      <li class="apropos-step">
+        <span class="apropos-step-num" aria-hidden="true">2</span>
+        <div>
+          <h3>Ajouter au panier</h3>
+          <p>Validez votre commande avec ou sans compte client — retrait ou livraison selon votre zone.</p>
+          <a href="{{ url_for('panier') }}">Voir mon panier →</a>
+        </div>
+      </li>
+      <li class="apropos-step">
+        <span class="apropos-step-num" aria-hidden="true">3</span>
+        <div>
+          <h3>Payer &amp; suivre</h3>
+          <p>Carte, PayPal, virement ou espèces à la livraison. Suivi de commande par e-mail.</p>
+          <a href="{{ url_for('contact') }}#modes-paiement">Modes de paiement →</a>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  {% if featured_producers %}
+  <section class="section section--compact">
+    <p class="section-eyebrow reveal">Traçabilité</p>
+    <h2 class="section-title reveal">Nos <em>producteurs</em></h2>
+    <p class="section-sub reveal section-sub--tight">
+      Derrière chaque référence, un visage et un savoir-faire. Découvrez qui prépare ce que vous achetez.
+    </p>
+    <div class="producers-grid producers-grid--home">
+      {% for pr in featured_producers %}
+      <a href="{{ url_for('producteur_detail', slug=pr.slug) }}" class="producer-card producer-card--compact reveal">
+        <span class="producer-avatar producer-avatar--md" aria-hidden="true">{{ pr.avatar_emoji }}</span>
+        <div>
+          <p class="producer-region">📍 {{ pr.region }}</p>
+          <h3 class="producer-name">{{ pr.name }}</h3>
+          <p class="producer-flagship">🌿 {{ pr.flagship_product }}</p>
+          <span class="producer-link">Voir la fiche →</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    <p class="section-cta reveal">
+      <a href="{{ url_for('producteurs') }}" class="btn-outline">Toute la vitrine producteurs</a>
+    </p>
+  </section>
+  {% endif %}
+
+  <section class="section section--compact">
+    <div class="quote-block reveal">
+      <p>« Des prix accessibles, des produits choisis avec soin, et la livraison qui vous évite la course du dimanche. »</p>
+      <cite>— Yombal Marché · Groupe YOMBAL</cite>
+    </div>
+  </section>
+
+  <section class="section section--compact section--flush-bottom">
+    <div class="boutique-band reveal">
+      <div class="bb-left">
+        <h3 class="bb-title">Prêt à commander ?</h3>
+        <p class="bb-sub">Parcourez le catalogue, ajoutez au panier et réglez en ligne — avec ou sans compte.</p>
+        <div class="bb-tags">
+          <span class="bb-tag">Livraison</span>
+          <span class="bb-tag">Sans compte</span>
+          <span class="bb-tag">Paiement sécurisé</span>
+        </div>
+      </div>
+      <a href="{{ url_for('boutique') }}" class="btn-gold">Ouvrir la boutique</a>
     </div>
   </section>
 </div>

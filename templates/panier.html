@@ -56,7 +56,7 @@
       <div class="cart-summary-actions">
         <a href="{{ url_for('checkout') }}" class="btn-primary">Valider la commande</a>
         {% if not current_user.is_authenticated %}
-        <p class="cart-login-hint">Sans compte : vos coordonnées seront demandées à l’étape suivante. <a href="{{ url_for('login', next=url_for('checkout')) }}">Se connecter</a> si vous avez déjà un compte.</p>
+        <p class="cart-login-hint">Sans compte : vos coordonnées seront demandées à l’étape suivante.</p>
         {% endif %}
         <a href="{{ url_for('boutique') }}" class="btn-outline">Continuer les achats</a>
       </div>

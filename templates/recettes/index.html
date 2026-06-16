@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Recettes &amp; paniers — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper recettes-page">
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Cuisine &amp; soins</p>
+    <h1 class="section-title reveal">Recettes &amp; <em>paniers</em></h1>
+    <p class="section-sub reveal">
+      Choisissez une idée, consultez la recette et ajoutez tous les ingrédients du catalogue en un clic.
+    </p>
+  </header>
+
+  <section class="section section--flush-top">
+    <div class="goal-picker reveal" aria-label="Que souhaitez-vous faire ?">
+      <p class="goal-picker-label">Que souhaitez-vous faire ?</p>
+      <div class="goal-picker-grid">
+        <a href="{{ url_for('recettes', type='boisson') }}" class="goal-pill">🥤 Boire frais</a>
+        <a href="{{ url_for('recettes', type='plat') }}" class="goal-pill">🍲 Cuisiner</a>
+        <a href="{{ url_for('recettes', type='soin') }}" class="goal-pill">🧴 Soins</a>
+        <a href="{{ url_for('coffrets') }}" class="goal-pill">🎁 Offrir</a>
+      </div>
+    </div>
+
+    <nav class="recipe-filters reveal" aria-label="Filtrer les recettes">
+      <a href="{{ url_for('recettes') }}" class="recipe-filter{% if not filter_kind %} is-active{% endif %}">Toutes</a>
+      {% for k in kinds %}
+      <a href="{{ url_for('recettes', type=k) }}" class="recipe-filter{% if filter_kind == k %} is-active{% endif %}">
+        {% if k == 'boisson' %}Boissons{% elif k == 'plat' %}Plats{% elif k == 'soin' %}Soins{% elif k == 'petit-dejeuner' %}Petit-déj{% else %}{{ k }}{% endif %}
+      </a>
+      {% endfor %}
+    </nav>
+
+    <div class="recipe-grid">
+      {% for recipe in recipes %}
+      <article class="recipe-card reveal">
+        <div class="recipe-card-top">
+          <span class="recipe-card-emoji" aria-hidden="true">{{ recipe.emoji }}</span>
+          <div>
+            <p class="recipe-card-kind">{{ recipe.kind_label }}</p>
+            <h2 class="recipe-card-title">
+              <a href="{{ url_for('recette_detail', slug=recipe.slug) }}">{{ recipe.title }}</a>
+            </h2>
+          </div>
+        </div>
+        <p class="recipe-card-summary">{{ recipe.summary }}</p>
+        <ul class="recipe-card-meta">
+          <li>⏱ {{ recipe.time_minutes }} min</li>
+          <li>🍽 {{ recipe.servings }} pers.</li>
+          <li>🛒 {{ recipe.available_count }}/{{ recipe.ingredient_count }} ingrédients</li>
+        </ul>
+        <div class="recipe-card-footer">
+          <span class="recipe-card-price">{{ '%.2f'|format(recipe.total_cents / 100) }} €</span>
+          <a href="{{ url_for('recette_detail', slug=recipe.slug) }}" class="btn-outline">Voir la recette</a>
+        </div>
+      </article>
+      {% else %}
+      <p class="section-sub reveal">Aucune recette dans cette catégorie pour le moment.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

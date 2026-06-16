@@ -17,6 +17,7 @@
 
   {% set ep = request.endpoint %}
   {% set nav_shop = ep in ['boutique', 'product_detail', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'suivi_commande', 'suivi_commande_detail', 'admin_orders', 'admin_order_detail'] %}
+  {% set nav_discover = ep in ['decouvrir', 'saveurs', 'recettes', 'recette_detail', 'recette_panier', 'coffrets', 'coffret_detail', 'coffret_panier'] %}
 
   <div class="trust-bar" role="complementary" aria-label="Engagements boutique">
     <span><span class="trust-dot" aria-hidden="true"></span> Livraison à domicile</span>
@@ -45,6 +46,17 @@
       <li><a href="{{ url_for('index') }}" class="{{ 'active' if ep == 'index' else '' }}">Accueil</a></li>
       <li><a href="{{ url_for('boutique') }}" class="{{ 'active' if nav_shop else '' }}">Boutique</a></li>
       <li><a href="{{ url_for('producteurs') }}" class="{{ 'active' if ep in ['producteurs', 'producteur_detail'] else '' }}">Producteurs</a></li>
+      <li class="nav-item nav-item--dropdown">
+        <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_discover else '' }}" aria-expanded="false" aria-controls="nav-discover-menu" aria-haspopup="true">
+          Découvrir <span class="nav-chevron" aria-hidden="true">▾</span>
+        </button>
+        <ul id="nav-discover-menu" class="nav-dropdown" role="menu">
+          <li role="none"><a href="{{ url_for('decouvrir') }}" role="menuitem" class="{{ 'active' if ep == 'decouvrir' else '' }}">Vue d'ensemble</a></li>
+          <li role="none"><a href="{{ url_for('saveurs') }}" role="menuitem" class="{{ 'active' if ep == 'saveurs' else '' }}">Carte des saveurs</a></li>
+          <li role="none"><a href="{{ url_for('recettes') }}" role="menuitem" class="{{ 'active' if ep in ['recettes', 'recette_detail', 'recette_panier'] else '' }}">Recettes &amp; paniers</a></li>
+          <li role="none"><a href="{{ url_for('coffrets') }}" role="menuitem" class="{{ 'active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}">Coffrets cadeaux</a></li>
+        </ul>
+      </li>
       <li><a href="{{ url_for('panier') }}" class="{{ 'active' if ep in ['panier', 'checkout'] else '' }}">Panier{% if cart_count %}<span class="nav-cart-badge">{{ cart_count }}</span>{% endif %}</a></li>
       <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail'] else '' }}">Suivi</a></li>
       <li><a href="{{ url_for('services') }}" class="{{ 'active' if ep == 'services' else '' }}">Services</a></li>
@@ -55,15 +67,10 @@
       <li><a href="{{ url_for('admin_orders') }}" class="{{ 'active' if ep in ['admin_orders', 'admin_order_detail'] else '' }}">Admin</a></li>
       {% endif %}
       <li><a href="{{ url_for('logout') }}">Déconnexion</a></li>
-      {% else %}
-      <li><a href="{{ url_for('login') }}" class="{{ 'active' if ep == 'login' else '' }}">Connexion</a></li>
       {% endif %}
     </ul>
 
     <div class="nav-actions">
-      {% if not current_user.is_authenticated %}
-      <a href="{{ url_for('register') }}" class="btn-nav-secondary">Créer un compte</a>
-      {% endif %}
       <a href="{{ url_for('boutique') }}" class="btn-nav">Commander</a>
     </div>
   </header>
@@ -94,6 +101,10 @@
         <a href="{{ url_for('boutique', categorie='alimentaire') }}">Alimentaire</a>
         <a href="{{ url_for('boutique', categorie='cosmetique') }}">Cosmétique</a>
         <a href="{{ url_for('producteurs') }}">Nos producteurs</a>
+        <a href="{{ url_for('decouvrir') }}">Découvrir l'expérience</a>
+        <a href="{{ url_for('saveurs') }}">Carte des saveurs</a>
+        <a href="{{ url_for('recettes') }}">Recettes &amp; paniers</a>
+        <a href="{{ url_for('coffrets') }}">Coffrets cadeaux</a>
         <a href="{{ url_for('panier') }}">Mon panier</a>
         <a href="{{ url_for('checkout') }}">Commander</a>
         <a href="{{ url_for('suivi_commande') }}">Suivi de commande</a>
@@ -125,5 +136,6 @@
   </footer>
 
   <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
+  {% block extra_scripts %}{% endblock %}
 </body>
 </html>

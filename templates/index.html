@@ -28,7 +28,7 @@
       </p>
       <div class="hero-btns">
         <a href="{{ url_for('boutique') }}" class="btn-primary">Commander en ligne <span class="btn-arrow" aria-hidden="true">→</span></a>
-        <a href="{{ url_for('services') }}" class="btn-outline">Nos services</a>
+        <a href="{{ url_for('decouvrir') }}" class="btn-outline">Découvrir l'expérience</a>
       </div>
       <div class="hero-mobile-stats" aria-label="Chiffres clés">
         <div class="hero-stat"><strong>2</strong><span>Univers</span></div>
@@ -63,7 +63,7 @@
     </div>
   </div>
 
-  <a href="#services-anchor" class="scroll-hint">
+  <a href="#discover-anchor" class="scroll-hint">
     <span class="scroll-mouse"><span class="scroll-dot"></span></span>
     <span class="scroll-label">Découvrir</span>
   </a>
@@ -93,6 +93,98 @@
     </article>
   </div>
 </section>
+
+<section class="discover-band" id="discover-anchor" aria-label="Expériences Yombal">
+  <div class="discover-band-inner reveal">
+    <a href="{{ url_for('saveurs') }}" class="discover-card discover-card--map">
+      <span class="discover-card-icon" aria-hidden="true">🗺️</span>
+      <h2>Carte des saveurs</h2>
+      <p>Explorez les origines et rencontrez nos producteurs sur une carte interactive.</p>
+      <span class="discover-card-cta">Explorer →</span>
+    </a>
+    <a href="{{ url_for('recettes') }}" class="discover-card discover-card--recipes">
+      <span class="discover-card-icon" aria-hidden="true">🍲</span>
+      <h2>Recettes &amp; paniers</h2>
+      <p>Thiéb, bissap, soins karité… ajoutez tous les ingrédients en un clic.</p>
+      <span class="discover-card-cta">Cuisiner →</span>
+    </a>
+    <a href="{{ url_for('coffrets') }}" class="discover-card discover-card--gifts">
+      <span class="discover-card-icon" aria-hidden="true">🎁</span>
+      <h2>Coffrets diaspora</h2>
+      <p>Goûters d'enfance, soins maman, terroir sénégalais — prêts à offrir.</p>
+      <span class="discover-card-cta">Offrir →</span>
+    </a>
+    <a href="{{ url_for('decouvrir') }}" class="discover-card discover-card--all">
+      <span class="discover-card-icon" aria-hidden="true">✦</span>
+      <h2>Tout découvrir</h2>
+      <p>Carte, recettes, coffrets et producteurs — l'expérience complète Yombal Marché.</p>
+      <span class="discover-card-cta">Explorer →</span>
+    </a>
+  </div>
+</section>
+
+{% if featured_recipes %}
+<section class="section">
+  <p class="section-eyebrow reveal">Idées du moment</p>
+  <h2 class="section-title reveal">Paniers <em>intelligents</em></h2>
+  <p class="section-sub reveal">Des recettes pensées avec nos produits — prêtes à commander.</p>
+  <div class="recipe-grid recipe-grid--home">
+    {% for recipe in featured_recipes %}
+    <article class="recipe-card reveal">
+      <div class="recipe-card-top">
+        <span class="recipe-card-emoji" aria-hidden="true">{{ recipe.emoji }}</span>
+        <div>
+          <p class="recipe-card-kind">{{ recipe.kind_label }}</p>
+          <h3 class="recipe-card-title">
+            <a href="{{ url_for('recette_detail', slug=recipe.slug) }}">{{ recipe.title }}</a>
+          </h3>
+        </div>
+      </div>
+      <p class="recipe-card-summary">{{ recipe.summary }}</p>
+      <div class="recipe-card-footer">
+        <span class="recipe-card-price">dès {{ '%.2f'|format(recipe.total_cents / 100) }} €</span>
+        <a href="{{ url_for('recette_detail', slug=recipe.slug) }}" class="btn-primary">Voir la recette</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  <p style="text-align:center;margin-top:32px;" class="reveal">
+    <a href="{{ url_for('recettes') }}" class="btn-outline">Toutes les recettes</a>
+  </p>
+</section>
+{% endif %}
+
+{% if featured_coffrets %}
+<section class="section">
+  <p class="section-eyebrow reveal">Cadeaux</p>
+  <h2 class="section-title reveal">Coffrets <em>diaspora</em></h2>
+  <p class="section-sub reveal">Paniers gourmands prêts à offrir — un clic pour tout ajouter au panier.</p>
+  <div class="coffret-grid coffret-grid--home">
+    {% for c in featured_coffrets %}
+    <article class="coffret-card reveal">
+      <div class="coffret-card-badge">Cadeau</div>
+      <div class="recipe-card-top">
+        <span class="recipe-card-emoji" aria-hidden="true">{{ c.emoji }}</span>
+        <div>
+          <p class="recipe-card-kind">{{ c.theme_label }}</p>
+          <h3 class="recipe-card-title">
+            <a href="{{ url_for('coffret_detail', slug=c.slug) }}">{{ c.title }}</a>
+          </h3>
+        </div>
+      </div>
+      <p class="coffret-gift-msg">« {{ c.gift_message }} »</p>
+      <div class="recipe-card-footer">
+        <span class="recipe-card-price">{{ '%.2f'|format(c.total_cents / 100) }} €</span>
+        <a href="{{ url_for('coffret_detail', slug=c.slug) }}" class="btn-gold">Voir le coffret</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  <p style="text-align:center;margin-top:32px;" class="reveal">
+    <a href="{{ url_for('coffrets') }}" class="btn-outline">Tous les coffrets</a>
+  </p>
+</section>
+{% endif %}
 
 <div class="strip" aria-hidden="true">
   <div class="strip-inner">

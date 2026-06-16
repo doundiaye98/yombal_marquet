@@ -21,6 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
       navBackdrop.classList.toggle("is-visible", open);
       navBackdrop.setAttribute("aria-hidden", open ? "false" : "true");
     }
+    if (!open) {
+      document.querySelectorAll(".nav-item--dropdown.is-open").forEach((item) => {
+        item.classList.remove("is-open");
+        const trigger = item.querySelector(".nav-dropdown-trigger");
+        if (trigger) trigger.setAttribute("aria-expanded", "false");
+      });
+    }
     document.body.style.overflow = open ? "hidden" : "";
   }
 
@@ -38,6 +45,46 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "Escape") setNavOpen(false);
     });
   }
+
+  const navDropdowns = document.querySelectorAll(".nav-item--dropdown");
+  const mqNavMobile = window.matchMedia("(max-width: 900px)");
+
+  navDropdowns.forEach((item) => {
+    const trigger = item.querySelector(".nav-dropdown-trigger");
+    if (!trigger) return;
+
+    trigger.addEventListener("click", (e) => {
+      if (!mqNavMobile.matches) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const wasOpen = item.classList.contains("is-open");
+      navDropdowns.forEach((other) => {
+        other.classList.remove("is-open");
+        const t = other.querySelector(".nav-dropdown-trigger");
+        if (t) t.setAttribute("aria-expanded", "false");
+      });
+      if (!wasOpen) {
+        item.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    item.addEventListener("focusout", (e) => {
+      if (mqNavMobile.matches) return;
+      if (!item.contains(e.relatedTarget)) {
+        item.classList.remove("is-open");
+        trigger.setAttribute("aria-expanded", "false");
+      }
+    });
+  });
+
+  mqNavMobile.addEventListener("change", () => {
+    navDropdowns.forEach((item) => {
+      item.classList.remove("is-open");
+      const trigger = item.querySelector(".nav-dropdown-trigger");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+    });
+  });
 
   const toastRoot = document.getElementById("toast-root");
   function showToast(msg) {
