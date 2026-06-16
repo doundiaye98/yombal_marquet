@@ -46,15 +46,15 @@
       <li><a href="{{ url_for('index') }}" class="{{ 'active' if ep == 'index' else '' }}">Accueil</a></li>
       <li><a href="{{ url_for('boutique') }}" class="{{ 'active' if nav_shop else '' }}">Boutique</a></li>
       <li><a href="{{ url_for('producteurs') }}" class="{{ 'active' if ep in ['producteurs', 'producteur_detail'] else '' }}">Producteurs</a></li>
-      <li class="nav-item nav-item--dropdown">
-        <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_discover else '' }}" aria-expanded="false" aria-controls="nav-discover-menu" aria-haspopup="true">
+      <li class="nav-item nav-item--dropdown{% if nav_discover %} nav-item--dropdown--active{% endif %}">
+        <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_discover else '' }}" aria-expanded="{{ 'true' if nav_discover else 'false' }}" aria-controls="nav-discover-menu" aria-haspopup="true">
           Découvrir <span class="nav-chevron" aria-hidden="true">▾</span>
         </button>
         <ul id="nav-discover-menu" class="nav-dropdown" role="menu">
-          <li role="none"><a href="{{ url_for('decouvrir') }}" role="menuitem" class="{{ 'active' if ep == 'decouvrir' else '' }}">Vue d'ensemble</a></li>
-          <li role="none"><a href="{{ url_for('saveurs') }}" role="menuitem" class="{{ 'active' if ep == 'saveurs' else '' }}">Carte des saveurs</a></li>
-          <li role="none"><a href="{{ url_for('recettes') }}" role="menuitem" class="{{ 'active' if ep in ['recettes', 'recette_detail', 'recette_panier'] else '' }}">Recettes &amp; paniers</a></li>
-          <li role="none"><a href="{{ url_for('coffrets') }}" role="menuitem" class="{{ 'active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}">Coffrets cadeaux</a></li>
+          <li role="none"><a href="{{ url_for('decouvrir') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep == 'decouvrir' else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">✦</span> Vue d'ensemble</a></li>
+          <li role="none"><a href="{{ url_for('saveurs') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep == 'saveurs' else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🗺️</span> Carte des saveurs</a></li>
+          <li role="none"><a href="{{ url_for('recettes') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep in ['recettes', 'recette_detail', 'recette_panier'] else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🍲</span> Recettes &amp; paniers</a></li>
+          <li role="none"><a href="{{ url_for('coffrets') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🎁</span> Coffrets cadeaux</a></li>
         </ul>
       </li>
       <li><a href="{{ url_for('panier') }}" class="{{ 'active' if ep in ['panier', 'checkout'] else '' }}">Panier{% if cart_count %}<span class="nav-cart-badge">{{ cart_count }}</span>{% endif %}</a></li>
