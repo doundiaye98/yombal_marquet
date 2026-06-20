@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*-
 """Crée ou met à jour un compte admin : python scripts/create_admin.py email@exemple.com MonMotDePasse"""
 
-import os
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = __import__("os").path.dirname(__import__("os").path.dirname(__import__("os").path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 from app import app
 from extensions import db
-from models.user import User
+from services.admin_bootstrap import upsert_admin_user
+from shop_auth import admin_emails_set
 
 
 def main():
@@ -25,25 +25,13 @@ def main():
         sys.exit(1)
 
     with app.app_context():
-        user = User.query.filter_by(email=email).first()
-        if user:
-            user.set_password(password)
-            user.is_active = True
-            print(f"Mot de passe mis à jour pour {email}")
-        else:
-            user = User(email=email, name="Administrateur", is_active=True)
-            user.set_password(password)
-            db.session.add(user)
-            print(f"Compte créé : {email}")
+        upsert_admin_user(email, password, force_password=True)
         db.session.commit()
-        admins = os.environ.get("ADMIN_EMAILS", "")
-        if email not in {e.strip().lower() for e in admins.split(",") if e.strip()}:
-            print(
-                f"\nAjoutez aussi dans .env :\nADMIN_EMAILS={email}\n"
-                "Puis redemarrez l'application Flask."
-            )
+        print(f"Compte enregistré pour {email}")
+        if email not in admin_emails_set():
+            print(f"\nAjoutez aussi dans .env / Render :\nADMIN_EMAILS={email}")
         else:
-            print(f"\nConnectez-vous sur /admin/connexion")
+            print("\nConnectez-vous sur /admin/connexion")
 
 
 if __name__ == "__main__":

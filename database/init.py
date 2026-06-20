@@ -43,6 +43,10 @@ def ensure_database(app: Flask) -> None:
         sync_product_images(app.root_path)
         purge_products_without_images()
 
+        from services.admin_bootstrap import bootstrap_admin_users
+
+        bootstrap_admin_users()
+
 
 def _add_columns(table, patches):
     from sqlalchemy import inspect, text

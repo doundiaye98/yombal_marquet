@@ -17,6 +17,8 @@ services:
     startCommand: gunicorn --bind 0.0.0.0:$PORT --timeout 120 --graceful-timeout 30 app:app
     healthCheckPath: /healthz
     autoDeployTrigger: commit
+    # Variables sensibles à ajouter dans le dashboard Render (Environment) :
+    # ADMIN_EMAILS, BOOTSTRAP_ADMIN_PASSWORD, CONTACT_EMAIL, FLASK_SECRET_KEY (si pas generateValue)
     envVars:
       - key: FLASK_APP
         value: app.py

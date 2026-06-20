@@ -1301,4 +1301,16 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    main()
+
+
+@app.cli.command("bootstrap-admin")
+def bootstrap_admin_cli():
+    """Flask CLI : flask bootstrap-admin (Render Shell)."""
+    from services.admin_bootstrap import bootstrap_admin_users
+
+    created = bootstrap_admin_users()
+    if created:
+        print("Comptes créés:", ", ".join(created))
+    else:
+        print("Rien à créer (comptes existants ou BOOTSTRAP_ADMIN_PASSWORD absent).")
