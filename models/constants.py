@@ -11,16 +11,39 @@ ORDER_STATUS_PAID_MANUAL = "paid_manual"
 ORDER_STATUS_SHIPPED = "shipped"
 ORDER_STATUS_CANCELLED = "cancelled"
 
+# Statuts annulables par le client (avant préparation / expédition)
+ORDER_STATUS_CANCELLABLE = frozenset(
+    {
+        ORDER_STATUS_PENDING,
+        ORDER_STATUS_AWAITING_WIRE,
+        ORDER_STATUS_AWAITING_PAYPAL,
+        ORDER_STATUS_COD_CONFIRMED,
+    }
+)
+
 ORDER_STATUS_LABELS = {
-    ORDER_STATUS_PENDING: "Commande enregistrée",
-    ORDER_STATUS_AWAITING_WIRE: "En attente de virement",
-    ORDER_STATUS_AWAITING_PAYPAL: "En attente PayPal",
-    ORDER_STATUS_COD_CONFIRMED: "Paiement à la livraison confirmé",
-    ORDER_STATUS_PAID_STRIPE: "Payée par carte",
-    ORDER_STATUS_PAID_DEMO: "Payée (démo)",
-    ORDER_STATUS_PAID_MANUAL: "Paiement reçu",
-    ORDER_STATUS_SHIPPED: "Expédiée / en livraison",
+    ORDER_STATUS_PENDING: "En attente de paiement",
+    ORDER_STATUS_AWAITING_WIRE: "Virement en cours",
+    ORDER_STATUS_AWAITING_PAYPAL: "PayPal en attente",
+    ORDER_STATUS_COD_CONFIRMED: "Paiement à la livraison",
+    ORDER_STATUS_PAID_STRIPE: "Payée — en préparation",
+    ORDER_STATUS_PAID_DEMO: "Payée — en préparation",
+    ORDER_STATUS_PAID_MANUAL: "Payée — en préparation",
+    ORDER_STATUS_SHIPPED: "Expédiée",
     ORDER_STATUS_CANCELLED: "Annulée",
+}
+
+# Pastille courte (hub commandes type marketplace)
+ORDER_STATUS_PILL = {
+    ORDER_STATUS_PENDING: ("À payer", "pill-warning"),
+    ORDER_STATUS_AWAITING_WIRE: ("Virement", "pill-info"),
+    ORDER_STATUS_AWAITING_PAYPAL: ("PayPal", "pill-info"),
+    ORDER_STATUS_COD_CONFIRMED: ("À la livraison", "pill-info"),
+    ORDER_STATUS_PAID_STRIPE: ("Préparation", "pill-success"),
+    ORDER_STATUS_PAID_DEMO: ("Préparation", "pill-success"),
+    ORDER_STATUS_PAID_MANUAL: ("Préparation", "pill-success"),
+    ORDER_STATUS_SHIPPED: ("En livraison", "pill-shipped"),
+    ORDER_STATUS_CANCELLED: ("Annulée", "pill-muted"),
 }
 
 ORDER_STATUS_HINTS = {
@@ -49,10 +72,10 @@ ORDER_STATUS_STEP = {
 }
 
 ORDER_TRACKING_STEPS = (
-    {"id": 1, "title": "Commande", "desc": "Reçue"},
-    {"id": 2, "title": "Paiement", "desc": "Validé"},
-    {"id": 3, "title": "Préparation", "desc": "En cours"},
-    {"id": 4, "title": "Livraison", "desc": "Expédiée"},
+    {"id": 1, "title": "Commande", "desc": "Confirmée", "icon": "📋"},
+    {"id": 2, "title": "Paiement", "desc": "Validé", "icon": "💳"},
+    {"id": 3, "title": "Préparation", "desc": "En cours", "icon": "📦"},
+    {"id": 4, "title": "Livraison", "desc": "En route", "icon": "🚚"},
 )
 
 ORDER_STATUSES = frozenset(

@@ -1,10 +1,14 @@
 {% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
+{% from "macros/checkout_steps.html" import checkout_steps %}
 {% block title %}Paiement — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
+  {{ checkout_steps('payment') }}
+
   <header class="page-hero page-hero--compact payment-page-hero">
-    <p class="section-eyebrow reveal">Paiement</p>
-    <h1 class="section-title reveal">Commande #{{ order.id }}</h1>
+    <p class="section-eyebrow reveal">Paiement · étape 3/3</p>
+    <h1 class="section-title reveal">Finaliser la commande</h1>
     {% set pm_labels = {
       'wire': 'Virement bancaire',
       'paypal': 'PayPal',
@@ -13,21 +17,38 @@
       'demo': 'Simulation démo'
     } %}
     <div class="payment-order-meta reveal">
+      <span>Réf. : <strong><code>{{ order.public_ref }}</code></strong></span>
       <span>Montant : <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong></span>
       {% if order.payment_method %}
       <span>Mode : <strong>{{ pm_labels.get(order.payment_method, order.payment_method) }}</strong></span>
       {% endif %}
-      <span>Réf. : <strong><code>YOMBAL-CMD-{{ order.id }}</code></strong></span>
     </div>
+    <p class="payment-track-link reveal">
+      <a href="{{ url_for('suivi_commande_detail', order_id=order.id) }}">Voir le suivi de cette commande →</a>
+    </p>
+    {% if order.status not in ['cancelled', 'shipped'] %}
+    {% set est = order_delivery_estimate(order) %}
+    <p class="payment-delivery-estimate reveal">🚚 Livraison estimée : <strong>{{ est.label }}</strong></p>
+    {% endif %}
   </header>
 
   <section class="section section--flush-top">
 
-    <ul class="checkout-list reveal">
+    <ul class="order-line-list order-line-list--compact reveal">
       {% for line in order.items %}
-      <li class="checkout-line">
-        <span>{{ line.product.name }} × {{ line.quantity }}</span>
-        <span>{{ '%.2f'|format(line.unit_price_cents * line.quantity / 100) }} €</span>
+      <li class="order-line-row order-line-row--compact">
+        <div class="order-line-media{% if line.product and line.product.image %} order-line-media--photo{% endif %}">
+          {% if line.product %}
+          {{ product_image(line.product, 'thumb') }}
+          {% else %}
+          <span class="product-photo-fallback" aria-hidden="true">🛒</span>
+          {% endif %}
+        </div>
+        <div class="order-line-info">
+          <span class="order-line-name">{{ line.product_name }}</span>
+          <span class="order-line-qty">× {{ line.quantity }}</span>
+        </div>
+        <strong class="order-line-price">{{ '%.2f'|format(line.unit_price_cents * line.quantity / 100) }} €</strong>
       </li>
       {% endfor %}
     </ul>
@@ -39,7 +60,10 @@
       {% if order.status == 'awaiting_wire' %}
       <div class="payment-instructions">
         <p><strong>Virement bancaire</strong> — utilisez impérativement cette référence dans le libellé :</p>
-        <p class="payment-ref-box"><code>YOMBAL-CMD-{{ order.id }}</code></p>
+        <p class="payment-ref-box">
+          <code>{{ order.public_ref }}</code>
+          <button type="button" class="btn-copy-ref btn-copy-ref--inline" data-copy-ref="{{ order.public_ref }}">Copier</button>
+        </p>
         {% if bank.iban %}
         <dl class="payment-bank-dl">
           {% if bank.name %}<dt>Banque</dt><dd>{{ bank.name }}</dd>{% endif %}
@@ -67,7 +91,10 @@
       {% if order.status == 'awaiting_paypal' %}
       <div class="payment-instructions">
         <p><strong>PayPal</strong> — envoyez le montant exact avec cette référence dans le message :</p>
-        <p class="payment-ref-box"><code>YOMBAL-CMD-{{ order.id }}</code></p>
+        <p class="payment-ref-box">
+          <code>{{ order.public_ref }}</code>
+          <button type="button" class="btn-copy-ref btn-copy-ref--inline" data-copy-ref="{{ order.public_ref }}">Copier</button>
+        </p>
         {% if paypal.email %}
         <p>Compte à utiliser : <strong>{{ paypal.email }}</strong></p>
         {% endif %}
@@ -86,11 +113,12 @@
       <div class="payment-instructions">
         <p><strong>Espèces à la livraison</strong></p>
         <p>Vous réglerez <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong> au livreur ou au point de retrait, selon ce qui vous aura été confirmé par message.</p>
-        <p class="payment-note muted-small">Référence commande : <code>YOMBAL-CMD-{{ order.id }}</code></p>
+        <p class="payment-note muted-small">Référence commande : <code>{{ order.public_ref }}</code></p>
       </div>
       {% endif %}
 
       <p class="payment-actions-footer">
+        <a href="{{ url_for('suivi_commande_detail', order_id=order.id) }}" class="btn-primary">Suivre ma commande</a>
         <a href="{{ url_for('boutique') }}" class="btn-outline">Retour à la boutique</a>
         <a href="{{ url_for('contact') }}" class="btn-outline">Une question ? Contact</a>
       </p>

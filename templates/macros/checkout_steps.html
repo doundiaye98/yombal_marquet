@@ -1,0 +1,18 @@
+{% macro checkout_steps(active) %}
+<nav class="checkout-steps" aria-label="Étapes de commande">
+  <a href="{{ url_for('panier') }}" class="checkout-step {% if active == 'cart' %}is-active{% elif active in ['checkout', 'payment', 'done'] %}is-done{% endif %}">
+    <span class="checkout-step-num">1</span>
+    <span class="checkout-step-label">Panier</span>
+  </a>
+  <span class="checkout-step-line" aria-hidden="true"></span>
+  <a href="{{ url_for('checkout') if active != 'cart' else '#' }}" class="checkout-step {% if active == 'checkout' %}is-active{% elif active in ['payment', 'done'] %}is-done{% endif %}">
+    <span class="checkout-step-num">2</span>
+    <span class="checkout-step-label">Coordonnées</span>
+  </a>
+  <span class="checkout-step-line" aria-hidden="true"></span>
+  <span class="checkout-step {% if active == 'payment' %}is-active{% elif active == 'done' %}is-done{% endif %}">
+    <span class="checkout-step-num">3</span>
+    <span class="checkout-step-label">Paiement</span>
+  </span>
+</nav>
+{% endmacro %}

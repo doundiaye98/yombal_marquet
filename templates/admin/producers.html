@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Admin — Producteurs{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact"><h1 class="section-title reveal">Producteurs</h1></header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top section--cart">
+    <div class="cart-table-wrap admin-table-wrap reveal">
+      <table class="cart-table admin-table">
+        <thead><tr><th>Nom</th><th>Région</th><th>Carte</th><th></th></tr></thead>
+        <tbody>
+          {% for p in producers %}
+          <tr>
+            <td>{{ p.avatar_emoji }} {{ p.name }}</td>
+            <td>{{ p.region }}</td>
+            <td>{% if p.map_x %}✓{% else %}—{% endif %}</td>
+            <td><a href="{{ url_for('admin.admin_producer_edit', producer_id=p.id) }}" class="btn-outline">Modifier</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

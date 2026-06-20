@@ -33,6 +33,11 @@ class Order(TimestampMixin, db.Model):
     delivery_postal_code = db.Column(db.String(20))
     delivery_country = db.Column(db.String(2), default="FR", server_default="FR")
     customer_notes = db.Column(db.Text)
+    gift_message = db.Column(db.Text)
+    is_gift = db.Column(db.Boolean, nullable=False, default=False, server_default="0")
+    promo_code = db.Column(db.String(40))
+    discount_cents = db.Column(db.Integer, nullable=False, default=0, server_default="0")
+    notify_status_updates = db.Column(db.Boolean, nullable=False, default=True, server_default="1")
 
     currency = db.Column(db.String(3), nullable=False, default="EUR", server_default="EUR")
     subtotal_cents = db.Column(db.Integer, nullable=False, default=0)
@@ -129,12 +134,14 @@ class OrderItem(db.Model):
     quantity = db.Column(db.Integer, nullable=False, default=1)
     unit_price_cents = db.Column(db.Integer, nullable=False)
     line_total_cents = db.Column(db.Integer, nullable=False)
+    bundle_type = db.Column(db.String(20))  # recipe | coffret
+    bundle_slug = db.Column(db.String(120))
 
     order = db.relationship("Order", back_populates="items")
     product = db.relationship("Product", back_populates="order_items", lazy="joined")
 
     @staticmethod
-    def from_product(product, quantity, order_id):
+    def from_product(product, quantity, order_id, bundle_type=None, bundle_slug=None):
         qty = max(1, int(quantity))
         unit = product.price_cents
         return OrderItem(
@@ -144,6 +151,8 @@ class OrderItem(db.Model):
             quantity=qty,
             unit_price_cents=unit,
             line_total_cents=unit * qty,
+            bundle_type=bundle_type,
+            bundle_slug=bundle_slug,
         )
 
 

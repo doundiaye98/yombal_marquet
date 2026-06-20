@@ -1,28 +1,42 @@
 {% extends "base.html" %}
-{% block title %}Suivi de commande — Yombal Marché{% endblock %}
+{% from "macros/order_card.html" import order_card %}
+{% block title %}Mes commandes — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper">
+<div class="page-wrapper orders-hub">
   <header class="page-hero page-hero--compact">
-    <p class="section-eyebrow reveal">Après votre achat</p>
-    <h1 class="section-title reveal">Suivi de <em>commande</em></h1>
+    <p class="section-eyebrow reveal">Espace commandes</p>
+    <h1 class="section-title reveal">Mes <em>commandes</em></h1>
     <p class="section-sub reveal">
-      Entrez votre référence et l’e-mail utilisé lors de la commande — sans compte obligatoire.
+      Suivez vos achats, payez une commande en attente ou retrouvez une commande passée — sans compte obligatoire.
     </p>
   </header>
 
   <section class="section section--flush-top">
-    <div class="tracking-layout">
+    {% if order_cards %}
+    <div class="orders-hub-section reveal">
+      <div class="orders-hub-section-head">
+        <h2 class="form-panel-title">Commandes récentes</h2>
+        <p class="form-panel-hint">Sur cet appareil{% if current_user.is_authenticated %} · compte connecté{% else %} · mode invité{% endif %}</p>
+      </div>
+      <div class="order-card-grid">
+        {% for card in order_cards %}
+        {{ order_card(card.order, card.preview_lines, card.extra_item_count, card.pill_label, card.pill_class, card.can_pay) }}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="tracking-layout tracking-layout--hub">
       <div class="form-panel reveal">
         <h2 class="form-panel-title">Retrouver une commande</h2>
         <p class="form-panel-hint">
-          Référence : <code>YM-…</code>, <code>YOMBAL-CMD-12</code> ou numéro de commande.
-          L’e-mail doit correspondre à celui saisi au checkout.
+          Référence (<code>YM-…</code> ou <code>YOMBAL-CMD-12</code>) + e-mail utilisé au checkout.
         </p>
         <form method="post" class="tracking-form">
           <div class="field-group">
-            <label class="field-label" for="order_ref">Référence commande</label>
+            <label class="field-label" for="order_ref">N° de commande</label>
             <input id="order_ref" class="field-input" type="text" name="order_ref" required
-              placeholder="YM-20260615-ABC123 ou YOMBAL-CMD-42"
+              placeholder="YM-20260615-ABC123"
               value="{{ request.form.get('order_ref', '') }}">
           </div>
           <div class="field-group">
@@ -31,37 +45,24 @@
               placeholder="vous@exemple.com"
               value="{{ request.form.get('email', current_user.email if current_user.is_authenticated else '') }}">
           </div>
-          <button type="submit" class="btn-primary">Voir le suivi</button>
+          <button type="submit" class="btn-primary">Afficher ma commande</button>
         </form>
       </div>
 
-      {% if recent_orders %}
-      <aside class="tracking-recent reveal">
-        <h2 class="form-panel-title">Vos commandes récentes</h2>
-        <p class="form-panel-hint">Sur cet appareil{% if current_user.is_authenticated %} (compte connecté){% else %} (session invité){% endif %}.</p>
-        <ul class="tracking-order-list">
-          {% for o in recent_orders %}
-          <li>
-            <a href="{{ url_for('suivi_commande_detail', order_id=o.id) }}" class="tracking-order-item">
-              <span class="tracking-order-ref">{{ o.public_ref }}</span>
-              <span class="tracking-order-date">{{ o.created_at.strftime('%d/%m/%Y') }}</span>
-              <span class="tracking-order-status">{{ order_status_labels.get(o.status, o.status) }}</span>
-              <span class="tracking-order-total">{{ '%.2f'|format(o.total_cents / 100) }} €</span>
-            </a>
-          </li>
-          {% endfor %}
+      <aside class="orders-trust-panel reveal">
+        <h2 class="form-panel-title">Acheter en confiance</h2>
+        <ul class="orders-trust-list">
+          <li><span aria-hidden="true">📦</span> Suivi en temps réel de votre commande</li>
+          <li><span aria-hidden="true">🔒</span> Paiement sécurisé (carte, virement, PayPal)</li>
+          <li><span aria-hidden="true">🚚</span> Livraison suivie jusqu’à votre porte</li>
+          <li><span aria-hidden="true">💬</span> Support par e-mail sous 24–48 h</li>
         </ul>
+        <p class="form-panel-hint">
+          Besoin d’aide ?
+          <a href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }}</a>
+          · <a href="{{ url_for('contact') }}">Contact</a>
+        </p>
       </aside>
-      {% endif %}
-    </div>
-
-    <div class="tracking-help reveal">
-      <h3 class="form-panel-title">Besoin d’aide ?</h3>
-      <p class="form-panel-hint">
-        La référence figure dans l’e-mail de confirmation. Questions :
-        <a href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }}</a>
-        ou <a href="{{ url_for('contact') }}">page Contact</a>.
-      </p>
     </div>
   </section>
 </div>

@@ -16,7 +16,7 @@
   <a href="#main-content" class="skip-link">Aller au contenu</a>
 
   {% set ep = request.endpoint %}
-  {% set nav_shop = ep in ['boutique', 'product_detail', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'suivi_commande', 'suivi_commande_detail', 'admin_orders', 'admin_order_detail'] %}
+  {% set nav_shop = ep in ['boutique', 'product_detail', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'suivi_commande', 'suivi_commande_detail', 'commande_recommander', 'commande_annuler', 'api_commande_statut', 'admin_orders', 'admin_order_detail'] %}
   {% set nav_discover = ep in ['decouvrir', 'saveurs', 'recettes', 'recette_detail', 'recette_panier', 'coffrets', 'coffret_detail', 'coffret_panier'] %}
 
   <div class="trust-bar" role="complementary" aria-label="Engagements boutique">
@@ -58,13 +58,13 @@
         </ul>
       </li>
       <li><a href="{{ url_for('panier') }}" class="{{ 'active' if ep in ['panier', 'checkout'] else '' }}">Panier{% if cart_count %}<span class="nav-cart-badge">{{ cart_count }}</span>{% endif %}</a></li>
-      <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail'] else '' }}">Suivi</a></li>
+      <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail', 'commande_recommander'] else '' }}">Commandes</a></li>
       <li><a href="{{ url_for('services') }}" class="{{ 'active' if ep == 'services' else '' }}">Services</a></li>
       <li><a href="{{ url_for('apropos') }}" class="{{ 'active' if ep == 'apropos' else '' }}">À propos</a></li>
       <li><a href="{{ url_for('contact') }}" class="{{ 'active' if ep == 'contact' else '' }}">Contact</a></li>
       {% if current_user.is_authenticated %}
       {% if is_shop_admin %}
-      <li><a href="{{ url_for('admin_orders') }}" class="{{ 'active' if ep in ['admin_orders', 'admin_order_detail'] else '' }}">Admin</a></li>
+      <li><a href="{{ url_for('admin.admin_dashboard') }}" class="{{ 'active' if ep and ep.startswith('admin.') else '' }}">Admin</a></li>
       {% endif %}
       <li><a href="{{ url_for('logout') }}">Déconnexion</a></li>
       {% endif %}
@@ -93,7 +93,15 @@
       <div class="footer-col">
         <p class="footer-brand">Yombal Marché</p>
         <p class="footer-tagline">Produits alimentaires et cosmétiques, livraison à domicile et boutique en ligne — une enseigne du <strong>Groupe YOMBAL</strong>.</p>
-        <p class="footer-contact-line">📧 <a href="mailto:{{ shop_contact_email }}" class="footer-email-link">{{ shop_contact_email }}</a></p>
+        <div class="footer-email-block">
+          <span class="footer-email-label">Contact</span>
+          <a href="mailto:{{ shop_contact_email }}" class="email-chip email-chip--footer">
+            <span class="email-chip-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <span class="email-chip-text">{{ shop_contact_email }}</span>
+          </a>
+        </div>
       </div>
       <nav class="footer-col" aria-label="Navigation boutique">
         <h3>Boutique</h3>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Admin — Codes promo{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact">
+    <h1 class="section-title reveal">Codes promo</h1>
+    <p class="section-sub reveal"><a href="{{ url_for('admin.admin_promo_edit', promo_id=None) }}" class="btn-primary">+ Nouveau code</a></p>
+  </header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top section--cart">
+    <div class="cart-table-wrap admin-table-wrap reveal">
+      <table class="cart-table admin-table">
+        <thead><tr><th>Code</th><th>Réduction</th><th>Utilisations</th><th>Actif</th><th></th></tr></thead>
+        <tbody>
+          {% for p in promos %}
+          <tr>
+            <td><code>{{ p.code }}</code></td>
+            <td>{% if p.discount_percent %}{{ p.discount_percent }} %{% elif p.discount_cents %}{{ '%.2f'|format(p.discount_cents / 100) }} €{% endif %}</td>
+            <td>{{ p.used_count }}{% if p.max_uses %} / {{ p.max_uses }}{% endif %}</td>
+            <td>{{ 'Oui' if p.is_active else 'Non' }}</td>
+            <td><a href="{{ url_for('admin.admin_promo_edit', promo_id=p.id) }}" class="btn-outline">Modifier</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

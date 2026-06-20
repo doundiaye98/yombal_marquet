@@ -18,6 +18,10 @@ class Producer(TimestampMixin, db.Model):
     monthly_production = db.Column(db.String(120))
     story = db.Column(db.Text, nullable=False)
     avatar_emoji = db.Column(db.String(8), nullable=False, default="👤", server_default="👤")
+    audio_url = db.Column(db.String(500))
+    map_x = db.Column(db.Integer)
+    map_y = db.Column(db.Integer)
+    map_label = db.Column(db.String(120))
     is_active = db.Column(db.Boolean, nullable=False, default=True, server_default="1")
 
     products = db.relationship("Product", back_populates="producer", lazy="dynamic")

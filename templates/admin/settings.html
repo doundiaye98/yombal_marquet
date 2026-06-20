@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Admin — Paramètres{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact"><h1 class="section-title reveal">Paramètres boutique</h1></header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top">
+    <form method="post" class="form-panel reveal">
+      <div class="field-group"><label class="field-label">Nom boutique</label><input class="field-input" name="shop_name" value="{{ settings.shop_name }}"></div>
+      <div class="field-group"><label class="field-label">E-mail contact</label><input class="field-input" type="email" name="shop_contact_email" value="{{ settings.shop_contact_email }}"></div>
+      <div class="field-group"><label class="field-label">Adresse ligne 1</label><input class="field-input" name="shop_address_line1" value="{{ settings.shop_address_line1 }}"></div>
+      <div class="field-group"><label class="field-label">Adresse ligne 2</label><input class="field-input" name="shop_address_line2" value="{{ settings.shop_address_line2 }}"></div>
+      <div class="field-group"><label class="field-label">Téléphone</label><input class="field-input" name="shop_phone" value="{{ settings.shop_phone }}"></div>
+      <div class="field-group"><label class="field-label">Horaires semaine</label><input class="field-input" name="shop_hours_weekday" value="{{ settings.shop_hours_weekday }}"></div>
+      <div class="field-group"><label class="field-label">Horaires samedi</label><input class="field-input" name="shop_hours_saturday" value="{{ settings.shop_hours_saturday }}"></div>
+      <div class="field-group"><label class="field-label">Horaires dimanche</label><input class="field-input" name="shop_hours_sunday" value="{{ settings.shop_hours_sunday }}"></div>
+      <div class="field-row-2">
+        <div class="field-group"><label class="field-label">Délai livraison min (jours)</label><input class="field-input" type="number" min="1" max="60" name="shop_delivery_days_min" value="{{ settings.shop_delivery_days_min or '3' }}"></div>
+        <div class="field-group"><label class="field-label">Délai livraison max (jours)</label><input class="field-input" type="number" min="1" max="90" name="shop_delivery_days_max" value="{{ settings.shop_delivery_days_max or '7' }}"></div>
+      </div>
+      <button type="submit" class="btn-primary">Enregistrer</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

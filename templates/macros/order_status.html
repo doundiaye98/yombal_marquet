@@ -1,0 +1,4 @@
+{% macro status_pill(status) %}
+{% set pill = order_status_pills.get(status, ('En cours', 'pill-neutral')) %}
+<span class="order-pill {{ pill[1] }}">{{ pill[0] }}</span>
+{% endmacro %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Admin — Code promo{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact"><h1 class="section-title reveal">{{ 'Nouveau code' if is_new else promo.code }}</h1></header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top">
+    <form method="post" class="form-panel reveal">
+      <div class="field-group"><label class="field-label">Code</label><input class="field-input" name="code" required value="{{ promo.code or '' }}"></div>
+      <div class="field-row-2">
+        <div class="field-group"><label class="field-label">Réduction (%)</label><input class="field-input" name="discount_percent" type="number" value="{{ promo.discount_percent or '' }}"></div>
+        <div class="field-group"><label class="field-label">Ou montant fixe (€)</label><input class="field-input" name="discount_euros" type="number" step="0.01" value="{{ '%.2f'|format(promo.discount_cents / 100) if promo.discount_cents else '' }}"></div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group"><label class="field-label">Commande min. (€)</label><input class="field-input" name="min_order_euros" type="number" step="0.01" value="{{ '%.2f'|format(promo.min_order_cents / 100) if promo.min_order_cents else '0' }}"></div>
+        <div class="field-group"><label class="field-label">Max utilisations</label><input class="field-input" name="max_uses" type="number" value="{{ promo.max_uses or '' }}"></div>
+      </div>
+      <div class="field-group"><label><input type="checkbox" name="is_active" value="1" {% if promo.is_active %}checked{% endif %}> Actif</label></div>
+      <button type="submit" class="btn-primary">Enregistrer</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

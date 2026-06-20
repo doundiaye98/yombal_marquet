@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Admin — {{ producer.name }}{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact"><h1 class="section-title reveal">{{ producer.name }}</h1></header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top">
+    <form method="post" class="form-panel reveal">
+      <div class="field-group"><label class="field-label">Nom</label><input class="field-input" name="name" required value="{{ producer.name }}"></div>
+      <div class="field-group"><label class="field-label">Région</label><input class="field-input" name="region" required value="{{ producer.region }}"></div>
+      <div class="field-group"><label class="field-label">Produit phare</label><input class="field-input" name="flagship_product" value="{{ producer.flagship_product }}"></div>
+      <div class="field-group"><label class="field-label">Histoire</label><textarea class="field-textarea" name="story" rows="8" required>{{ producer.story }}</textarea></div>
+      <div class="field-row-2">
+        <div class="field-group"><label class="field-label">Emoji</label><input class="field-input" name="avatar_emoji" value="{{ producer.avatar_emoji }}"></div>
+        <div class="field-group"><label class="field-label">Audio URL (MP3)</label><input class="field-input" name="audio_url" value="{{ producer.audio_url or '' }}"></div>
+      </div>
+      <div class="field-row-2">
+        <div class="field-group"><label class="field-label">Carte X (0–1000)</label><input class="field-input" name="map_x" type="number" value="{{ producer.map_x or '' }}"></div>
+        <div class="field-group"><label class="field-label">Carte Y (0–500)</label><input class="field-input" name="map_y" type="number" value="{{ producer.map_y or '' }}"></div>
+      </div>
+      <div class="field-group"><label class="field-label">Libellé carte</label><input class="field-input" name="map_label" value="{{ producer.map_label or '' }}"></div>
+      <div class="field-group"><label><input type="checkbox" name="is_active" value="1" {% if producer.is_active %}checked{% endif %}> Actif</label></div>
+      <button type="submit" class="btn-primary">Enregistrer</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

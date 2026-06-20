@@ -7,6 +7,7 @@
     <h1 class="section-title reveal">Commandes</h1>
     <p class="section-sub reveal">Liste des commandes récentes (250 max). Filtrez par statut.</p>
   </header>
+  {% include "admin/_nav.html" %}
 
   <section class="section section--flush-top section--cart">
     <form class="admin-filter reveal" method="get" action="{{ url_for('admin_orders') }}">

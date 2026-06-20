@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Admin — Recettes{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact"><h1 class="section-title reveal">Recettes (base de données)</h1></header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top section--cart">
+    <p class="reveal section-sub">Les recettes sont synchronisées depuis le seed initial. Édition avancée des lignes produit via la base ou prochaine itération admin.</p>
+    <div class="cart-table-wrap admin-table-wrap reveal">
+      <table class="cart-table admin-table">
+        <thead><tr><th>Titre</th><th>Type</th><th>Ingrédients</th><th>Actif</th></tr></thead>
+        <tbody>
+          {% for r in recipes %}
+          <tr>
+            <td>{{ r.emoji }} {{ r.title }}</td>
+            <td>{{ r.kind_label or r.kind }}</td>
+            <td>{{ r.lines|length }}</td>
+            <td>{{ 'Oui' if r.is_active else 'Non' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

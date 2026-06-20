@@ -1,0 +1,39 @@
+{% from "macros/product_image.html" import product_image %}
+{% macro order_card(order, preview_lines, extra_item_count, pill_label, pill_class, can_pay=false) %}
+<article class="order-card">
+  <a href="{{ url_for('suivi_commande_detail', order_id=order.id) }}" class="order-card-link">
+    <header class="order-card-header">
+      <div class="order-card-meta">
+        <span class="order-card-ref">{{ order.public_ref }}</span>
+        <time class="order-card-date" datetime="{{ order.created_at.isoformat() }}">{{ order.created_at.strftime('%d/%m/%Y') }}</time>
+      </div>
+      <span class="order-pill {{ pill_class }}">{{ pill_label }}</span>
+    </header>
+    <div class="order-card-thumbs" aria-hidden="true">
+      {% for row in preview_lines %}
+      <span class="order-card-thumb">
+        {% if row.product %}
+        {{ product_image(row.product, 'thumb') }}
+        {% else %}
+        <span class="product-photo-fallback">{{ row.icon }}</span>
+        {% endif %}
+        {% if row.quantity > 1 %}<span class="order-card-qty">×{{ row.quantity }}</span>{% endif %}
+      </span>
+      {% endfor %}
+      {% if extra_item_count %}
+      <span class="order-card-more">+{{ extra_item_count }}</span>
+      {% endif %}
+    </div>
+    <footer class="order-card-footer">
+      <span class="order-card-total">{{ '%.2f'|format(order.total_cents / 100) }} €</span>
+      <span class="order-card-cta">{{ 'Payer →' if can_pay else 'Voir détails →' }}</span>
+    </footer>
+    {% if order.status not in ['cancelled', 'shipped'] %}
+    <p class="order-card-delivery">📅 {{ order_delivery_estimate(order).label }}</p>
+    {% endif %}
+  </a>
+  {% if can_pay %}
+  <a href="{{ url_for('paiement', order_id=order.id) }}" class="order-card-pay btn-primary btn-sm">Finaliser le paiement</a>
+  {% endif %}
+</article>
+{% endmacro %}

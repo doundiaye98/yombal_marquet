@@ -379,4 +379,27 @@ document.addEventListener("DOMContentLoaded", () => {
   window.setTimeout(() => {
     document.querySelectorAll(".reveal:not(.visible)").forEach((el) => el.classList.add("visible"));
   }, 2800);
+
+  /* Copier référence commande (hub / détail / paiement) */
+  document.querySelectorAll("[data-copy-ref]").forEach((btn) => {
+    const original = btn.textContent.trim();
+    btn.addEventListener("click", async () => {
+      const text = btn.dataset.copyRef || "";
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "Copié !";
+        btn.classList.add("is-copied");
+        window.setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove("is-copied");
+        }, 2000);
+      } catch {
+        btn.textContent = "Erreur";
+        window.setTimeout(() => {
+          btn.textContent = original;
+        }, 2000);
+      }
+    });
+  });
 });

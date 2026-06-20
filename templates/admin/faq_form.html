@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Admin — FAQ{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact"><h1 class="section-title reveal">{{ 'Nouvelle FAQ' if is_new else 'Modifier FAQ' }}</h1></header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top">
+    <form method="post" class="form-panel reveal">
+      <div class="field-group"><label class="field-label">Question</label><input class="field-input" name="question" required value="{{ item.question or '' }}"></div>
+      <div class="field-group"><label class="field-label">Réponse</label><textarea class="field-textarea" name="answer" rows="5" required>{{ item.answer or '' }}</textarea></div>
+      <div class="field-group"><label class="field-label">Ordre</label><input class="field-input" name="sort_order" type="number" value="{{ item.sort_order or 0 }}"></div>
+      <div class="field-group"><label><input type="checkbox" name="is_active" value="1" {% if item.is_active %}checked{% endif %}> Active</label></div>
+      <button type="submit" class="btn-primary">Enregistrer</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

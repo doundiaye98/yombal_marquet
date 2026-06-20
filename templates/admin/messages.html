@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Admin — Messages{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact"><h1 class="section-title reveal">Messages contact</h1></header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top section--cart">
+    <div class="cart-table-wrap admin-table-wrap reveal">
+      <table class="cart-table admin-table">
+        <thead><tr><th>Date</th><th>Nom</th><th>Sujet</th><th>Lu</th><th></th></tr></thead>
+        <tbody>
+          {% for m in messages %}
+          <tr>
+            <td>{{ m.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ m.name }}<br><small>{{ m.email }}</small></td>
+            <td>{{ m.subject }}</td>
+            <td>{{ 'Oui' if m.is_read else 'Non' }}</td>
+            <td>
+              <details><summary>Voir</summary><p style="white-space:pre-wrap;font-size:13px;">{{ m.message }}</p></details>
+              {% if not m.is_read %}
+              <form method="post" action="{{ url_for('admin.admin_message_read', msg_id=m.id) }}" style="display:inline;"><button type="submit" class="btn-outline">Marquer lu</button></form>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5">Aucun message.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

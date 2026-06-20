@@ -1,7 +1,10 @@
 {% extends "base.html" %}
+{% from "macros/checkout_steps.html" import checkout_steps %}
 {% block title %}Commande — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper">
+  {{ checkout_steps('checkout') }}
+
   <header class="page-hero page-hero--compact">
     <p class="section-eyebrow reveal">Commande</p>
     <h1 class="section-title reveal">Récapitulatif</h1>
@@ -17,20 +20,41 @@
           <span>{{ '%.2f'|format(row.product.price_euros() * row.quantity) }} €</span>
         </li>
         {% endfor %}
+        <li class="checkout-line">
+          <span>Sous-total</span>
+          <span>{{ '%.2f'|format(subtotal_cents / 100) }} €</span>
+        </li>
+        {% if shipping_cents %}
+        <li class="checkout-line">
+          <span>Livraison</span>
+          <span>{{ '%.2f'|format(shipping_cents / 100) }} €</span>
+        </li>
+        {% elif guest_form and guest_form.get('delivery_postal_code') %}
+        <li class="checkout-line">
+          <span>Livraison</span>
+          <span>Offerte</span>
+        </li>
+        {% endif %}
+        {% if discount_cents %}
+        <li class="checkout-line">
+          <span>Réduction{% if promo_code %} ({{ promo_code }}){% endif %}</span>
+          <span>− {{ '%.2f'|format(discount_cents / 100) }} €</span>
+        </li>
+        {% endif %}
         <li class="checkout-line checkout-total">
           <strong>Total TTC</strong>
           <strong>{{ '%.2f'|format(total_cents / 100) }} €</strong>
         </li>
       </ul>
+      {% set est = checkout_delivery_estimate() %}
+      <p class="checkout-delivery-estimate">🚚 Livraison estimée : <strong>{{ est.label }}</strong> <span class="muted-small">({{ est.days_min }}–{{ est.days_max }} j. ouvrés)</span></p>
     </div>
 
     <form method="post" class="checkout-actions reveal">
       {% if not current_user.is_authenticated %}
       <div class="form-panel">
         <h2 class="form-panel-title">Coordonnées (sans compte)</h2>
-        <p class="form-panel-hint">
-          Pas besoin de créer un compte : indiquez simplement vos coordonnées pour la livraison.
-        </p>
+        <p class="form-panel-hint">Pas besoin de créer un compte : indiquez simplement vos coordonnées pour la livraison.</p>
         <div class="field-group">
           <label class="field-label" for="guest_name">Nom complet</label>
           <input id="guest_name" class="field-input" type="text" name="guest_name" required autocomplete="name"
@@ -57,7 +81,6 @@
 
       <div class="form-panel">
         <h2 class="form-panel-title">Adresse de livraison</h2>
-        <p class="form-panel-hint">Indiquez l’adresse exacte pour la livraison ou le retrait organisé.</p>
         <div class="field-group">
           <label class="field-label" for="delivery_line1">Adresse</label>
           <input id="delivery_line1" class="field-input" type="text" name="delivery_line1" required autocomplete="street-address"
@@ -80,11 +103,41 @@
               value="{{ guest_form.get('delivery_city', '') if guest_form else '' }}">
           </div>
         </div>
-        <div class="field-group">
-          <label class="field-label" for="customer_notes">Instructions livreur ou message cadeau (facultatif)</label>
-          <textarea id="customer_notes" name="customer_notes" rows="3" class="field-textarea" placeholder="Ex. : sonner 2 fois, laisser au gardien, ou message pour un coffret offert…">{{ guest_form.get('customer_notes', '') if guest_form else '' }}</textarea>
-        </div>
         <input type="hidden" name="delivery_country" value="FR">
+      </div>
+
+      <div class="form-panel">
+        <h2 class="form-panel-title">Code promo (facultatif)</h2>
+        <div class="field-group">
+          <label class="field-label" for="promo_code">Code</label>
+          <input id="promo_code" class="field-input" type="text" name="promo_code" placeholder="Ex. BIENVENUE10"
+            value="{{ promo_code or (guest_form.get('promo_code', '') if guest_form else '') }}">
+        </div>
+      </div>
+
+      <div class="form-panel">
+        <h2 class="form-panel-title">Notifications</h2>
+        <div class="field-group">
+          <label class="checkout-notify-label">
+            <input type="checkbox" name="notify_status_updates" value="1" checked>
+            M’informer par e-mail et SMS des mises à jour (paiement, expédition, livraison)
+          </label>
+        </div>
+      </div>
+
+      <div class="form-panel">
+        <h2 class="form-panel-title">Cadeau &amp; instructions</h2>
+        <div class="field-group">
+          <label><input type="checkbox" name="is_gift" value="1" {% if guest_form and guest_form.get('is_gift') == '1' %}checked{% endif %}> C'est un cadeau</label>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="gift_message">Message cadeau</label>
+          <textarea id="gift_message" name="gift_message" rows="2" class="field-textarea" placeholder="Texte pour la carte cadeau…">{{ guest_form.get('gift_message', '') if guest_form else '' }}</textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="customer_notes">Instructions livreur (facultatif)</label>
+          <textarea id="customer_notes" name="customer_notes" rows="3" class="field-textarea" placeholder="Sonnette, gardien, créneau…">{{ guest_form.get('customer_notes', '') if guest_form else '' }}</textarea>
+        </div>
       </div>
 
       <div class="checkout-actions-footer">

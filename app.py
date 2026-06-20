@@ -4,13 +4,13 @@
 import logging
 import os
 from datetime import datetime
-from functools import wraps
 
 from dotenv import load_dotenv
 from flask import (
     Flask,
     abort,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
@@ -27,6 +27,7 @@ from models import (
     ORDER_STATUSES,
     ORDER_STATUS_AWAITING_PAYPAL,
     ORDER_STATUS_AWAITING_WIRE,
+    ORDER_STATUS_CANCELLED,
     ORDER_STATUS_COD_CONFIRMED,
     ORDER_STATUS_PAID_DEMO,
     ORDER_STATUS_PAID_MANUAL,
@@ -49,15 +50,24 @@ from models.constants import PRODUCT_CATEGORIES, SHOP_CATEGORY_ORDER
 from models.constants import (
     ORDER_STATUS_HINTS,
     ORDER_STATUS_LABELS,
+    ORDER_STATUS_PILL,
     ORDER_STATUS_STEP,
     ORDER_TRACKING_STEPS,
 )
 from models.order_tracking import find_order_by_reference_and_email
-from models.recipes import RECIPES, get_recipe_by_slug, recipes_for_product_slug
-from models.coffrets import COFFRETS, get_coffret_by_slug
-from models.faq import FAQ_ITEMS
+from routes.admin import admin_bp
+from services import cart as cart_svc
+from services import content as content_svc
+from services import promo as promo_svc
+from services import settings as settings_svc
+from services import delivery_estimate as delivery_est_svc
+from services import order_ui as order_ui_svc
+from services import shipping as shipping_svc
+from shop_auth import admin_required, is_shop_admin
+from models.contact_message import ContactMessage
 
-load_dotenv()
+_APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(_APP_ROOT, ".env"))
 
 logger = logging.getLogger(__name__)
 
@@ -73,12 +83,15 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 migrate.init_app(app, db)
 login_manager.init_app(app)
+app.register_blueprint(admin_bp)
 app.jinja_env.globals["product_categories"] = PRODUCT_CATEGORIES
 app.jinja_env.globals["shop_category_order"] = SHOP_CATEGORY_ORDER
 app.jinja_env.globals["order_status_labels"] = ORDER_STATUS_LABELS
 app.jinja_env.globals["order_status_hints"] = ORDER_STATUS_HINTS
 app.jinja_env.globals["order_status_step"] = ORDER_STATUS_STEP
-app.jinja_env.globals["order_tracking_steps"] = ORDER_TRACKING_STEPS
+app.jinja_env.globals["order_delivery_estimate"] = delivery_est_svc.estimate_for_order
+app.jinja_env.globals["checkout_delivery_estimate"] = delivery_est_svc.estimate_checkout_preview
+app.jinja_env.globals["order_status_pills"] = ORDER_STATUS_PILL
 
 try:
     import stripe as stripe_sdk
@@ -112,49 +125,24 @@ PRESTATION_CATEGORY = {
 
 
 def _cart_raw():
-    return session.get("cart") or {}
+    return cart_svc.cart_raw()
 
 
 def _cart_items():
-    raw = _cart_raw()
-    rows = []
-    total = 0
-    for pid, qty in raw.items():
-        try:
-            q = max(1, min(99, int(qty)))
-        except (TypeError, ValueError):
-            continue
-        p = db.session.get(Product, int(pid))
-        if p and p.is_active:
-            rows.append({"product": p, "quantity": q})
-            total += p.price_cents * q
-    return rows, total
+    return cart_svc.cart_items()
 
 
 def _cart_count():
-    return sum(int(q) for q in _cart_raw().values() if str(q).isdigit())
+    return cart_svc.cart_count()
 
 
 def _admin_emails_set():
-    return {e.strip().lower() for e in os.environ.get("ADMIN_EMAILS", "").split(",") if e.strip()}
+    from shop_auth import admin_emails_set
+    return admin_emails_set()
 
 
 def _is_shop_admin():
-    if not current_user.is_authenticated:
-        return False
-    return current_user.email.lower() in _admin_emails_set()
-
-
-def admin_required(view):
-    @wraps(view)
-    def wrapped(*args, **kwargs):
-        if not current_user.is_authenticated:
-            abort(404)
-        if not _is_shop_admin():
-            abort(403)
-        return view(*args, **kwargs)
-
-    return wrapped
+    return is_shop_admin()
 
 
 def _order_contact(order):
@@ -195,12 +183,60 @@ def _notify_payment_received(order):
     suivi = _order_suivi_url(order)
     try:
         if contact and contact.email:
-            mailer.notify_customer_payment_received(order, contact)
+            mailer.notify_customer_payment_received(order, contact, suivi_url=suivi)
             mailer.notify_admin_payment_received(order, contact)
     except Exception:
         pass
     try:
         smser.notify_customer_payment_received(order, suivi_url=suivi)
+    except Exception:
+        pass
+
+
+def _notify_status_change(order, old_status, new_status):
+    if old_status == new_status:
+        return
+    if not getattr(order, "notify_status_updates", True):
+        return
+    if new_status == ORDER_STATUS_CANCELLED:
+        _notify_order_cancelled(order, by_customer=False)
+        return
+    if new_status in (
+        ORDER_STATUS_PAID_STRIPE,
+        ORDER_STATUS_PAID_DEMO,
+        ORDER_STATUS_PAID_MANUAL,
+    ):
+        return
+    contact = _order_contact(order)
+    suivi = _order_suivi_url(order)
+    try:
+        if contact and contact.email:
+            mailer.notify_customer_status_update(order, contact, old_status, new_status, suivi_url=suivi)
+    except Exception:
+        pass
+    try:
+        smser.notify_customer_status_update(order, old_status, new_status, suivi_url=suivi)
+    except Exception:
+        pass
+
+
+def _notify_order_cancelled(order, *, by_customer=False):
+    if not getattr(order, "notify_status_updates", True):
+        return
+    contact = _order_contact(order)
+    suivi = _order_suivi_url(order)
+    try:
+        if contact and contact.email:
+            mailer.notify_customer_order_cancelled(
+                order, contact, suivi_url=suivi, by_customer=by_customer
+            )
+            mailer.notify_admin_order_cancelled(order, contact, by_customer=by_customer)
+    except Exception:
+        pass
+    try:
+        smser.notify_customer_status_update(
+            order, order.status, ORDER_STATUS_CANCELLED, suivi_url=suivi
+        )
     except Exception:
         pass
 
@@ -246,11 +282,13 @@ def _apply_stripe_pi_to_order(order, pi):
 
 @app.context_processor
 def inject_globals():
+    shop = settings_svc.shop_settings()
     return {
         "current_year": datetime.now().year,
         "service_categories": SERVICE_CATEGORIES,
         "cart_count": _cart_count(),
-        "shop_contact_email": (os.environ.get("CONTACT_EMAIL") or "contact@yombal-marche.local").strip(),
+        "shop_contact_email": shop.get("shop_contact_email"),
+        "shop_settings": shop,
         "is_shop_admin": _is_shop_admin(),
         "product_categories": PRODUCT_CATEGORIES,
         "shop_category_order": SHOP_CATEGORY_ORDER,
@@ -258,6 +296,7 @@ def inject_globals():
         "order_status_hints": ORDER_STATUS_HINTS,
         "order_status_step": ORDER_STATUS_STEP,
         "order_tracking_steps": ORDER_TRACKING_STEPS,
+        "order_status_pills": ORDER_STATUS_PILL,
     }
 
 
@@ -301,27 +340,61 @@ def _producer_query_active():
 
 
 def _delivery_from_form():
+    is_gift = request.form.get("is_gift") == "1"
+    gift_message = (request.form.get("gift_message") or "").strip() or None
+    notes = (request.form.get("customer_notes") or "").strip() or None
+    if is_gift and gift_message and not notes:
+        notes = gift_message
     return {
         "delivery_line1": (request.form.get("delivery_line1") or "").strip(),
         "delivery_line2": (request.form.get("delivery_line2") or "").strip() or None,
         "delivery_city": (request.form.get("delivery_city") or "").strip(),
         "delivery_postal_code": (request.form.get("delivery_postal_code") or "").strip(),
         "delivery_country": (request.form.get("delivery_country") or "FR").strip().upper()[:2],
-        "customer_notes": (request.form.get("customer_notes") or "").strip() or None,
+        "customer_notes": notes,
+        "is_gift": is_gift,
+        "gift_message": gift_message,
+    }
+
+
+def _checkout_preview(items, subtotal_cents, form=None):
+    form = form or {}
+    postal = (form.get("delivery_postal_code") or request.form.get("delivery_postal_code") or "").strip()
+    promo_code = (form.get("promo_code") or request.form.get("promo_code") or "").strip()
+    shipping = shipping_svc.shipping_cents_for_postal(postal, subtotal_cents) if postal else 0
+    promo, discount, promo_err = promo_svc.validate_promo(promo_code, subtotal_cents)
+    total = max(0, subtotal_cents + shipping - discount)
+    return {
+        "shipping_cents": shipping,
+        "discount_cents": discount,
+        "promo_code": promo.code if promo else None,
+        "promo_error": promo_err,
+        "total_cents": total,
+        "subtotal_cents": subtotal_cents,
     }
 
 
 def _apply_delivery_to_order(order, delivery):
-    for key, value in delivery.items():
-        setattr(order, key, value)
+    for key in (
+        "delivery_line1",
+        "delivery_line2",
+        "delivery_city",
+        "delivery_postal_code",
+        "delivery_country",
+        "customer_notes",
+        "is_gift",
+        "gift_message",
+    ):
+        if key in delivery:
+            setattr(order, key, delivery[key])
 
 
 @app.route("/")
 def index():
     featured = _product_query_active().order_by(Product.id).limit(6).all()
     featured_producers = _producer_query_active().order_by(Producer.id).limit(4).all()
-    featured_recipes = [_build_recipe_view(r) for r in RECIPES[:3]]
-    featured_coffrets = [_build_product_bundle(c) for c in COFFRETS[:2]]
+    featured_recipes = [_build_recipe_view(r) for r in content_svc.all_recipe_defs()[:3]]
+    featured_coffrets = [_build_product_bundle(c) for c in content_svc.all_coffret_defs()[:2]]
     return render_template(
         "index.html",
         featured_products=featured,
@@ -376,7 +449,7 @@ def product_detail(slug):
         .all()
     )
     related_recipes = [
-        _build_recipe_view(r) for r in recipes_for_product_slug(slug)[:3]
+        _build_recipe_view(r) for r in content_svc.recipes_for_product_slug(slug)[:3]
     ]
     return render_template(
         "boutique/detail.html",
@@ -415,6 +488,22 @@ SAVEURS_PIN_DEFS = (
 
 def _saveurs_pins():
     pins = []
+    producers = _producer_query_active().filter(
+        Producer.map_x.isnot(None),
+        Producer.map_y.isnot(None),
+    ).order_by(Producer.name)
+    for producer in producers:
+        pins.append(
+            {
+                "producer": producer,
+                "x_pct": round(producer.map_x / 1000 * 100, 2),
+                "y_pct": round(producer.map_y / 500 * 100, 2),
+                "label": producer.map_label or producer.region,
+                "products": producer.active_products().limit(3).all(),
+            }
+        )
+    if pins:
+        return pins
     for d in SAVEURS_PIN_DEFS:
         producer = _producer_query_active().filter_by(slug=d["producer_slug"]).first()
         if not producer:
@@ -470,14 +559,14 @@ def _build_recipe_view(recipe_def):
 @app.route("/recettes")
 def recettes():
     kind = request.args.get("type")
-    recipes = [_build_recipe_view(r) for r in RECIPES if not kind or r.get("kind") == kind]
-    kinds = sorted({r.get("kind") for r in RECIPES if r.get("kind")})
+    recipes = [_build_recipe_view(r) for r in content_svc.all_recipe_defs() if not kind or r.get("kind") == kind]
+    kinds = sorted({r.get("kind") for r in content_svc.all_recipe_defs() if r.get("kind")})
     return render_template("recettes/index.html", recipes=recipes, kinds=kinds, filter_kind=kind)
 
 
 @app.route("/recette/<slug>")
 def recette_detail(slug):
-    recipe_def = get_recipe_by_slug(slug)
+    recipe_def = content_svc.recipe_def_by_slug(slug)
     if not recipe_def:
         abort(404)
     recipe = _build_recipe_view(recipe_def)
@@ -486,7 +575,7 @@ def recette_detail(slug):
 
 @app.route("/recette/<slug>/panier", methods=["POST"])
 def recette_panier(slug):
-    recipe_def = get_recipe_by_slug(slug)
+    recipe_def = content_svc.recipe_def_by_slug(slug)
     if not recipe_def:
         abort(404)
     recipe = _build_recipe_view(recipe_def)
@@ -496,11 +585,10 @@ def recette_panier(slug):
 
     cart = dict(session.get("cart") or {})
     for ing in recipe["cart_items"]:
-        pid = str(ing["product"].id)
-        qty = ing["quantity"]
-        cart[pid] = min(99, cart.get(pid, 0) + qty)
-    session["cart"] = cart
-    session.modified = True
+        ok, err = cart_svc.add_to_cart(ing["product"].id, ing["quantity"], "recipe", slug)
+        if not ok:
+            flash(err, "danger")
+            return redirect(url_for("recette_detail", slug=slug))
 
     added = len(recipe["cart_items"])
     if recipe["is_complete"]:
@@ -519,14 +607,14 @@ def recette_panier(slug):
 @app.route("/coffrets")
 def coffrets():
     theme = request.args.get("theme")
-    items = [_build_product_bundle(c) for c in COFFRETS if not theme or c.get("theme") == theme]
-    themes = sorted({c.get("theme") for c in COFFRETS if c.get("theme")})
+    items = [_build_product_bundle(c) for c in content_svc.all_coffret_defs() if not theme or c.get("theme") == theme]
+    themes = sorted({c.get("theme") for c in content_svc.all_coffret_defs() if c.get("theme")})
     return render_template("coffrets/index.html", coffrets=items, themes=themes, filter_theme=theme)
 
 
 @app.route("/coffret/<slug>")
 def coffret_detail(slug):
-    coffret_def = get_coffret_by_slug(slug)
+    coffret_def = content_svc.coffret_def_by_slug(slug)
     if not coffret_def:
         abort(404)
     coffret = _build_product_bundle(coffret_def)
@@ -535,7 +623,7 @@ def coffret_detail(slug):
 
 @app.route("/coffret/<slug>/panier", methods=["POST"])
 def coffret_panier(slug):
-    coffret_def = get_coffret_by_slug(slug)
+    coffret_def = content_svc.coffret_def_by_slug(slug)
     if not coffret_def:
         abort(404)
     coffret = _build_product_bundle(coffret_def)
@@ -543,13 +631,11 @@ def coffret_panier(slug):
         flash("Aucun produit disponible pour ce coffret.", "warning")
         return redirect(url_for("coffret_detail", slug=slug))
 
-    cart = dict(session.get("cart") or {})
     for ing in coffret["cart_items"]:
-        pid = str(ing["product"].id)
-        qty = ing["quantity"]
-        cart[pid] = min(99, cart.get(pid, 0) + qty)
-    session["cart"] = cart
-    session.modified = True
+        ok, err = cart_svc.add_to_cart(ing["product"].id, ing["quantity"], "coffret", slug)
+        if not ok:
+            flash(err, "danger")
+            return redirect(url_for("coffret_detail", slug=slug))
 
     added = len(coffret["cart_items"])
     if coffret["is_complete"]:
@@ -576,13 +662,10 @@ def panier_ajouter():
     if not product or not product.is_active:
         flash("Produit introuvable.", "danger")
         return redirect(request.referrer or url_for("boutique"))
-    qty = max(1, min(20, qty))
-    cart = dict(session.get("cart") or {})
-    cart[str(pid)] = cart.get(str(pid), 0) + qty
-    if cart[str(pid)] > 99:
-        cart[str(pid)] = 99
-    session["cart"] = cart
-    session.modified = True
+    ok, err = cart_svc.add_to_cart(pid, qty)
+    if not ok:
+        flash(err or "Produit introuvable.", "danger")
+        return redirect(request.referrer or url_for("boutique"))
     flash("Produit ajouté au panier.", "success")
     next_url = request.form.get("next") or request.referrer
     return redirect(next_url or url_for("panier"))
@@ -591,22 +674,17 @@ def panier_ajouter():
 @app.route("/panier")
 def panier():
     items, total = _cart_items()
-    return render_template("panier.html", items=items, total_cents=total)
+    item_count = sum(row["quantity"] for row in items)
+    return render_template("panier.html", items=items, total_cents=total, cart_item_count=item_count)
 
 
 @app.route("/panier/modifier", methods=["POST"])
 def panier_modifier():
     pid = str(request.form.get("product_id", ""))
     qty = request.form.get("quantity", type=int)
-    cart = dict(session.get("cart") or {})
-    if pid not in cart:
-        return redirect(url_for("panier"))
-    if qty is None or qty < 1:
-        cart.pop(pid, None)
-    else:
-        cart[pid] = max(1, min(99, qty))
-    session["cart"] = cart
-    session.modified = True
+    ok, err = cart_svc.set_cart_qty(pid, qty)
+    if not ok:
+        flash(err, "warning")
     return redirect(url_for("panier"))
 
 
@@ -630,33 +708,55 @@ def logout():
 
 @app.route("/checkout", methods=["GET", "POST"])
 def checkout():
-    items, total = _cart_items()
+    items, subtotal = _cart_items()
     if not items:
         flash("Votre panier est vide.", "warning")
         return redirect(url_for("boutique"))
+    preview = _checkout_preview(items, subtotal, request.form if request.method == "POST" else None)
+
+    def _render_checkout(form=None, preview_override=None):
+        p = preview_override or preview
+        return render_template(
+            "checkout.html",
+            items=items,
+            subtotal_cents=subtotal,
+            shipping_cents=p["shipping_cents"],
+            discount_cents=p["discount_cents"],
+            total_cents=p["total_cents"],
+            promo_code=p.get("promo_code") or ((form or {}).get("promo_code") or ""),
+            promo_error=p.get("promo_error"),
+            guest_form=form,
+        )
+
     if request.method == "POST":
         delivery = _delivery_from_form()
+        preview = _checkout_preview(items, subtotal, request.form)
+        if preview.get("promo_error") and (request.form.get("promo_code") or "").strip():
+            flash(preview["promo_error"], "danger")
+            return _render_checkout(request.form, preview)
         if len(delivery["delivery_line1"]) < 5:
             flash("Indiquez une adresse de livraison complète.", "danger")
-            return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+            return _render_checkout(request.form, preview)
         if len(delivery["delivery_city"]) < 2 or len(delivery["delivery_postal_code"]) < 4:
             flash("Indiquez la ville et le code postal.", "danger")
-            return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+            return _render_checkout(request.form, preview)
 
         if current_user.is_authenticated:
             phone = _phone_from_form()
             if len(phone) < 6:
                 flash("Indiquez un numéro de téléphone pour la livraison et les confirmations SMS.", "danger")
-                return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+                return _render_checkout(request.form, preview)
             order = Order(
                 user_id=current_user.id,
                 guest_phone=phone,
-                subtotal_cents=total,
-                shipping_cents=0,
-                total_cents=total,
+                subtotal_cents=subtotal,
+                shipping_cents=preview["shipping_cents"],
+                discount_cents=preview["discount_cents"],
+                total_cents=preview["total_cents"],
+                promo_code=preview.get("promo_code"),
                 status=ORDER_STATUS_PENDING,
+                notify_status_updates=request.form.get("notify_status_updates") == "1",
             )
-            current_user.phone = phone
             _apply_delivery_to_order(order, delivery)
         else:
             email = (request.form.get("guest_email") or "").strip().lower()
@@ -664,22 +764,25 @@ def checkout():
             phone = _phone_from_form()
             if not email or "@" not in email:
                 flash("Indiquez une adresse e-mail valide pour la commande.", "danger")
-                return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+                return _render_checkout(request.form, preview)
             if len(name) < 2:
                 flash("Indiquez votre nom pour la livraison.", "danger")
-                return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+                return _render_checkout(request.form, preview)
             if len(phone) < 6:
                 flash("Indiquez un numéro de téléphone valide (confirmation SMS).", "danger")
-                return render_template("checkout.html", items=items, total_cents=total, guest_form=request.form)
+                return _render_checkout(request.form, preview)
             order = Order(
                 user_id=None,
                 guest_email=email,
                 guest_name=name,
                 guest_phone=phone,
-                subtotal_cents=total,
-                shipping_cents=0,
-                total_cents=total,
+                subtotal_cents=subtotal,
+                shipping_cents=preview["shipping_cents"],
+                discount_cents=preview["discount_cents"],
+                total_cents=preview["total_cents"],
+                promo_code=preview.get("promo_code"),
                 status=ORDER_STATUS_PENDING,
+                notify_status_updates=request.form.get("notify_status_updates") == "1",
             )
             _apply_delivery_to_order(order, delivery)
 
@@ -689,18 +792,30 @@ def checkout():
         db.session.add(order)
         db.session.flush()
         for row in items:
-            db.session.add(OrderItem.from_product(row["product"], row["quantity"], order.id))
+            db.session.add(
+                OrderItem.from_product(
+                    row["product"],
+                    row["quantity"],
+                    order.id,
+                    bundle_type=row.get("bundle_type"),
+                    bundle_slug=row.get("bundle_slug"),
+                )
+            )
+        cart_svc.decrement_stock_for_order(items)
+        promo_obj = None
+        if preview.get("promo_code"):
+            promo_obj = promo_svc.validate_promo(preview["promo_code"], subtotal)[0]
+        promo_svc.apply_promo_use(promo_obj)
         db.session.commit()
         if not order.user_id:
             _remember_guest_order(order.id)
-        session["cart"] = {}
-        session.modified = True
+        cart_svc.clear_cart()
         try:
             _notify_order_created(order)
         except Exception:
             pass
         return redirect(url_for("paiement", order_id=order.id))
-    return render_template("checkout.html", items=items, total_cents=total, guest_form=None)
+    return _render_checkout()
 
 
 @app.route("/paiement/<int:order_id>")
@@ -983,6 +1098,11 @@ def admin_order_detail(order_id):
                     _notify_payment_received(order)
                 except Exception:
                     pass
+            else:
+                try:
+                    _notify_status_change(order, old, new_status)
+                except Exception:
+                    pass
             db.session.commit()
             flash("Statut de commande mis à jour.", "success")
         else:
@@ -1042,7 +1162,10 @@ def _recent_orders_for_user():
 def _redirect_suivi_commande(order_id, message=None, category="success"):
     if message:
         flash(message, category)
-    return redirect(url_for("suivi_commande_detail", order_id=order_id))
+    kwargs = {"order_id": order_id}
+    if category == "success" and message:
+        kwargs["confirmed"] = 1
+    return redirect(url_for("suivi_commande_detail", **kwargs))
 
 
 @app.route("/suivi-commande", methods=["GET", "POST"])
@@ -1061,7 +1184,20 @@ def suivi_commande():
                 if not order.user_id:
                     _remember_guest_order(order.id)
                 return redirect(url_for("suivi_commande_detail", order_id=order.id))
-    return render_template("commandes/suivi.html", recent_orders=recent_orders)
+    order_cards = []
+    for o in recent_orders:
+        pill = order_ui_svc.order_status_pill(o.status)
+        order_cards.append(
+            {
+                "order": o,
+                "preview_lines": order_ui_svc.order_preview_lines(o),
+                "extra_item_count": order_ui_svc.order_extra_count(o),
+                "pill_label": pill[0],
+                "pill_class": pill[1],
+                "can_pay": order_ui_svc.order_can_pay(o),
+            }
+        )
+    return render_template("commandes/suivi.html", recent_orders=recent_orders, order_cards=order_cards)
 
 
 @app.route("/suivi-commande/<int:order_id>")
@@ -1072,17 +1208,96 @@ def suivi_commande_detail(order_id):
         return redirect(url_for("suivi_commande"))
     events = order.status_events.order_by(OrderStatusEvent.created_at.desc()).all()
     current_step = ORDER_STATUS_STEP.get(order.status, 1)
+    pill = order_ui_svc.order_status_pill(order.status)
     return render_template(
         "commandes/detail.html",
         order=order,
         events=events,
         current_step=current_step,
+        preview_lines=order_ui_svc.order_preview_lines(order),
+        extra_item_count=order_ui_svc.order_extra_count(order),
+        status_pill_label=pill[0],
+        status_pill_class=pill[1],
+        can_pay=order_ui_svc.order_can_pay(order),
+        can_reorder=order_ui_svc.order_can_reorder(order),
+        can_cancel=order_ui_svc.order_can_cancel(order),
+        delivery_estimate=delivery_est_svc.estimate_for_order(order),
     )
 
 
-@app.route("/contact")
+@app.route("/commande/<int:order_id>/annuler", methods=["POST"])
+def commande_annuler(order_id):
+    order = db.session.get(Order, order_id)
+    if not _can_access_order(order):
+        abort(403)
+    if not order_ui_svc.order_can_cancel(order):
+        flash("Cette commande ne peut plus être annulée en ligne. Contactez-nous.", "warning")
+        return redirect(url_for("suivi_commande_detail", order_id=order.id))
+    cart_svc.restore_stock_for_order(order)
+    order.set_status(ORDER_STATUS_CANCELLED, note="Annulation client")
+    db.session.commit()
+    try:
+        _notify_order_cancelled(order, by_customer=True)
+    except Exception:
+        pass
+    flash("Commande annulée. Un e-mail de confirmation vous sera envoyé.", "success")
+    return redirect(url_for("suivi_commande_detail", order_id=order.id))
+
+
+@app.route("/api/commande/<int:order_id>/statut")
+def api_commande_statut(order_id):
+    order = db.session.get(Order, order_id)
+    if not _can_access_order(order):
+        return jsonify({"error": "forbidden"}), 403
+    est = delivery_est_svc.estimate_for_order(order)
+    return jsonify(
+        {
+            "status": order.status,
+            "status_label": ORDER_STATUS_LABELS.get(order.status, order.status),
+            "step": ORDER_STATUS_STEP.get(order.status, 1),
+            "delivery_estimate": est["label"],
+        }
+    )
+
+
+@app.route("/commande/<int:order_id>/recommander", methods=["POST"])
+def commande_recommander(order_id):
+    order = db.session.get(Order, order_id)
+    if not _can_access_order(order):
+        abort(403)
+    added = 0
+    for line in order.items:
+        if line.product and line.product.is_active:
+            ok, _ = cart_svc.add_to_cart(line.product_id, line.quantity)
+            if ok:
+                added += 1
+    if added:
+        flash(f"{added} article(s) ajouté(s) au panier.", "success")
+    else:
+        flash("Impossible de recommander — produits indisponibles.", "warning")
+    return redirect(url_for("panier"))
+
+
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html", faq_items=FAQ_ITEMS)
+    if request.method == "POST":
+        name = (request.form.get("name") or "").strip()
+        email = (request.form.get("email") or "").strip().lower()
+        subject = (request.form.get("subject") or "").strip()
+        message = (request.form.get("message") or "").strip()
+        if len(name) < 2 or not email or "@" not in email or len(subject) < 3 or len(message) < 10:
+            flash("Veuillez remplir tous les champs du formulaire.", "danger")
+        else:
+            msg = ContactMessage(name=name, email=email, subject=subject, message=message)
+            db.session.add(msg)
+            db.session.commit()
+            try:
+                mailer.notify_contact_message(msg)
+            except Exception:
+                pass
+            flash("Message envoyé — nous vous répondrons rapidement.", "success")
+            return redirect(url_for("contact"))
+    return render_template("contact.html", faq_items=content_svc.all_faq_items())
 
 
 if __name__ == "__main__":

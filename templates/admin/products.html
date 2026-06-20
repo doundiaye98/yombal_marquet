@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Admin — Produits{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact">
+    <h1 class="section-title reveal">Produits</h1>
+    <p class="section-sub reveal"><a href="{{ url_for('admin.admin_product_edit', product_id=None) }}" class="btn-primary">+ Nouveau produit</a></p>
+  </header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top section--cart">
+    <div class="cart-table-wrap admin-table-wrap reveal">
+      <table class="cart-table admin-table">
+        <thead><tr><th>Nom</th><th>Cat.</th><th>Prix</th><th>Stock</th><th>Actif</th><th></th></tr></thead>
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td>{{ p.icon or '' }} {{ p.name }}</td>
+            <td>{{ p.category }}</td>
+            <td>{{ '%.2f'|format(p.price_euros()) }} €</td>
+            <td>{{ p.stock_qty if p.stock_qty is not none else '∞' }}</td>
+            <td>{{ 'Oui' if p.is_active else 'Non' }}</td>
+            <td><a href="{{ url_for('admin.admin_product_edit', product_id=p.id) }}" class="btn-outline">Modifier</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

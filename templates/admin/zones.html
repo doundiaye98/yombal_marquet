@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Admin — Zones livraison{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact">
+    <h1 class="section-title reveal">Zones de livraison</h1>
+    <p class="section-sub reveal"><a href="{{ url_for('admin.admin_zone_edit', zone_id=None) }}" class="btn-primary">+ Nouvelle zone</a></p>
+  </header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top section--cart">
+    <div class="cart-table-wrap admin-table-wrap reveal">
+      <table class="cart-table admin-table">
+        <thead><tr><th>Nom</th><th>Préfixe CP</th><th>Tarif</th><th>Gratuit dès</th><th></th></tr></thead>
+        <tbody>
+          {% for z in zones %}
+          <tr>
+            <td>{{ z.name }}</td>
+            <td>{{ z.postal_prefix or '*(défaut)*' }}</td>
+            <td>{{ '%.2f'|format(z.price_cents / 100) }} €</td>
+            <td>{% if z.free_over_cents %}{{ '%.2f'|format(z.free_over_cents / 100) }} €{% else %}—{% endif %}</td>
+            <td><a href="{{ url_for('admin.admin_zone_edit', zone_id=z.id) }}" class="btn-outline">Modifier</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

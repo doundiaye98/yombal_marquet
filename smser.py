@@ -201,3 +201,22 @@ def notify_customer_payment_received(order, *, suivi_url=""):
     if suivi_url:
         body += f" Suivi: {suivi_url}"
     return send_sms(to, body)
+
+
+def notify_customer_status_update(order, old_status, new_status, *, suivi_url=""):
+    """SMS pour expédition ou annulation (évite le spam sur chaque micro-changement)."""
+    from models.constants import ORDER_STATUS_CANCELLED, ORDER_STATUS_SHIPPED
+
+    if new_status not in (ORDER_STATUS_SHIPPED, ORDER_STATUS_CANCELLED):
+        return False
+    to = _order_phone_e164(order)
+    if not to:
+        return False
+    ref = order.public_ref or f"#{order.id}"
+    if new_status == ORDER_STATUS_SHIPPED:
+        body = f"Yombal Marche: commande {ref} expediee! En route vers vous."
+    else:
+        body = f"Yombal Marche: commande {ref} annulee."
+    if suivi_url:
+        body += f" {suivi_url}"
+    return send_sms(to, body)

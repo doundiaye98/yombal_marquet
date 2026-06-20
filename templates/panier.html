@@ -1,16 +1,25 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
+{% from "macros/checkout_steps.html" import checkout_steps %}
 {% block title %}Panier — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper">
+<div class="page-wrapper{% if items %} has-cart-sticky{% endif %}">
+  {{ checkout_steps('cart') }}
+
   <header class="page-hero page-hero--compact">
     <p class="section-eyebrow reveal">Panier</p>
-    <h1 class="section-title reveal">Vos <em>articles</em></h1>
+    <h1 class="section-title reveal">Vos <em>articles</em>{% if cart_item_count %} <span class="cart-count-badge">{{ cart_item_count }}</span>{% endif %}</h1>
     <p class="section-sub reveal">Modifiez les quantités puis validez — commande possible sans créer de compte.</p>
   </header>
 
   <section class="section section--cart section--flush-top">
     {% if items %}
+    <ul class="cart-trust-row reveal" aria-label="Garanties">
+      <li><span aria-hidden="true">🔒</span> Paiement sécurisé</li>
+      <li><span aria-hidden="true">📦</span> Suivi commande</li>
+      <li><span aria-hidden="true">↩</span> Support réactif</li>
+    </ul>
+
     <ul class="cart-list reveal">
       {% for row in items %}
       <li class="cart-item">
@@ -25,11 +34,11 @@
           </p>
         </div>
         <div class="cart-item-qty-wrap">
-          <label class="cart-item-qty-label" for="qty-{{ row.product.id }}">Quantité</label>
+          <label class="cart-item-qty-label" for="qty-{{ row.product.id }}">Qté</label>
           <form class="cart-item-qty-form" method="post" action="{{ url_for('panier_modifier') }}">
             <input type="hidden" name="product_id" value="{{ row.product.id }}">
             <input id="qty-{{ row.product.id }}" class="cart-item-qty-input" type="number" name="quantity" value="{{ row.quantity }}" min="1" max="99" inputmode="numeric" autocomplete="off">
-            <button type="submit" class="cart-item-update">Mettre à jour</button>
+            <button type="submit" class="cart-item-update">OK</button>
           </form>
         </div>
         <div class="cart-item-subtotal-wrap">
@@ -50,15 +59,22 @@
 
     <div class="cart-summary reveal">
       <div class="cart-summary-row">
-        <span class="cart-summary-label">Total TTC <span class="cart-summary-hint">(indicatif)</span></span>
+        <span class="cart-summary-label">Total TTC <span class="cart-summary-hint">({{ cart_item_count }} article{{ 's' if cart_item_count > 1 else '' }})</span></span>
         <span class="cart-summary-total">{{ '%.2f'|format(total_cents / 100) }} €</span>
       </div>
-      <div class="cart-summary-actions">
-        <a href="{{ url_for('checkout') }}" class="btn-primary">Valider la commande</a>
-        {% if not current_user.is_authenticated %}
-        <p class="cart-login-hint">Sans compte : vos coordonnées seront demandées à l’étape suivante.</p>
-        {% endif %}
+      <div class="cart-summary-actions cart-summary-actions--desktop">
+        <a href="{{ url_for('checkout') }}" class="btn-primary">Passer commande</a>
         <a href="{{ url_for('boutique') }}" class="btn-outline">Continuer les achats</a>
+      </div>
+    </div>
+
+    <div class="cart-sticky-bar" role="region" aria-label="Récapitulatif panier">
+      <div class="cart-sticky-bar-inner">
+        <div class="cart-sticky-bar-meta">
+          <span class="cart-sticky-bar-label">{{ cart_item_count }} article{{ 's' if cart_item_count > 1 else '' }}</span>
+          <strong class="cart-sticky-bar-total">{{ '%.2f'|format(total_cents / 100) }} €</strong>
+        </div>
+        <a href="{{ url_for('checkout') }}" class="btn-primary">Commander</a>
       </div>
     </div>
     {% else %}

@@ -34,9 +34,12 @@ def ensure_database(app: Flask) -> None:
         from models.product_images import purge_products_without_images, sync_product_images
         from models.seed import sync_catalogue
 
+        from models.seed_content import seed_content_if_empty
+
         seed_products_if_empty()
         sync_catalogue()
         seed_producers()
+        seed_content_if_empty()
         sync_product_images(app.root_path)
         purge_products_without_images()
 
@@ -130,6 +133,33 @@ def _legacy_patch_schema():
         [
             ("product_name", "VARCHAR(220)"),
             ("line_total_cents", "INTEGER"),
+        ],
+    )
+
+    _add_columns(
+        "producers",
+        [
+            ("audio_url", "VARCHAR(500)"),
+            ("map_x", "INTEGER"),
+            ("map_y", "INTEGER"),
+            ("map_label", "VARCHAR(120)"),
+        ],
+    )
+    _add_columns(
+        "orders",
+        [
+            ("gift_message", "TEXT"),
+            ("is_gift", "BOOLEAN"),
+            ("promo_code", "VARCHAR(40)"),
+            ("discount_cents", "INTEGER"),
+            ("notify_status_updates", "BOOLEAN"),
+        ],
+    )
+    _add_columns(
+        "order_items",
+        [
+            ("bundle_type", "VARCHAR(20)"),
+            ("bundle_slug", "VARCHAR(120)"),
         ],
     )
 

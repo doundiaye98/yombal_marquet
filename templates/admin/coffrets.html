@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Admin — Coffrets{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact"><h1 class="section-title reveal">Coffrets (base de données)</h1></header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top section--cart">
+    <div class="cart-table-wrap admin-table-wrap reveal">
+      <table class="cart-table admin-table">
+        <thead><tr><th>Titre</th><th>Thème</th><th>Produits</th><th>Actif</th></tr></thead>
+        <tbody>
+          {% for c in coffrets %}
+          <tr>
+            <td>{{ c.emoji }} {{ c.title }}</td>
+            <td>{{ c.theme_label or c.theme }}</td>
+            <td>{{ c.lines|length }}</td>
+            <td>{{ 'Oui' if c.is_active else 'Non' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

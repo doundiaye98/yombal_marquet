@@ -7,6 +7,7 @@
     <h1 class="section-title reveal">Commande #{{ order.id }}</h1>
     <p class="section-sub reveal">Réf. <code>{{ order.public_ref }}</code> · {{ '%.2f'|format(order.total_cents / 100) }} €</p>
   </header>
+  {% include "admin/_nav.html" %}
 
   <section class="section section--flush-top section--cart">
     <div class="payment-confirmed-panel admin-detail-panel reveal">

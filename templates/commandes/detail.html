@@ -1,16 +1,49 @@
 {% extends "base.html" %}
-{% block title %}Commande {{ order.public_ref }} — Suivi{% endblock %}
+{% from "macros/product_image.html" import product_image %}
+{% block title %}Commande {{ order.public_ref }} — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper">
-  <header class="page-hero page-hero--compact">
-    <p class="section-eyebrow reveal">
-      <a href="{{ url_for('suivi_commande') }}" class="admin-back-link">← Suivi commande</a>
+<div class="page-wrapper order-detail-page">
+  {% if request.args.get('confirmed') %}
+  <div class="order-success-banner reveal" role="status">
+    <span class="order-success-icon" aria-hidden="true">✓</span>
+    <div>
+      <strong>Commande confirmée</strong>
+      <p>Merci ! Vous recevrez un e-mail de confirmation. Suivez l’avancement ci-dessous.</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <header class="order-detail-header reveal">
+    <p class="section-eyebrow">
+      <a href="{{ url_for('suivi_commande') }}" class="admin-back-link">← Mes commandes</a>
     </p>
-    <h1 class="section-title reveal">Commande <em>{{ order.public_ref }}</em></h1>
-    <p class="section-sub reveal">
-      Passée le {{ order.created_at.strftime('%d/%m/%Y à %H:%M') }}
-      · {{ '%.2f'|format(order.total_cents / 100) }} €
-    </p>
+    <div class="order-detail-title-row">
+      <div>
+        <h1 class="section-title">Commande <em>{{ order.public_ref }}</em></h1>
+        <p class="order-detail-sub">
+          Passée le {{ order.created_at.strftime('%d/%m/%Y à %H:%M') }}
+        </p>
+      </div>
+      <span class="order-pill {{ status_pill_class }} order-pill--lg">{{ status_pill_label }}</span>
+    </div>
+    <div class="order-ref-row">
+      <code class="order-ref-code">{{ order.public_ref }}</code>
+      <button type="button" class="btn-copy-ref" data-copy-ref="{{ order.public_ref }}" aria-label="Copier la référence">Copier</button>
+    </div>
+    {% if order.status not in ['cancelled'] %}
+    <div class="order-delivery-banner reveal">
+      <span class="order-delivery-icon" aria-hidden="true">🚚</span>
+      <div>
+        {% if order.status == 'shipped' %}
+        <strong>En cours de livraison</strong>
+        <p>Votre colis est en route — vous serez contacté si besoin.</p>
+        {% else %}
+        <strong>Livraison estimée : {{ delivery_estimate.label }}</strong>
+        <p>Délai indicatif {{ delivery_estimate.days_min }}–{{ delivery_estimate.days_max }} jours ouvrés après validation du paiement.</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
   </header>
 
   <section class="section section--flush-top">
@@ -20,10 +53,11 @@
       <p>{{ order_status_hints.get(order.status, '') }}</p>
     </div>
   {% else %}
-    <div class="tracking-progress reveal" aria-label="Progression de la commande">
+    <div class="tracking-progress tracking-progress--pro reveal" aria-label="Progression de la commande">
       {% for step in order_tracking_steps %}
       <div class="tracking-step {{ 'is-done' if current_step >= step.id else '' }} {{ 'is-current' if current_step == step.id else '' }}">
-        <span class="tracking-step-dot" aria-hidden="true">{{ step.id }}</span>
+        <span class="tracking-step-icon" aria-hidden="true">{{ step.icon }}</span>
+        <span class="tracking-step-dot">{{ step.id }}</span>
         <span class="tracking-step-title">{{ step.title }}</span>
         <span class="tracking-step-desc">{{ step.desc }}</span>
       </div>
@@ -36,62 +70,132 @@
     </div>
   {% endif %}
 
-  <div class="tracking-detail-grid reveal">
-    <div class="form-panel">
-      <h2 class="form-panel-title">Livraison</h2>
-      <p class="tracking-info-line"><strong>{{ order.customer_name() }}</strong></p>
-      <p class="tracking-info-line">{{ order.delivery_formatted() }}</p>
-      {% if order.customer_phone() and order.customer_phone() != '—' %}
-      <p class="tracking-info-line">📞 {{ order.customer_phone() }}</p>
+  <div class="order-detail-layout reveal">
+    <div class="order-detail-main">
+      <div class="form-panel order-items-panel">
+        <h2 class="form-panel-title">Articles ({{ order.items|length }})</h2>
+        <ul class="order-line-list">
+          {% for line in order.items %}
+          <li class="order-line-row">
+            <div class="order-line-media{% if line.product and line.product.image %} order-line-media--photo{% endif %}">
+              {% if line.product %}
+              {{ product_image(line.product, 'thumb') }}
+              {% else %}
+              <span class="product-photo-fallback" aria-hidden="true">🛒</span>
+              {% endif %}
+            </div>
+            <div class="order-line-info">
+              <span class="order-line-name">{{ line.product_name }}</span>
+              <span class="order-line-qty">Qté : {{ line.quantity }}</span>
+              {% if line.bundle_type %}
+              <span class="order-line-badge">{{ line.bundle_type }}</span>
+              {% endif %}
+            </div>
+            <strong class="order-line-price">{{ '%.2f'|format(line.line_total_cents / 100) }} €</strong>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      {% if events %}
+      <div class="form-panel tracking-history">
+        <h2 class="form-panel-title">Historique</h2>
+        <ol class="tracking-timeline">
+          {% for ev in events %}
+          <li class="tracking-timeline-item">
+            <time datetime="{{ ev.created_at.isoformat() }}">{{ ev.created_at.strftime('%d/%m/%Y %H:%M') }}</time>
+            <p>
+              {% if ev.from_status %}
+              <span class="tracking-tl-from">{{ order_status_labels.get(ev.from_status, ev.from_status) }}</span>
+              <span aria-hidden="true"> → </span>
+              {% endif %}
+              <strong>{{ order_status_labels.get(ev.to_status, ev.to_status) }}</strong>
+              {% if ev.note %}<span class="tracking-tl-note"> — {{ ev.note }}</span>{% endif %}
+            </p>
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
       {% endif %}
-      <p class="tracking-info-line">✉️ {{ order.customer_email() }}</p>
     </div>
 
-    <div class="form-panel">
-      <h2 class="form-panel-title">Articles</h2>
-      <ul class="checkout-list">
-        {% for line in order.items %}
-        <li class="checkout-line">
-          <span>{{ line.product_name }} × {{ line.quantity }}</span>
-          <span>{{ '%.2f'|format(line.line_total_cents / 100) }} €</span>
-        </li>
-        {% endfor %}
-        <li class="checkout-line checkout-total">
-          <strong>Total</strong>
-          <strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  {% if events %}
-  <div class="form-panel tracking-history reveal">
-    <h2 class="form-panel-title">Historique</h2>
-    <ol class="tracking-timeline">
-      {% for ev in events %}
-      <li class="tracking-timeline-item">
-        <time datetime="{{ ev.created_at.isoformat() }}">{{ ev.created_at.strftime('%d/%m/%Y %H:%M') }}</time>
-        <p>
-          {% if ev.from_status %}
-          <span class="tracking-tl-from">{{ order_status_labels.get(ev.from_status, ev.from_status) }}</span>
-          <span aria-hidden="true"> → </span>
+    <aside class="order-detail-sidebar">
+      <div class="form-panel order-price-panel">
+        <h2 class="form-panel-title">Récapitulatif</h2>
+        <ul class="order-price-breakdown">
+          <li><span>Sous-total</span><span>{{ '%.2f'|format(order.subtotal_cents / 100) }} €</span></li>
+          <li>
+            <span>Livraison</span>
+            <span>{% if order.shipping_cents %}{{ '%.2f'|format(order.shipping_cents / 100) }} €{% else %}Offerte{% endif %}</span>
+          </li>
+          {% if order.discount_cents %}
+          <li>
+            <span>Réduction{% if order.promo_code %} ({{ order.promo_code }}){% endif %}</span>
+            <span>− {{ '%.2f'|format(order.discount_cents / 100) }} €</span>
+          </li>
           {% endif %}
-          <strong>{{ order_status_labels.get(ev.to_status, ev.to_status) }}</strong>
-          {% if ev.note %}<span class="tracking-tl-note"> — {{ ev.note }}</span>{% endif %}
-        </p>
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
-  {% endif %}
+          <li class="order-price-total"><strong>Total TTC</strong><strong>{{ '%.2f'|format(order.total_cents / 100) }} €</strong></li>
+        </ul>
+      </div>
 
-  <div class="checkout-actions-footer reveal" style="margin-top:24px;">
-    {% if order.status == 'pending' and not order.is_paid() %}
-    <a href="{{ url_for('paiement', order_id=order.id) }}" class="btn-primary">Finaliser le paiement</a>
-    {% endif %}
-    <a href="{{ url_for('suivi_commande') }}" class="btn-outline">Autre commande</a>
-    <a href="{{ url_for('contact') }}" class="btn-outline">Nous contacter</a>
+      <div class="form-panel">
+        <h2 class="form-panel-title">Livraison</h2>
+        <p class="tracking-info-line"><strong>{{ order.customer_name() }}</strong></p>
+        <p class="tracking-info-line">{{ order.delivery_formatted() }}</p>
+        {% if order.customer_phone() and order.customer_phone() != '—' %}
+        <p class="tracking-info-line">📞 {{ order.customer_phone() }}</p>
+        {% endif %}
+        <p class="tracking-info-line">✉️ {{ order.customer_email() }}</p>
+        {% if order.is_gift and order.gift_message %}
+        <p class="tracking-info-line order-gift-note">🎁 {{ order.gift_message }}</p>
+        {% endif %}
+      </div>
+
+      <div class="order-detail-actions">
+        {% if can_pay %}
+        <a href="{{ url_for('paiement', order_id=order.id) }}" class="btn-primary">Finaliser le paiement</a>
+        {% endif %}
+        {% if can_cancel %}
+        <form method="post" action="{{ url_for('commande_annuler', order_id=order.id) }}" class="order-cancel-form" onsubmit="return confirm('Annuler définitivement cette commande ?');">
+          <button type="submit" class="btn-outline btn-block btn-danger-outline">Annuler la commande</button>
+        </form>
+        {% endif %}
+        {% if can_reorder %}
+        <form method="post" action="{{ url_for('commande_recommander', order_id=order.id) }}">
+          <button type="submit" class="btn-outline btn-block">Recommander ces articles</button>
+        </form>
+        {% endif %}
+        <a href="{{ url_for('contact') }}" class="btn-outline btn-block">Aide &amp; contact</a>
+      </div>
+
+      {% if order.status != 'cancelled' and order.notify_status_updates %}
+      <div class="form-panel order-notify-panel">
+        <h2 class="form-panel-title">Alertes</h2>
+        <p class="form-panel-hint">E-mail et SMS activés pour cette commande. Activez aussi les notifications navigateur :</p>
+        <button type="button" class="btn-outline btn-block" id="order-push-enable"
+          data-order-id="{{ order.id }}"
+          data-order-status="{{ order.status }}"
+          data-status-url="{{ url_for('api_commande_statut', order_id=order.id) }}">
+          🔔 Activer les alertes navigateur
+        </button>
+        <p class="form-panel-hint order-notify-hint" id="order-push-status" hidden></p>
+      </div>
+      {% endif %}
+    </aside>
   </div>
   </section>
+
+  {% if can_pay %}
+  <div class="order-sticky-pay" aria-hidden="false">
+    <div class="order-sticky-pay-inner">
+      <span class="order-sticky-pay-total">{{ '%.2f'|format(order.total_cents / 100) }} €</span>
+      <a href="{{ url_for('paiement', order_id=order.id) }}" class="btn-primary">Payer maintenant</a>
+    </div>
+  </div>
+  {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/order-notify.js') }}" defer></script>
 {% endblock %}

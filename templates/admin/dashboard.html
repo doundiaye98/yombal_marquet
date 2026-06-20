@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Admin — Tableau de bord{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Administration</p>
+    <h1 class="section-title reveal">Tableau de bord</h1>
+  </header>
+  {% include "admin/_nav.html" %}
+  <section class="section section--flush-top">
+    <div class="apropos-stats reveal">
+      <div class="apropos-stat"><strong>{{ stats.orders }}</strong><span>Commandes</span></div>
+      <div class="apropos-stat"><strong>{{ stats.products }}</strong><span>Produits actifs</span></div>
+      <div class="apropos-stat"><strong>{{ stats.messages_unread }}</strong><span>Messages non lus</span></div>
+    </div>
+  </section>
+</div>
+{% endblock %}

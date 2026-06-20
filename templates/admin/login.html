@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Connexion admin — Yombal Marché{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+  <header class="page-hero page-hero--compact">
+    <p class="section-eyebrow reveal">Administration</p>
+    <h1 class="section-title reveal">Espace <em>admin</em></h1>
+    {% if allowed_admins %}
+    <p class="section-sub reveal">
+      Connectez-vous avec l’un de ces e-mails :
+      {% for e in allowed_admins %}<strong>{{ e }}</strong>{% if not loop.last %} ou {% endif %}{% endfor %}
+    </p>
+    {% endif %}
+  </header>
+  <section class="section section--flush-top">
+    <form method="post" class="form-panel admin-login-panel reveal" style="max-width:420px;margin:0 auto;" autocomplete="on">
+      <div class="field-group">
+        <label class="field-label" for="admin_email">E-mail</label>
+        <input id="admin_email" class="field-input" type="email" name="email" required autocomplete="username"
+          list="admin-emails-list"
+          value="{{ request.form.get('email', allowed_admins[0] if allowed_admins else '') }}">
+        <datalist id="admin-emails-list">
+          {% for e in allowed_admins %}<option value="{{ e }}">{% endfor %}
+        </datalist>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="admin_password">Mot de passe</label>
+        <input id="admin_password" class="field-input" type="password" name="password" required autocomplete="current-password" placeholder="Yombal2026">
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;">Se connecter</button>
+      <p class="form-panel-hint" style="margin-top:16px;">
+        Mot de passe par défaut (local) : <code>Yombal2026</code><br>
+        Pour le changer :
+        <code>python scripts/create_admin.py votre@email.com NouveauMotDePasse</code>
+      </p>
+    </form>
+  </section>
+</div>
+{% endblock %}
