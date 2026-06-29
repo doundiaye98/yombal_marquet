@@ -5,10 +5,11 @@ import os
 import shutil
 
 from extensions import db
+from models.catalogue_retired import RETIRED_IMAGE_MIGRATION, RETIRED_PRODUCT_SLUGS
 from models.product import Product
 
 # slug → chemin relatif sous static/
-PRODUCT_IMAGES = {
+_RAW_PRODUCT_IMAGES = {
     # Catalogue initial
     "couscous-complet-1kg": "img/products/couscous-complet-1kg.png",
     "huile-argan-bio-100ml": "img/products/huile-argan-bio-100ml.jpg",
@@ -46,8 +47,40 @@ PRODUCT_IMAGES = {
     "pastilles-tamarin-150g": "img/products/pastilles-tamarin-150g.jpg",
 }
 
-# Seuls ces slugs restent dans le catalogue boutique.
+PRODUCT_IMAGES = dict(_RAW_PRODUCT_IMAGES)
+for _old, _new in RETIRED_IMAGE_MIGRATION.items():
+    if _old in PRODUCT_IMAGES and _new not in PRODUCT_IMAGES:
+        PRODUCT_IMAGES[_new] = PRODUCT_IMAGES[_old]
+for _old in RETIRED_PRODUCT_SLUGS:
+    PRODUCT_IMAGES.pop(_old, None)
+
+# Photos extraites des captures catalogue Univers Diaspora (prioritaires)
+CATALOG_SCREENSHOT_IMAGES = {
+    "poudre-lait-nido-400g": "img/products/poudre-lait-nido-400g.jpg",
+    "poudre-lait-nido-900g": "img/products/poudre-lait-nido-900g.jpg",
+    "poudre-lait-nido-1800g": "img/products/poudre-lait-nido-1800g.jpg",
+    "poudre-lait-nido-2500g": "img/products/poudre-lait-nido-2500g.jpg",
+    "lait-concentre-bonnet-rouge": "img/products/lait-concentre-bonnet-rouge.jpg",
+    "sauce-trofai-palmier-350": "img/products/sauce-trofai-palmier-350.jpg",
+    "sauce-trofai-palmier-410": "img/products/sauce-trofai-palmier-410.jpg",
+    "concentre-tomates-rolli": "img/products/concentre-tomates-rolli.jpg",
+    "maad-230g": "img/products/maad-230g.jpg",
+    "maad-400g": "img/products/maad-400g.jpg",
+    "sirop-bissap-ud": "img/products/sirop-bissap-ud.jpg",
+    "sirop-gingembre-ud": "img/products/sirop-gingembre-ud.jpg",
+    "concentre-tomates-2kg": "img/products/concentre-tomates-2kg.jpg",
+    "pate-sardinelle-pinton": "img/products/pate-sardinelle-pinton.jpg",
+    "sardinelle-pilchards-tomate": "img/products/sardinelle-pilchards-tomate.jpg",
+}
+PRODUCT_IMAGES.update(CATALOG_SCREENSHOT_IMAGES)
+
+# Seuls ces slugs restent dans le catalogue boutique (avec photo).
 CATALOGUE_SLUGS = frozenset(PRODUCT_IMAGES.keys())
+
+try:
+    from models.catalogue_labelafrik import LABELAFRIK_SLUGS
+except ImportError:
+    LABELAFRIK_SLUGS = frozenset()
 
 # Fichiers sources dans img/ (racine projet) → slug produit
 IMAGE_SOURCES = {
@@ -58,7 +91,7 @@ IMAGE_SOURCES = {
     "cinquéliba.jpg": "kinkeliba-80g",
     "Cafetera tuba.jpg": "cafe-touba-250g",
     "Tamarin.jpg": "tamarin-pulpe-200g",
-    "riz.jpg": "riz-brise-local-1kg",
+    "riz.jpg": "riz-casse-1x-1kg",
     "Pearl millet.jpg": "mil-millet-1kg",
     "#Sorgo.jpg": "sorgho-1kg",
     "Superfood Fonio – Glutenfreies Urgetreide aus Afrika _ Reich an Eisen, Magnesium & Calcium.jpg": "fonio-500g",
@@ -129,9 +162,10 @@ def purge_products_without_images():
     if not Product.query.first():
         return
     changed = False
+    keep_slugs = CATALOGUE_SLUGS | LABELAFRIK_SLUGS
     for product in Product.query.filter(
-        or_(Product.image.is_(None), Product.image == "", ~Product.slug.in_(CATALOGUE_SLUGS))
-    ).all():
+        or_(Product.image.is_(None), Product.image == "")
+    ).filter(~Product.slug.in_(keep_slugs)).all():
         has_orders = OrderItem.query.filter_by(product_id=product.id).first() is not None
         if has_orders:
             if product.is_active:

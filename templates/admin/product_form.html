@@ -7,7 +7,46 @@
   </header>
   {% include "admin/_nav.html" %}
   <section class="section section--flush-top">
-    <form method="post" class="form-panel reveal">
+    <form method="post" enctype="multipart/form-data" class="form-panel reveal admin-product-form">
+      <div class="admin-product-image-block">
+        <p class="field-label">Photo produit</p>
+        <div class="admin-product-image-preview">
+          {% if product.image %}
+          <img src="{{ url_for('static', filename=product.image) }}" alt="Photo actuelle — {{ product.name }}" class="admin-product-image-preview__img">
+          {% else %}
+          <span class="admin-product-image-preview__fallback" aria-hidden="true">{{ product.icon or '🛒' }}</span>
+          {% endif %}
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="image">Ajouter ou remplacer l'image</label>
+          <input class="field-input" id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+          <p class="field-hint">JPG, PNG, WebP ou GIF — max. 5 Mo. Nommée d'après le slug du produit.</p>
+        </div>
+        {% if product.image %}
+        <div class="field-group">
+          <label><input type="checkbox" name="remove_image" value="1"> Supprimer la photo principale</label>
+        </div>
+        {% endif %}
+        {% if product.gallery_images %}
+        <div class="field-group admin-gallery-existing">
+          <p class="field-label">Photos galerie</p>
+          <div class="admin-gallery-grid">
+            {% for img in product.gallery_images %}
+            <label class="admin-gallery-item">
+              <img src="{{ url_for('static', filename=img.image) }}" alt="">
+              <span><input type="checkbox" name="remove_gallery" value="{{ img.id }}"> Supprimer</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        <div class="field-group">
+          <label class="field-label" for="gallery_uploads">Ajouter des photos à la galerie</label>
+          <input class="field-input" id="gallery_uploads" name="gallery_uploads" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+          <p class="field-hint">Photos supplémentaires affichées sur la fiche produit (miniatures cliquables).</p>
+        </div>
+      </div>
+
       <div class="field-group"><label class="field-label">Slug</label><input class="field-input" name="slug" required value="{{ product.slug or '' }}"></div>
       <div class="field-group"><label class="field-label">Nom</label><input class="field-input" name="name" required value="{{ product.name or '' }}"></div>
       <div class="field-group"><label class="field-label">Résumé</label><input class="field-input" name="summary" value="{{ product.summary or '' }}"></div>
@@ -24,7 +63,7 @@
       </div>
       <div class="field-row-2">
         <div class="field-group"><label class="field-label">Stock (vide = illimité)</label><input class="field-input" name="stock_qty" type="number" value="{{ product.stock_qty if product.stock_qty is not none else '' }}"></div>
-        <div class="field-group"><label class="field-label">Emoji</label><input class="field-input" name="icon" maxlength="4" value="{{ product.icon or '🛒' }}"></div>
+        <div class="field-group"><label class="field-label">Emoji (si pas de photo)</label><input class="field-input" name="icon" maxlength="4" value="{{ product.icon or '🛒' }}"></div>
       </div>
       <div class="field-group"><label class="field-label">Producteur</label>
         <select class="field-input" name="producer_id">
@@ -38,6 +77,12 @@
       <button type="submit" class="btn-primary">Enregistrer</button>
       <a href="{{ url_for('admin.admin_products') }}" class="btn-outline">Retour</a>
     </form>
+    {% if not is_new %}
+    <form method="post" action="{{ url_for('admin.admin_product_delete', product_id=product.id) }}" class="form-panel reveal admin-product-delete" onsubmit="return confirm('Supprimer « {{ product.name }} » ?\n\nSi le produit a déjà été commandé, il sera seulement désactivé.');">
+      <p class="field-hint">Retrait définitif de la boutique. Les produits déjà commandés restent dans l'historique (désactivation uniquement).</p>
+      <button type="submit" class="btn-outline btn-danger-outline">Supprimer ce produit</button>
+    </form>
+    {% endif %}
   </section>
 </div>
 {% endblock %}

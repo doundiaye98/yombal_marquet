@@ -39,7 +39,7 @@ RECIPES = [
         ],
         "ingredients": [
             {"product_slug": "huile-palme-artisanale-1l", "quantity": 1, "note": "2 c. à soupe"},
-            {"product_slug": "riz-brise-local-1kg", "quantity": 1, "note": "400 g"},
+            {"product_slug": "riz-casse-1x-1kg", "quantity": 1, "note": "400 g"},
             {"product_slug": "legumes-seches-thiebou-200g", "quantity": 1, "note": "1 sachet"},
             {"product_slug": "piment-sec-moulu-80g", "quantity": 1, "note": "1/2 c. à café"},
         ],
@@ -60,7 +60,7 @@ RECIPES = [
         ],
         "ingredients": [
             {"product_slug": "cafe-arabica-250g", "quantity": 1, "note": "2 c. à soupe moulu"},
-            {"product_slug": "dates-medjool-400g", "quantity": 1, "note": "4 à 6 dattes"},
+            {"product_slug": "dattes-seches-ud", "quantity": 1, "note": "4 à 6 dattes"},
             {"product_slug": "miel-thym-500g", "quantity": 1, "note": "1 c. à soupe"},
         ],
     },

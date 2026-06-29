@@ -12,8 +12,8 @@ COFFRETS = [
         "gift_message": "Pour retrouver les saveurs du quartier, là où que vous soyez.",
         "ingredients": [
             {"product_slug": "miel-thym-500g", "quantity": 1},
-            {"product_slug": "dates-medjool-400g", "quantity": 1},
-            {"product_slug": "pastilles-tamarin-150g", "quantity": 1},
+            {"product_slug": "dattes-seches-ud", "quantity": 1},
+            {"product_slug": "dakhar-sachet-150g", "quantity": 1},
         ],
     },
     {
@@ -41,7 +41,7 @@ COFFRETS = [
         "ingredients": [
             {"product_slug": "cafe-arabica-250g", "quantity": 1},
             {"product_slug": "couscous-complet-1kg", "quantity": 1},
-            {"product_slug": "bissap-concentre-50cl", "quantity": 1},
+            {"product_slug": "sirop-bissap-ud", "quantity": 1},
             {"product_slug": "sel-kaolack-500g", "quantity": 1},
         ],
     },
@@ -55,7 +55,7 @@ COFFRETS = [
         "gift_message": "Du marché de Dakar à votre table, sans prendre l'avion.",
         "ingredients": [
             {"product_slug": "huile-palme-artisanale-1l", "quantity": 1},
-            {"product_slug": "riz-brise-local-1kg", "quantity": 1},
+            {"product_slug": "riz-casse-1x-1kg", "quantity": 1},
             {"product_slug": "bissap-seche-200g", "quantity": 1},
             {"product_slug": "piment-sec-moulu-80g", "quantity": 1},
         ],

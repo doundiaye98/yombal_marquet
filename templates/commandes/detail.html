@@ -8,7 +8,12 @@
     <span class="order-success-icon" aria-hidden="true">✓</span>
     <div>
       <strong>Commande confirmée</strong>
-      <p>Merci ! Vous recevrez un e-mail de confirmation. Suivez l’avancement ci-dessous.</p>
+      <p>Merci ! Vous recevrez un e-mail de confirmation. Suivez l'avancement ci-dessous.</p>
+      {% if can_download_invoice %}
+      <p style="margin-top:12px;">
+        <a href="{{ url_for('commande_facture_pdf', order_id=order.id) }}" class="btn-primary">Télécharger le reçu PDF</a>
+      </p>
+      {% endif %}
     </div>
   </div>
   {% endif %}
@@ -164,6 +169,16 @@
         <form method="post" action="{{ url_for('commande_recommander', order_id=order.id) }}">
           <button type="submit" class="btn-outline btn-block">Recommander ces articles</button>
         </form>
+        {% endif %}
+        {% if can_simulate_shipment %}
+        <form method="post" action="{{ url_for('commande_simuler_livraison', order_id=order.id) }}" class="order-sim-ship-form" onsubmit="return confirm('Simuler l\'expédition de cette commande ?');">
+          <button type="submit" class="btn-gold btn-block">🧪 Simuler l'expédition (test livraison)</button>
+        </form>
+        {% endif %}
+        {% if can_download_invoice %}
+        <a href="{{ url_for('commande_facture_pdf', order_id=order.id) }}" class="btn-outline btn-block">
+          {% if order.is_paid() %}Télécharger le reçu PDF{% else %}Télécharger la confirmation PDF{% endif %}
+        </a>
         {% endif %}
         <a href="{{ url_for('contact') }}" class="btn-outline btn-block">Aide &amp; contact</a>
       </div>

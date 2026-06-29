@@ -102,7 +102,6 @@
                 <form method="post" action="{{ url_for('panier_ajouter') }}" class="saveur-product-form">
                   <input type="hidden" name="product_id" value="{{ pr.id }}">
                   <input type="hidden" name="quantity" value="1">
-                  <input type="hidden" name="next" value="{{ url_for('saveurs') }}">
                   <button type="submit" class="btn-outline btn-saveur-add">Ajouter</button>
                 </form>
               </div>

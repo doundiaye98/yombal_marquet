@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       new Notification(title, {
         body,
-        icon: "/static/images/favicon.ico",
+        icon: "/static/img/yombal-logo.png",
         tag: `yombal-order-${orderId}`,
       });
     } catch {

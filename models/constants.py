@@ -134,3 +134,45 @@ SHOP_CATEGORY_ORDER = (
     CATEGORY_CONSERVES,
     CATEGORY_COSMETIQUE,
 )
+
+# Pays de livraison (code ISO → libellé)
+DELIVERY_COUNTRIES = {
+    "FR": "France",
+    "BE": "Belgique",
+    "LU": "Luxembourg",
+    "CH": "Suisse",
+    "DE": "Allemagne",
+    "ES": "Espagne",
+    "IT": "Italie",
+    "GB": "Royaume-Uni",
+    "SN": "Sénégal",
+    "CI": "Côte d'Ivoire",
+    "ML": "Mali",
+    "GN": "Guinée",
+    "MA": "Maroc",
+    "TN": "Tunisie",
+    "DZ": "Algérie",
+    "CM": "Cameroun",
+    "GA": "Gabon",
+}
+
+# Frais livraison internationale forfaitaires (centimes EUR), hors France
+INTERNATIONAL_SHIPPING_CENTS = {
+    "BE": 890,
+    "LU": 790,
+    "DE": 990,
+    "ES": 1190,
+    "IT": 1190,
+    "CH": 1490,
+    "GB": 1290,
+    "SN": 1490,
+    "CI": 1490,
+    "ML": 1490,
+    "GN": 1490,
+    "MA": 1290,
+    "TN": 1290,
+    "DZ": 1290,
+    "CM": 1690,
+    "GA": 1690,
+}
+DEFAULT_INTERNATIONAL_SHIPPING_CENTS = 1490

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Routes administration boutique."""
 
-from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_user, logout_user
 
 from extensions import db
@@ -12,12 +12,15 @@ from models.delivery_zone import DeliveryZone
 from models.faq_item import FaqItem
 from models.producer import Producer
 from models.product import Product
+from models.product_image import ProductImage
 from models.promo_code import PromoCode
 from models.recipe_model import Recipe, RecipeLine
 from models.site_setting import SiteSetting, set_setting
 from models.order import Order
 from models.user import User
 from shop_auth import admin_emails_set, admin_required, is_shop_admin
+from services.product_admin import delete_product
+from services.product_upload import remove_product_image_file, save_product_image
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -51,8 +54,7 @@ def admin_login():
             )
         elif user.check_password(password):
             login_user(user)
-            dest = request.args.get("next") or url_for("admin.admin_dashboard")
-            return redirect(dest)
+            return redirect(url_for("admin.admin_dashboard"))
         else:
             flash("Mot de passe incorrect. Réinitialisez avec scripts/create_admin.py", "danger")
     return render_template("admin/login.html", allowed_admins=sorted(admins))
@@ -111,6 +113,60 @@ def admin_product_edit(product_id):
         else:
             if not product_id:
                 db.session.add(product)
+                db.session.flush()
+
+            static_folder = current_app.static_folder
+            remove_image = request.form.get("remove_image") == "1"
+            upload = request.files.get("image")
+
+            if remove_image and product.image:
+                remove_product_image_file(static_folder, product.image)
+                product.image = None
+
+            if upload and upload.filename:
+                old_path = product.image
+                rel_path, err = save_product_image(upload, product.slug, static_folder)
+                if err:
+                    flash(err, "danger")
+                else:
+                    if old_path and old_path != rel_path:
+                        remove_product_image_file(static_folder, old_path)
+                    product.image = rel_path
+
+            remove_gallery = request.form.getlist("remove_gallery")
+            for gid in remove_gallery:
+                try:
+                    gid_int = int(gid)
+                except (TypeError, ValueError):
+                    continue
+                row = db.session.get(ProductImage, gid_int)
+                if row and row.product_id == product.id:
+                    remove_product_image_file(static_folder, row.image)
+                    db.session.delete(row)
+
+            gallery_uploads = request.files.getlist("gallery_uploads")
+            existing = ProductImage.query.filter_by(product_id=product.id).count()
+            sort_base = existing + 1
+            added = 0
+            for upload in gallery_uploads:
+                if not upload or not upload.filename:
+                    continue
+                suffix = f"-g{sort_base + added}"
+                rel_path, err = save_product_image(
+                    upload, product.slug, static_folder, filename_suffix=suffix
+                )
+                if err:
+                    flash(err, "warning")
+                    continue
+                db.session.add(
+                    ProductImage(
+                        product_id=product.id,
+                        image=rel_path,
+                        sort_order=sort_base + added,
+                    )
+                )
+                added += 1
+
             db.session.commit()
             flash("Produit enregistré.", "success")
             return redirect(url_for("admin.admin_products"))
@@ -121,6 +177,18 @@ def admin_product_edit(product_id):
         categories=PRODUCT_CATEGORIES,
         is_new=not product_id,
     )
+
+
+@admin_bp.route("/produit/<int:product_id>/supprimer", methods=["POST"])
+@admin_required
+def admin_product_delete(product_id):
+    product = db.session.get(Product, product_id)
+    if not product:
+        abort(404)
+    level, message = delete_product(product, current_app.static_folder)
+    db.session.commit()
+    flash(message, level)
+    return redirect(url_for("admin.admin_products"))
 
 
 @admin_bp.route("/producteurs")

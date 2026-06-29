@@ -39,7 +39,7 @@ PRODUCERS = [
             "Son sirop est devenu l’indispensable des fêtes de quartier — désormais disponible "
             "chez vous grâce à Yombal Marché."
         ),
-        "product_slugs": ["bissap-concentre-50cl", "bissap-seche-200g", "confiture-bissap-250g"],
+        "product_slugs": ["sirop-bissap-ud", "bissap-seche-200g", "bissap-rouge-zena"],
     },
     {
         "slug": "cooperative-tafraout",
@@ -124,13 +124,13 @@ PRODUCERS = [
             "La famille exporte une petite partie de sa production via Yombal Marché "
             "pour toucher une clientèle sensible à la qualité premium."
         ),
-        "product_slugs": ["dates-medjool-400g"],
+        "product_slugs": ["dattes-seches-ud", "dattes-branchees-ud"],
     },
     {
         "slug": "plantation-las-flores",
         "name": "Plantation Las Flores",
         "region": "Huehuetenango, Guatemala",
-        "flagship_product": "Café Arabica",
+        "flagship_product": "Café",
         "experience": "Culture en altitude depuis 1982",
         "method": "Torréfaction moyenne par petits lots, commerce direct",
         "monthly_production": "600 kg de café vert",
@@ -159,6 +159,25 @@ PRODUCERS = [
             "dans vos placards via Yombal Marché."
         ),
         "product_slugs": ["couscous-complet-1kg"],
+    },
+    {
+        "slug": "univers-diaspora",
+        "name": "Univers Diaspora — LabelAfrik",
+        "region": "Paris & Afrique de l'Ouest",
+        "flagship_product": "Arraw, Thiakhry, Fonio, Baobab",
+        "experience": "Partenariat LabelAfrik — du champ à la table",
+        "method": "Produits 100 % locaux, sans gluten, savoir-faire traditionnel",
+        "monthly_production": "Catalogue épicerie africaine",
+        "avatar_emoji": "🌍",
+        "story": (
+            "Univers Diaspora valorise la richesse du patrimoine africain à travers des produits "
+            "authentiques, issus du savoir-faire local et du respect de la nature.\n\n"
+            "Ce partenariat est né d'une vision commune : promouvoir l'excellence africaine, "
+            "du champ à la table, en alliant tradition, innovation et durabilité.\n\n"
+            "Chaque grain, chaque saveur, chaque création raconte une histoire — celle d'un "
+            "continent vibrant, fier et tourné vers l'avenir."
+        ),
+        "product_slugs": [],  # lié dynamiquement aux slugs LabelAfrik
     },
 ]
 
@@ -229,8 +248,25 @@ def seed_producers():
             palm.category = "huiles"
         if not palm.icon:
             palm.icon = "🟠"
-    bissap_sirop = Product.query.filter_by(slug="bissap-concentre-50cl").first()
-    if bissap_sirop and bissap_sirop.category != "boissons":
-        bissap_sirop.category = "boissons"
+    sirop_bissap = Product.query.filter_by(slug="sirop-bissap-ud").first()
+    if sirop_bissap and sirop_bissap.category != "boissons":
+        sirop_bissap.category = "boissons"
+
+    _link_univers_diaspora_products()
 
     db.session.commit()
+
+
+def _link_univers_diaspora_products():
+    """Associe le producteur Univers Diaspora aux produits LabelAfrik."""
+    try:
+        from models.catalogue_labelafrik import LABELAFRIK_SLUGS
+    except ImportError:
+        return
+    producer = Producer.query.filter_by(slug="univers-diaspora").first()
+    if not producer:
+        return
+    for slug in LABELAFRIK_SLUGS:
+        product = Product.query.filter_by(slug=slug).first()
+        if product and product.producer_id != producer.id:
+            product.producer_id = producer.id

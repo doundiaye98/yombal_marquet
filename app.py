@@ -14,6 +14,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    Response,
     session,
     url_for,
 )
@@ -46,7 +47,7 @@ from models import (
     Product,
     User,
 )
-from models.constants import PRODUCT_CATEGORIES, SHOP_CATEGORY_ORDER
+from models.constants import PRODUCT_CATEGORIES, SHOP_CATEGORY_ORDER, DELIVERY_COUNTRIES
 from models.constants import (
     ORDER_STATUS_HINTS,
     ORDER_STATUS_LABELS,
@@ -62,6 +63,7 @@ from services import promo as promo_svc
 from services import settings as settings_svc
 from services import delivery_estimate as delivery_est_svc
 from services import order_ui as order_ui_svc
+from services import payment_simulation as pay_sim_svc
 from services import shipping as shipping_svc
 from shop_auth import admin_required, is_shop_admin
 from models.contact_message import ContactMessage
@@ -79,6 +81,7 @@ if _db_url.startswith("postgres://"):
     _db_url = _db_url.replace("postgres://", "postgresql://", 1)
 app.config["SQLALCHEMY_DATABASE_URI"] = _db_url or ("sqlite:///" + _sqlite_path)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["MAX_CONTENT_LENGTH"] = 6 * 1024 * 1024  # uploads admin (photos produits)
 
 db.init_app(app)
 migrate.init_app(app, db)
@@ -297,6 +300,8 @@ def inject_globals():
         "order_status_step": ORDER_STATUS_STEP,
         "order_tracking_steps": ORDER_TRACKING_STEPS,
         "order_status_pills": ORDER_STATUS_PILL,
+        "delivery_countries": DELIVERY_COUNTRIES,
+        "payment_simulation_enabled": pay_sim_svc.payment_simulation_enabled(),
     }
 
 
@@ -309,6 +314,68 @@ def ensure_session_cart():
 def healthz():
     """Réponse minimale pour les health checks Render (sans accès DB)."""
     return "ok", 200, {"Cache-Control": "no-store"}
+
+
+@app.route("/robots.txt")
+def robots_txt():
+    base = request.url_root.rstrip("/")
+    body = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /admin/\n"
+        f"Sitemap: {base}/sitemap.xml\n"
+    )
+    return body, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    from services.seo import render_sitemap_xml, sitemap_urls
+
+    xml = render_sitemap_xml(sitemap_urls(app, request.url_root.rstrip("/")))
+    return xml, 200, {"Content-Type": "application/xml; charset=utf-8"}
+
+
+def _can_download_invoice(order):
+    if not order or order.status == ORDER_STATUS_CANCELLED:
+        return False
+    if is_shop_admin():
+        return True
+    if not _can_access_order(order):
+        return False
+    return True
+
+
+def _order_receipt_pdf(order):
+    shop = settings_svc.shop_settings()
+    from services.invoice_pdf import build_invoice_pdf
+
+    pdf_bytes = build_invoice_pdf(order, shop=shop)
+    prefix = "recu" if order.is_paid() else "commande"
+    filename = f"{prefix}-{order.public_ref}.pdf"
+    return pdf_bytes, filename
+
+
+@app.route("/commande/<int:order_id>/facture.pdf")
+@app.route("/commande/<int:order_id>/recu.pdf")
+def commande_facture_pdf(order_id):
+    order = db.session.get(Order, order_id)
+    if not _can_download_invoice(order):
+        abort(403)
+    try:
+        pdf_bytes, filename = _order_receipt_pdf(order)
+    except RuntimeError as exc:
+        flash(str(exc), "danger")
+        return redirect(url_for("suivi_commande_detail", order_id=order.id))
+    pdf_bytes = bytes(pdf_bytes)
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Content-Length": str(len(pdf_bytes)),
+        },
+    )
 
 
 def _bank_env():
@@ -360,8 +427,13 @@ def _delivery_from_form():
 def _checkout_preview(items, subtotal_cents, form=None):
     form = form or {}
     postal = (form.get("delivery_postal_code") or request.form.get("delivery_postal_code") or "").strip()
+    country = (form.get("delivery_country") or request.form.get("delivery_country") or "FR").strip().upper()[:2]
     promo_code = (form.get("promo_code") or request.form.get("promo_code") or "").strip()
-    shipping = shipping_svc.shipping_cents_for_postal(postal, subtotal_cents) if postal else 0
+    shipping = (
+        shipping_svc.shipping_cents_for_address(country, postal, subtotal_cents)
+        if postal
+        else 0
+    )
     promo, discount, promo_err = promo_svc.validate_promo(promo_code, subtotal_cents)
     total = max(0, subtotal_cents + shipping - discount)
     return {
@@ -598,9 +670,6 @@ def recette_panier(slug):
             f"{added} ingrédient(s) ajouté(s) — certains produits sont indisponibles pour le moment.",
             "warning",
         )
-    nxt = request.form.get("next") or url_for("panier")
-    if nxt.startswith("/") and not nxt.startswith("//"):
-        return redirect(nxt)
     return redirect(url_for("panier"))
 
 
@@ -645,9 +714,6 @@ def coffret_panier(slug):
             f"{added} produit(s) ajouté(s) — certains articles sont indisponibles pour le moment.",
             "warning",
         )
-    nxt = request.form.get("next") or url_for("panier")
-    if nxt.startswith("/") and not nxt.startswith("//"):
-        return redirect(nxt)
     return redirect(url_for("panier"))
 
 
@@ -657,18 +723,17 @@ def panier_ajouter():
     qty = request.form.get("quantity", default=1, type=int) or 1
     if not pid:
         flash("Produit introuvable.", "danger")
-        return redirect(request.referrer or url_for("boutique"))
+        return redirect(url_for("boutique"))
     product = db.session.get(Product, pid)
     if not product or not product.is_active:
         flash("Produit introuvable.", "danger")
-        return redirect(request.referrer or url_for("boutique"))
+        return redirect(url_for("boutique"))
     ok, err = cart_svc.add_to_cart(pid, qty)
     if not ok:
         flash(err or "Produit introuvable.", "danger")
-        return redirect(request.referrer or url_for("boutique"))
+        return redirect(url_for("boutique"))
     flash("Produit ajouté au panier.", "success")
-    next_url = request.form.get("next") or request.referrer
-    return redirect(next_url or url_for("panier"))
+    return redirect(url_for("product_detail", slug=product.slug))
 
 
 @app.route("/panier")
@@ -737,8 +802,16 @@ def checkout():
         if len(delivery["delivery_line1"]) < 5:
             flash("Indiquez une adresse de livraison complète.", "danger")
             return _render_checkout(request.form, preview)
-        if len(delivery["delivery_city"]) < 2 or len(delivery["delivery_postal_code"]) < 4:
-            flash("Indiquez la ville et le code postal.", "danger")
+        if len(delivery["delivery_city"]) < 2:
+            flash("Indiquez la ville.", "danger")
+            return _render_checkout(request.form, preview)
+        country = delivery["delivery_country"]
+        if country not in DELIVERY_COUNTRIES:
+            flash("Pays de livraison non pris en charge.", "danger")
+            return _render_checkout(request.form, preview)
+        min_postal = 4 if country == "FR" else 2
+        if len(delivery["delivery_postal_code"]) < min_postal:
+            flash("Indiquez un code postal valide.", "danger")
             return _render_checkout(request.form, preview)
 
         if current_user.is_authenticated:
@@ -864,6 +937,7 @@ def paiement(order_id):
         bank=_bank_env(),
         paypal=_paypal_env(),
         stripe_return_url=url_for("paiement_stripe_retour", _external=True),
+        payment_simulation_enabled=pay_sim_svc.payment_simulation_enabled(),
     )
 
 
@@ -1048,17 +1122,59 @@ def paiement_annule(order_id):
 
 @app.route("/paiement/demo/<int:order_id>", methods=["POST"])
 def paiement_demo(order_id):
+    if not pay_sim_svc.payment_simulation_enabled():
+        abort(404)
     order = db.session.get(Order, order_id)
     if not _can_access_order(order):
         abort(403)
-    order.set_status(ORDER_STATUS_PAID_DEMO, note="Paiement démonstration")
-    order.payment_method = PAYMENT_DEMO
+    full_flow = request.form.get("full_flow") == "1"
+    if full_flow:
+        old = order.status
+        pay_sim_svc.simulate_full_flow(order)
+        db.session.commit()
+        try:
+            _notify_payment_received(order)
+            _notify_status_change(order, ORDER_STATUS_PAID_DEMO, ORDER_STATUS_SHIPPED)
+        except Exception:
+            pass
+        return _redirect_suivi_commande(
+            order.id,
+            "Simulation complète : paiement validé et commande passée en livraison.",
+        )
+    old = pay_sim_svc.simulate_payment(order)
     db.session.commit()
     try:
         _notify_payment_received(order)
     except Exception:
         pass
-    return _redirect_suivi_commande(order.id, "Paiement simulé enregistré (mode démonstration).")
+    return _redirect_suivi_commande(
+        order.id,
+        "Paiement simulé. Étape suivante : préparation — vous pouvez simuler l'expédition depuis le suivi.",
+    )
+
+
+@app.route("/commande/<int:order_id>/simuler-livraison", methods=["POST"])
+def commande_simuler_livraison(order_id):
+    if not pay_sim_svc.payment_simulation_enabled():
+        abort(404)
+    order = db.session.get(Order, order_id)
+    if not _can_access_order(order):
+        abort(403)
+    if not order.is_paid():
+        flash("La commande doit être payée avant de simuler la livraison.", "warning")
+        return redirect(url_for("suivi_commande_detail", order_id=order.id))
+    if order.status == ORDER_STATUS_SHIPPED:
+        flash("Cette commande est déjà en livraison.", "info")
+        return redirect(url_for("suivi_commande_detail", order_id=order.id))
+    old = order.status
+    pay_sim_svc.simulate_shipment(order)
+    db.session.commit()
+    try:
+        _notify_status_change(order, old, ORDER_STATUS_SHIPPED)
+    except Exception:
+        pass
+    flash("Livraison simulée — toutes les étapes du suivi sont complètes.", "success")
+    return redirect(url_for("suivi_commande_detail", order_id=order.id))
 
 
 @app.route("/admin/commandes")
@@ -1221,6 +1337,12 @@ def suivi_commande_detail(order_id):
         can_pay=order_ui_svc.order_can_pay(order),
         can_reorder=order_ui_svc.order_can_reorder(order),
         can_cancel=order_ui_svc.order_can_cancel(order),
+        can_download_invoice=_can_download_invoice(order),
+        can_simulate_shipment=(
+            pay_sim_svc.payment_simulation_enabled()
+            and order.is_paid()
+            and order.status != ORDER_STATUS_SHIPPED
+        ),
         delivery_estimate=delivery_est_svc.estimate_for_order(order),
     )
 

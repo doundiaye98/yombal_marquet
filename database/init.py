@@ -32,12 +32,13 @@ def ensure_database(app: Flask) -> None:
 
         from models import seed_products_if_empty, seed_producers
         from models.product_images import purge_products_without_images, sync_product_images
-        from models.seed import sync_catalogue
+        from models.seed import sync_catalogue, retire_superseded_products
 
         from models.seed_content import seed_content_if_empty
 
         seed_products_if_empty()
         sync_catalogue()
+        retire_superseded_products()
         seed_producers()
         seed_content_if_empty()
         sync_product_images(app.root_path)

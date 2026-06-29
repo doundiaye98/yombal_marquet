@@ -39,6 +39,14 @@
         {% endfor %}
       </ul>
 
+      {% if order.is_paid() or order.status in ['awaiting_wire', 'awaiting_paypal', 'cod_confirmed', 'pending'] %}
+      <p style="margin-top:16px;">
+        <a href="{{ url_for('commande_facture_pdf', order_id=order.id) }}" class="btn-outline">
+          {% if order.is_paid() %}Télécharger le reçu PDF{% else %}Télécharger la confirmation PDF{% endif %}
+        </a>
+      </p>
+      {% endif %}
+
       <h2 class="payment-choice-title form-panel-title">Changer le statut</h2>
       <form method="post" class="admin-status-form">
         <label class="sr-only" for="new_status">Nouveau statut</label>

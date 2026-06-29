@@ -29,6 +29,22 @@ class Product(TimestampMixin, db.Model):
 
     producer = db.relationship("Producer", back_populates="products")
     order_items = db.relationship("OrderItem", back_populates="product", lazy="dynamic")
+    gallery_images = db.relationship(
+        "ProductImage",
+        back_populates="product",
+        cascade="all, delete-orphan",
+        order_by="ProductImage.sort_order",
+    )
+
+    def gallery_paths(self):
+        """Chemins image principale + galerie (sans doublons)."""
+        paths = []
+        if self.image:
+            paths.append(self.image)
+        for row in self.gallery_images or []:
+            if row.image and row.image not in paths:
+                paths.append(row.image)
+        return paths
 
     def price_euros(self):
         return self.price_cents / 100.0

@@ -66,7 +66,6 @@
         </div>
 
         <form method="post" action="{{ url_for('recette_panier', slug=recipe.slug) }}" class="recette-cart-form">
-          <input type="hidden" name="next" value="{{ url_for('panier') }}">
           <button type="submit" class="btn-primary btn-recette-cart"{% if not recipe.cart_items %} disabled{% endif %}>
             Ajouter tout au panier
           </button>

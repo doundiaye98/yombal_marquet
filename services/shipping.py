@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from models.constants import (
+    DEFAULT_INTERNATIONAL_SHIPPING_CENTS,
+    INTERNATIONAL_SHIPPING_CENTS,
+)
 from models.delivery_zone import DeliveryZone
 
 
@@ -21,3 +25,10 @@ def shipping_cents_for_postal(postal_code, subtotal_cents):
     if best:
         return best.price_for_subtotal(subtotal_cents)
     return 590
+
+
+def shipping_cents_for_address(country_code, postal_code, subtotal_cents):
+    country = (country_code or "FR").strip().upper()[:2]
+    if country == "FR":
+        return shipping_cents_for_postal(postal_code, subtotal_cents)
+    return INTERNATIONAL_SHIPPING_CENTS.get(country, DEFAULT_INTERNATIONAL_SHIPPING_CENTS)

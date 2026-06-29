@@ -119,6 +119,7 @@
 
       <p class="payment-actions-footer">
         <a href="{{ url_for('suivi_commande_detail', order_id=order.id) }}" class="btn-primary">Suivre ma commande</a>
+        <a href="{{ url_for('commande_facture_pdf', order_id=order.id) }}" class="btn-outline">Confirmation PDF</a>
         <a href="{{ url_for('boutique') }}" class="btn-outline">Retour à la boutique</a>
         <a href="{{ url_for('contact') }}" class="btn-outline">Une question ? Contact</a>
       </p>
@@ -126,13 +127,31 @@
 
     {% else %}
     {# Sélection type marketplace (liste + détail) #}
+    {% if payment_simulation_enabled and payment_phase == 'choose' %}
+    <div class="payment-simulation-banner reveal" role="region" aria-label="Mode test">
+      <p class="payment-simulation-banner__title">🧪 Mode simulation (tests locaux)</p>
+      <p class="payment-simulation-banner__text">
+        Vérifiez le parcours complet sans payer : étape <strong>3 Paiement</strong> puis suivi jusqu'à <strong>4 Livraison</strong>.
+      </p>
+      <ol class="payment-simulation-steps">
+        <li>Choisissez <strong>Simulation (démo)</strong> ci-dessous, ou</li>
+        <li>Utilisez le bouton <strong>Simulation complète</strong> pour enchaîner paiement + livraison en un clic.</li>
+      </ol>
+      <form method="post" action="{{ url_for('paiement_demo', order_id=order.id) }}" class="payment-simulation-full-form">
+        <input type="hidden" name="full_flow" value="1">
+        <button type="submit" class="btn-gold">Simulation complète jusqu'à la livraison</button>
+      </form>
+    </div>
+    {% endif %}
     {% if stripe_ok and stripe_pi_error %}
     <div class="payment-note payment-note--warn reveal" role="alert">
       Carte indisponible pour le moment : {{ stripe_pi_error }}
     </div>
     {% endif %}
 
-    {% if stripe_ok and stripe_client_secret %}
+    {% if payment_simulation_enabled %}
+      {% set default_pay = 'demo' %}
+    {% elif stripe_ok and stripe_client_secret %}
       {% set default_pay = 'card' %}
     {% else %}
       {% set default_pay = 'paypal' %}
@@ -204,6 +223,7 @@
             <span class="payment-mp-check" aria-hidden="true"></span>
           </label>
 
+          {% if payment_simulation_enabled %}
           <label class="payment-mp-row payment-mp-row--demo">
             <input class="payment-mp-input" type="radio" name="pay_mode" value="demo" {% if default_pay == 'demo' %}checked{% endif %}>
             <span class="payment-mp-icon" aria-hidden="true">🧪</span>
@@ -213,6 +233,7 @@
             </span>
             <span class="payment-mp-check" aria-hidden="true"></span>
           </label>
+          {% endif %}
         </fieldset>
 
         <div class="payment-mp-detail">
@@ -255,12 +276,15 @@
             </form>
           </div>
 
+          {% if payment_simulation_enabled %}
           <div class="payment-mp-panel" data-panel="demo" {% if default_pay != 'demo' %}hidden{% endif %}>
-            <p class="payment-mp-panel-lead">Marque la commande comme payée en local (aucun prélèvement réel).</p>
-            <form method="post" action="{{ url_for('paiement_demo', order_id=order.id) }}">
-              <button type="submit" class="btn-gold payment-mp-cta">Lancer la simulation</button>
+            <p class="payment-mp-panel-lead">Marque la commande comme payée (étape <strong>Préparation</strong> du suivi). Aucun prélèvement réel.</p>
+            <form method="post" action="{{ url_for('paiement_demo', order_id=order.id) }}" class="payment-sim-form">
+              <button type="submit" class="btn-gold payment-mp-cta">Simuler le paiement</button>
             </form>
+            <p class="field-hint" style="margin-top:12px;">Ensuite, sur la page de suivi, cliquez sur <strong>Simuler l'expédition</strong> pour atteindre l'étape Livraison.</p>
           </div>
+          {% endif %}
 
         </div>
       </div>

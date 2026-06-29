@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 from extensions import db
 from models.catalogue_extended import EXTENDED_CATALOGUE
+from models.catalogue_labelafrik import (
+    LABELAFRIK_CATALOGUE,
+    LABELAFRIK_SLUGS,
+    LABELAFRIK_UPDATES,
+)
 from models.product import Product
+from models.catalogue_retired import RETIRED_PRODUCT_SLUGS
+from models.product_names import apply_display_name, display_name_for_product
 from models.product_images import CATALOGUE_SLUGS, PRODUCT_IMAGES
 
 CATALOGUE = [
     {
         "sku": "ALIM-COUSCOUS-1KG",
         "slug": "couscous-complet-1kg",
-        "name": "Couscous complet précuit — 1 kg",
+        "name": "Couscous complet — 1 kg",
         "summary": "Semoule complète, texture légère, idéale pour tajines et salades.",
         "description": (
             "Notre couscous complet est préparé à partir de blé dur soigneusement sélectionné, "
@@ -30,7 +37,7 @@ CATALOGUE = [
     {
         "sku": "COSM-ARGAN-100ML",
         "slug": "huile-argan-bio-100ml",
-        "name": "Huile d’argan bio cosmétique — 100 ml",
+        "name": "Huile d'argan bio — 100 ml",
         "summary": "Pure, vierge pressée à froid — visage, corps et pointes.",
         "description": (
             "Huile d’argan du Maroc, certifiée biologique, obtenue par première pression à froid. "
@@ -51,7 +58,7 @@ CATALOGUE = [
     {
         "sku": "ALIM-MIEL-500G",
         "slug": "miel-thym-500g",
-        "name": "Miel de thym cru — 500 g",
+        "name": "Miel d'acacia — 500 g",
         "summary": "Goût corsé, notes boisées — idéal au yaourt et dans les tisanes.",
         "description": (
             "Miellée de thym récoltée sur plateaux méditerranéens. Miel non chauffé pour préserver enzymes et arômes.\n\n"
@@ -71,10 +78,10 @@ CATALOGUE = [
     {
         "sku": "ALIM-CAFE-250G",
         "slug": "cafe-arabica-250g",
-        "name": "Café Arabica moulu — 250 g",
+        "name": "Café — 250 g",
         "summary": "Torréfaction moyenne, notes chocolat et fruits rouges.",
         "description": (
-            "Grain Arabica en altitude, torréfié par petits lots pour révéler acidité équilibrée et corps velouté.\n\n"
+            "Grain torréfié par petits lots pour révéler acidité équilibrée et corps velouté.\n\n"
             "Mouture universelle adaptée à cafetière à piston, verseuse ou machine avec filtre papier. "
             "Pour espresso, préférer la version grains (demandez-nous la disponibilité).\n\n"
             "Date de torréfaction imprimée sur le sachet."
@@ -83,7 +90,7 @@ CATALOGUE = [
         "category": "alimentaire",
         "origin": "Amérique centrale & Afrique — assemblage maison",
         "weight_info": "250 g — sachet avec valve",
-        "ingredients": "Café 100 % Arabica.",
+        "ingredients": "Café 100 %.",
         "allergens": "",
         "usage_tips": "Ratio indicatif : 60 g pour 1 litre d’eau en cafetière à piston.",
         "conservation": "Refermer après ouverture ; consommer sous 3 semaines pour un arôme optimal.",
@@ -91,7 +98,7 @@ CATALOGUE = [
     {
         "sku": "COSM-SAVON-200G",
         "slug": "savon-noir-eucalyptus",
-        "name": "Savon noir traditionnel — eucalyptus — 200 g",
+        "name": "Savon noir eucalyptus — 200 g",
         "summary": "Pâte noire adoucissante pour le hammam et le soin du corps.",
         "description": (
             "Savon noir à base d’huile d’olive noircie au potasse végétale, enrichi en huile essentielle d’eucalyptus.\n\n"
@@ -109,48 +116,9 @@ CATALOGUE = [
         "conservation": "Bien refermer ; garder au sec.",
     },
     {
-        "sku": "ALIM-DATES-400G",
-        "slug": "dates-medjool-400g",
-        "name": "Dates Medjool dénoyautées — 400 g",
-        "summary": "Chair fondante, très peu sucrantes ajoutées — collation ou pâtisserie.",
-        "description": (
-            "Calibre premium, dénoyautées à la main. Texture caramel naturel.\n\n"
-            "Parfaites pour smoothies, barres énergétiques maison, ou farçage de volailles sucré-salé.\n\n"
-            "Contrôle qualité : fruits souples, non cristallisés."
-        ),
-        "price_cents": 649,
-        "category": "alimentaire",
-        "origin": "Jordanie / Israël selon saison",
-        "weight_info": "400 g — barquette",
-        "ingredients": "Dates.",
-        "allergens": "Peut contenir des traces de FRUITS À COQUE.",
-        "usage_tips": "Réhydrater 10 min dans du lait végétal pour un dessert express.",
-        "conservation": "Au réfrigérateur après ouverture pour ralentir la cristallisation du sucre.",
-    },
-    {
-        "sku": "ALIM-BISSAP-50CL",
-        "slug": "bissap-concentre-50cl",
-        "name": "Sirop de bissap (hibiscus) — 50 cl",
-        "summary": "À diluer : une dosage floral acidulé, sans colorant artificiel.",
-        "description": (
-            "Réduction de fleurs d’hibiscus infusées avec sucre de canne équitable et une pointe de menthe verte.\n\n"
-            "Diluer 1 volume de sirop pour 7 à 10 volumes d’eau gazeuse ou plate selon l’intensité désirée. "
-            "Excellent en cocktail sans alcool avec citron vert.\n\n"
-            "Stérilisé à chaud — conservation longue avant ouverture."
-        ),
-        "price_cents": 590,
-        "category": "alimentaire",
-        "origin": "Élaboré à partir de fleurs Sénégal / Burkina selon arrivages",
-        "weight_info": "50 cl — bouteille verre",
-        "ingredients": "Eau, sucre de canne, infusion hibiscus (minimum 18 %), jus de citron, extrait de menthe.",
-        "allergens": "",
-        "usage_tips": "Servez très frais avec glaçons et zestes d’orange.",
-        "conservation": "Après ouverture : au frais et consommer sous 20 jours.",
-    },
-    {
         "sku": "COSM-KARITE-150G",
         "slug": "beurre-karite-brut-150g",
-        "name": "Beurre de karité brut — 150 g",
+        "name": "Beurre de karité — 150 g",
         "summary": "Non raffiné : odeur noisette naturelle, baume universel.",
         "description": (
             "Beurre de karité extrait à l’ancienne, non déodoré. Couleur ivoire à beige selon la récolte.\n\n"
@@ -171,12 +139,38 @@ CATALOGUE = [
 
 
 FULL_CATALOGUE = [
-    row for row in (CATALOGUE + EXTENDED_CATALOGUE) if row["slug"] in CATALOGUE_SLUGS
-]
+    apply_display_name(row)
+    for row in (CATALOGUE + EXTENDED_CATALOGUE)
+    if row["slug"] in CATALOGUE_SLUGS and row["slug"] not in RETIRED_PRODUCT_SLUGS
+] + [apply_display_name(row) for row in LABELAFRIK_CATALOGUE]
+
+
+def _sync_row_to_product(product, row):
+    """Applique nom, prix, textes depuis une ligne catalogue."""
+    changed = False
+    for field in (
+        "name",
+        "summary",
+        "description",
+        "price_cents",
+        "weight_info",
+        "category",
+        "origin",
+        "ingredients",
+        "usage_tips",
+        "conservation",
+    ):
+        if field in row and row[field] is not None and getattr(product, field) != row[field]:
+            setattr(product, field, row[field])
+            changed = True
+    if row.get("icon") and not product.icon:
+        product.icon = row["icon"]
+        changed = True
+    return changed
 
 
 def _product_payload(row):
-    data = dict(row)
+    data = apply_display_name(dict(row))
     img = PRODUCT_IMAGES.get(data["slug"])
     if img:
         data["image"] = img
@@ -201,21 +195,72 @@ def seed_products_if_empty():
 
 
 def sync_catalogue():
-    """Ajoute les nouvelles références sans toucher aux produits existants."""
+    """Ajoute ou met à jour le catalogue (dont LabelAfrik / Univers Diaspora)."""
     from sqlalchemy import inspect
+
+    from services.product_admin import admin_removed_slugs
 
     if not inspect(db.engine).has_table("products"):
         return
+    removed = admin_removed_slugs()
     changed = False
     for row in FULL_CATALOGUE:
         slug = row["slug"]
+        if slug in removed:
+            continue
         product = Product.query.filter_by(slug=slug).first()
         if product:
-            if row.get("icon") and not product.icon:
-                product.icon = row["icon"]
+            if _sync_row_to_product(product, row):
                 changed = True
             continue
         db.session.add(Product(**_product_payload(row)))
         changed = True
+    for slug, row in LABELAFRIK_UPDATES.items():
+        if slug in RETIRED_PRODUCT_SLUGS or slug in removed:
+            continue
+        product = Product.query.filter_by(slug=slug).first()
+        if product and _sync_row_to_product(product, apply_display_name(row)):
+            changed = True
+    names_changed = sync_all_product_names()
+    if changed or names_changed:
+        db.session.commit()
+
+
+def sync_all_product_names():
+    """Harmonise les noms affichés pour tous les produits."""
+    from sqlalchemy import inspect
+
+    if not inspect(db.engine).has_table("products"):
+        return False
+    changed = False
+    for product in Product.query.all():
+        new_name = display_name_for_product(product.slug, product.weight_info, product.name)
+        if new_name and product.name != new_name:
+            product.name = new_name
+            changed = True
+    return changed
+
+
+def retire_superseded_products():
+    """Supprime ou désactive les anciens produits remplacés par LabelAfrik."""
+    from sqlalchemy import inspect
+
+    from models.order import OrderItem
+
+    if not inspect(db.engine).has_table("products"):
+        return
+    changed = False
+    for slug in RETIRED_PRODUCT_SLUGS:
+        product = Product.query.filter_by(slug=slug).first()
+        if not product:
+            continue
+        has_orders = OrderItem.query.filter_by(product_id=product.id).first() is not None
+        if has_orders:
+            if product.is_active:
+                product.is_active = False
+                changed = True
+        else:
+            db.session.delete(product)
+            changed = True
     if changed:
         db.session.commit()

@@ -45,7 +45,7 @@ def admin_required(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
         if not current_user.is_authenticated:
-            return redirect(url_for("admin.admin_login", next=request.url))
+            return redirect(url_for("admin.admin_login"))
         if not is_shop_admin():
             abort(403)
         return view(*args, **kwargs)

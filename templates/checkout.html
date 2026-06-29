@@ -103,7 +103,16 @@
               value="{{ guest_form.get('delivery_city', '') if guest_form else '' }}">
           </div>
         </div>
-        <input type="hidden" name="delivery_country" value="FR">
+        <div class="field-group">
+          <label class="field-label" for="delivery_country">Pays</label>
+          <select id="delivery_country" class="field-input" name="delivery_country" required autocomplete="country">
+            {% set selected_country = guest_form.get('delivery_country', 'FR') if guest_form else 'FR' %}
+            {% for code, label in delivery_countries.items() %}
+            <option value="{{ code }}" {% if selected_country == code %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <p class="field-hint">France : tarif selon zone. Autres pays : forfait international (affiché après saisie du code postal).</p>
+        </div>
       </div>
 
       <div class="form-panel">

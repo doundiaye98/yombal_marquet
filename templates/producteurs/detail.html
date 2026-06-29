@@ -82,7 +82,6 @@
               <form method="post" action="{{ url_for('panier_ajouter') }}">
                 <input type="hidden" name="product_id" value="{{ p.id }}">
                 <input type="hidden" name="quantity" value="1">
-                <input type="hidden" name="next" value="{{ url_for('producteur_detail', slug=producer.slug) }}">
                 <button type="submit" class="btn-outline">Panier</button>
               </form>
             </div>

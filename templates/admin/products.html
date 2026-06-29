@@ -10,16 +10,28 @@
   <section class="section section--flush-top section--cart">
     <div class="cart-table-wrap admin-table-wrap reveal">
       <table class="cart-table admin-table">
-        <thead><tr><th>Nom</th><th>Cat.</th><th>Prix</th><th>Stock</th><th>Actif</th><th></th></tr></thead>
+        <thead><tr><th>Photo</th><th>Nom</th><th>Cat.</th><th>Prix</th><th>Stock</th><th>Actif</th><th></th></tr></thead>
         <tbody>
           {% for p in products %}
           <tr>
-            <td>{{ p.icon or '' }} {{ p.name }}</td>
+            <td class="admin-table-thumb">
+              {% if p.image %}
+              <img src="{{ url_for('static', filename=p.image) }}" alt="" class="admin-table-thumb__img">
+              {% else %}
+              <span class="admin-table-thumb__emoji">{{ p.icon or '🛒' }}</span>
+              {% endif %}
+            </td>
+            <td>{{ p.name }}</td>
             <td>{{ p.category }}</td>
             <td>{{ '%.2f'|format(p.price_euros()) }} €</td>
             <td>{{ p.stock_qty if p.stock_qty is not none else '∞' }}</td>
             <td>{{ 'Oui' if p.is_active else 'Non' }}</td>
-            <td><a href="{{ url_for('admin.admin_product_edit', product_id=p.id) }}" class="btn-outline">Modifier</a></td>
+            <td class="admin-table-actions">
+              <a href="{{ url_for('admin.admin_product_edit', product_id=p.id) }}" class="btn-outline">Modifier</a>
+              <form method="post" action="{{ url_for('admin.admin_product_delete', product_id=p.id) }}" class="admin-table-actions__form" onsubmit="return confirm('Supprimer « {{ p.name }} » ?\n\nSi le produit a déjà été commandé, il sera seulement désactivé.');">
+                <button type="submit" class="btn-outline btn-danger-outline">Supprimer</button>
+              </form>
+            </td>
           </tr>
           {% endfor %}
         </tbody>

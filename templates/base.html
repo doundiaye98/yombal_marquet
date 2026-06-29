@@ -6,6 +6,7 @@
   <meta name="description" content="Yombal Marché — épicerie fine, cosmétiques et livraison à domicile. Boutique en ligne du Groupe YOMBAL.">
   <meta name="theme-color" content="#1a3d2b">
   <title>{% block title %}Yombal Marché{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/yombal-logo.png') }}" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -19,12 +20,6 @@
   {% set nav_shop = ep in ['boutique', 'product_detail', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'suivi_commande', 'suivi_commande_detail', 'commande_recommander', 'commande_annuler', 'api_commande_statut', 'admin_orders', 'admin_order_detail'] %}
   {% set nav_discover = ep in ['decouvrir', 'saveurs', 'recettes', 'recette_detail', 'recette_panier', 'coffrets', 'coffret_detail', 'coffret_panier'] %}
 
-  <div class="trust-bar" role="complementary" aria-label="Engagements boutique">
-    <span><span class="trust-dot" aria-hidden="true"></span> Livraison à domicile</span>
-    <span><span class="trust-dot" aria-hidden="true"></span> Paiement sécurisé</span>
-    <span><span class="trust-dot" aria-hidden="true"></span> Sans compte possible</span>
-  </div>
-
   <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
   <div id="progress-bar" class="scroll-progress" aria-hidden="true"></div>
   <div id="cursor-dot" aria-hidden="true"></div>
@@ -33,9 +28,15 @@
   <div id="toast-root" class="toast-root" role="status" aria-live="polite"></div>
 
   <header class="nav" role="banner">
-    <a href="{{ url_for('index') }}" class="nav-logo">
-      <span class="logo-mark" aria-hidden="true">◈</span>
-      <span class="logo-text">Yombal <small>Marché</small></span>
+    <a href="{{ url_for('index') }}" class="nav-logo" aria-label="Yombal Market — accueil">
+      <img
+        src="{{ url_for('static', filename='img/yombal-logo.png') }}"
+        alt="Yombal Market — Le goût du vrai, la fierté du local"
+        class="nav-logo-img"
+        width="240"
+        height="72"
+        decoding="async"
+      >
     </a>
 
     <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Ouvrir le menu">
@@ -91,7 +92,17 @@
   <footer class="site-footer">
     <div class="footer-inner footer-grid">
       <div class="footer-col">
-        <p class="footer-brand">Yombal Marché</p>
+        <a href="{{ url_for('index') }}" class="footer-logo-link">
+          <img
+            src="{{ url_for('static', filename='img/yombal-logo.png') }}"
+            alt="Yombal Market"
+            class="footer-logo-img"
+            width="180"
+            height="54"
+            loading="lazy"
+            decoding="async"
+          >
+        </a>
         <p class="footer-tagline">Produits alimentaires et cosmétiques, livraison à domicile et boutique en ligne — une enseigne du <strong>Groupe YOMBAL</strong>.</p>
         <div class="footer-email-block">
           <span class="footer-email-label">Contact</span>
@@ -123,6 +134,7 @@
         <a href="{{ url_for('apropos') }}">À propos</a>
         <a href="{{ url_for('contact') }}">Contact &amp; paiement</a>
         <a href="{{ url_for('mentions_legales') }}">Mentions légales</a>
+        <a href="{{ url_for('mentions_legales') }}#cookies">Cookies</a>
         <a href="{{ url_for('cgv') }}">CGV</a>
       </nav>
     </div>
@@ -143,6 +155,18 @@
     </div>
   </footer>
 
+  <div id="cookie-consent" class="cookie-consent" role="dialog" aria-labelledby="cookie-consent-title" aria-hidden="true" hidden>
+    <div class="cookie-consent-inner">
+      <p id="cookie-consent-title" class="cookie-consent-title">Cookies &amp; confidentialité</p>
+      <p class="cookie-consent-text">
+        Nous utilisons des cookies essentiels (panier, session) pour le fonctionnement de la boutique.
+        Consultez nos <a href="{{ url_for('mentions_legales') }}#cookies">mentions légales</a>.
+      </p>
+      <button type="button" class="btn-primary cookie-consent-btn" data-cookie-accept>OK, j'ai compris</button>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/cookie-consent.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
   {% block extra_scripts %}{% endblock %}
 </body>

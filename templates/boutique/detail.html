@@ -14,8 +14,25 @@
     </nav>
 
     <div class="product-detail-grid reveal">
-      <div class="product-detail-visual{% if product.image %} product-detail-visual--photo{% endif %}">
+      <div class="product-detail-visual{% if product.image %} product-detail-visual--photo{% endif %}{% if product.gallery_paths()|length > 1 %} product-detail-visual--gallery{% endif %}">
+        {% set gallery = product.gallery_paths() %}
+        {% if gallery|length > 1 %}
+        <div class="product-gallery" data-product-gallery>
+          <div class="product-gallery-main">
+            <img src="{{ url_for('static', filename=gallery[0]) }}" alt="{{ product.name }}" class="product-gallery-main__img" id="product-gallery-main">
+          </div>
+          <div class="product-gallery-thumbs" role="list">
+            {% for path in gallery %}
+            <button type="button" class="product-gallery-thumb{% if loop.first %} is-active{% endif %}" role="listitem"
+              data-gallery-src="{{ url_for('static', filename=path) }}" aria-label="Photo {{ loop.index }}">
+              <img src="{{ url_for('static', filename=path) }}" alt="">
+            </button>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
         {{ product_image(product, 'detail') }}
+        {% endif %}
       </div>
 
       <div class="product-detail-main">
@@ -93,7 +110,6 @@
         </div>
 
         <form class="product-add-form checkout-form product-detail-actions" method="post" action="{{ url_for('panier_ajouter') }}">
-          <input type="hidden" name="next" value="{{ url_for('product_detail', slug=product.slug) }}">
           <input type="hidden" name="product_id" value="{{ product.id }}">
           <div class="field-inline">
             <div class="field-group" style="margin-bottom:0;">
@@ -149,4 +165,9 @@
     {% endif %}
   </article>
 </div>
+{% endblock %}
+{% block extra_scripts %}
+{% if product.gallery_paths()|length > 1 %}
+<script src="{{ url_for('static', filename='js/product-gallery.js') }}" defer></script>
+{% endif %}
 {% endblock %}
