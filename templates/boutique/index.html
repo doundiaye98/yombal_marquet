@@ -1,100 +1,137 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
-{% from "macros/category_badge.html" import category_badge %}
 {% block title %}Boutique — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper">
-  <header class="page-hero page-hero--compact">
-    <p class="section-eyebrow reveal">Catalogue en ligne</p>
-    <h1 class="section-title reveal">La <em>boutique</em></h1>
-    <p class="section-sub reveal">
-      Épicerie sénégalaise, boissons, céréales, huiles, condiments et produits du terroir —
-      fiches détaillées et commande sans compte.
-    </p>
-    <nav class="filter-row reveal" aria-label="Filtrer par catégorie">
-      <a href="{{ url_for('boutique') }}" class="filter-pill {{ 'is-active' if not filter_cat else '' }}">
-        Tout <span class="pill-count">{{ total_products if not filter_cat else '—' }}</span>
-      </a>
-      {% for cat_key in shop_category_order %}
-      {% if shop_counts.get(cat_key, 0) > 0 %}
-      {% set meta = product_categories[cat_key] %}
-      <a href="{{ url_for('boutique', categorie=cat_key) }}" class="filter-pill {{ 'is-active' if filter_cat == cat_key else '' }}">
-        {{ meta.emoji }} {{ meta.label }}
-        <span class="pill-count">{{ shop_counts[cat_key] }}</span>
-      </a>
-      {% endif %}
-      {% endfor %}
-    </nav>
+<div class="page-wrapper boutique-page">
+  <header class="boutique-hero reveal">
+    <div class="boutique-hero__bg" aria-hidden="true"></div>
+    <div class="boutique-hero__inner">
+      <p class="section-eyebrow">Catalogue en ligne</p>
+      <h1 class="boutique-hero__title">La <em>boutique</em></h1>
+      <p class="boutique-hero__lead">
+        Épicerie sénégalaise, céréales, huiles et produits du terroir —
+        commandez sans compte, livraison à domicile.
+      </p>
+      <div class="boutique-hero__stats">
+        <span><strong>{{ total_products }}</strong> références</span>
+        <span class="boutique-hero__dot" aria-hidden="true"></span>
+        <span>Livraison France &amp; international</span>
+      </div>
+    </div>
   </header>
 
-  <section class="section section--flush-top">
-    <div class="experiences-strip reveal">
-      <a href="{{ url_for('saveurs') }}" class="experiences-strip-link">🗺️ Carte des saveurs</a>
-      <a href="{{ url_for('recettes') }}" class="experiences-strip-link">🍲 Recettes</a>
-      <a href="{{ url_for('coffrets') }}" class="experiences-strip-link">🎁 Coffrets</a>
-      <a href="{{ url_for('decouvrir') }}" class="experiences-strip-link">✦ Tout découvrir</a>
-    </div>
-
-    {% if catalog %}
-    <p class="section-sub reveal shop-result-count">
-      <strong>{{ catalog|length }}</strong> référence{{ 's' if catalog|length > 1 else '' }}
-      {% if filter_cat and product_categories.get(filter_cat) %}
-      — {{ product_categories[filter_cat].label }}
-      {% endif %}
-    </p>
-    <div class="shop-grid">
-      {% for entry in catalog %}
-      {% if entry.kind == 'group' %}
-      <article class="shop-card shop-card--group reveal">
-        <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="shop-card-link-overlay" aria-label="Voir la gamme {{ entry.title }}"></a>
-        <div class="shop-card-img{% if entry.hero_product.image %} shop-card-img--photo{% endif %}">
-          {{ product_image(entry.hero_product, 'card') }}
-          <span class="shop-group-badge">{{ entry.variant_count }} formats</span>
-        </div>
-        <div class="shop-card-body">
-          <span class="category-badge">{{ entry.emoji }} Gamme</span>
-          <h2 class="svc-name shop-card-title">{{ entry.title }}</h2>
-          <p>{{ entry.summary }}</p>
-          <p class="shop-price">dès {{ '%.2f'|format(entry.min_price_cents / 100) }} €</p>
-          <div class="shop-card-actions">
-            <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="btn-primary">Choisir le format</a>
-          </div>
-        </div>
-      </article>
-      {% else %}
-      {% set p = entry.product %}
-      <article class="shop-card reveal">
-        <div class="shop-card-img{% if p.image %} shop-card-img--photo{% endif %}">
-          {{ product_image(p, 'card') }}
-        </div>
-        <div class="shop-card-body">
-          {{ category_badge(p) }}
-          <h2 class="svc-name shop-card-title">{{ p.name }}</h2>
-          <p>{{ p.summary }}</p>
-          {% if p.producer %}
-          <p class="shop-producer-line">👩🏾‍🌾 <a href="{{ url_for('producteur_detail', slug=p.producer.slug) }}">{{ p.producer.name }}</a></p>
+  <div class="boutique-shell">
+    <aside class="boutique-sidebar reveal" aria-label="Filtrer le catalogue">
+      <div class="boutique-sidebar__panel">
+        <p class="boutique-sidebar__label">Rayons</p>
+        <nav class="boutique-cat-nav">
+          <a href="{{ url_for('boutique') }}" class="boutique-cat-link {{ 'is-active' if not filter_cat else '' }}">
+            <span class="boutique-cat-link__emoji" aria-hidden="true">✦</span>
+            <span class="boutique-cat-link__text">Tout le catalogue</span>
+            <span class="boutique-cat-link__count">{{ total_products }}</span>
+          </a>
+          {% for cat_key in shop_category_order %}
+          {% if shop_counts.get(cat_key, 0) > 0 %}
+          {% set meta = product_categories[cat_key] %}
+          <a href="{{ url_for('boutique', categorie=cat_key) }}" class="boutique-cat-link {{ 'is-active' if filter_cat == cat_key else '' }}">
+            <span class="boutique-cat-link__emoji" aria-hidden="true">{{ meta.emoji }}</span>
+            <span class="boutique-cat-link__text">{{ meta.label }}</span>
+            <span class="boutique-cat-link__count">{{ shop_counts[cat_key] }}</span>
+          </a>
           {% endif %}
-          <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
-          <div class="shop-card-actions">
-            <a href="{{ url_for('product_detail', slug=p.slug) }}" class="btn-primary">Voir la fiche</a>
-            <form method="post" action="{{ url_for('panier_ajouter') }}">
-              <input type="hidden" name="product_id" value="{{ p.id }}">
-              <input type="hidden" name="quantity" value="1">
-              <button type="submit" class="btn-outline">Panier</button>
-            </form>
-          </div>
+          {% endfor %}
+        </nav>
+
+        <p class="boutique-sidebar__label boutique-sidebar__label--spaced">À découvrir</p>
+        <nav class="boutique-discover-nav">
+          <a href="{{ url_for('saveurs') }}">Carte des saveurs</a>
+          <a href="{{ url_for('recettes') }}">Recettes</a>
+          <a href="{{ url_for('coffrets') }}">Coffrets</a>
+          <a href="{{ url_for('decouvrir') }}">Tout découvrir</a>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="boutique-main">
+      <div class="boutique-toolbar reveal">
+        <div>
+          <h2 class="boutique-toolbar__title">
+            {% if filter_cat and product_categories.get(filter_cat) %}
+            {{ product_categories[filter_cat].emoji }} {{ product_categories[filter_cat].label }}
+            {% else %}
+            Tout le catalogue
+            {% endif %}
+          </h2>
+          <p class="boutique-toolbar__meta">
+            <strong>{{ catalog|length }}</strong> référence{{ 's' if catalog|length > 1 else '' }} affichée{{ 's' if catalog|length > 1 else '' }}
+          </p>
         </div>
-      </article>
+      </div>
+
+      {% if catalog %}
+      <div class="boutique-grid">
+        {% for entry in catalog %}
+        {% if entry.kind == 'group' %}
+        <article class="boutique-card boutique-card--gamme reveal">
+          <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="boutique-card__media">
+            {{ product_image(entry.hero_product, 'card') }}
+            <span class="boutique-card__ribbon">{{ entry.variant_count }} formats</span>
+            <span class="boutique-card__cat">{{ entry.emoji }} Gamme</span>
+          </a>
+          <div class="boutique-card__body">
+            <h3 class="boutique-card__title">
+              <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}">{{ entry.title }}</a>
+            </h3>
+            <p class="boutique-card__summary">{{ entry.summary }}</p>
+            <div class="boutique-card__footer">
+              <span class="boutique-card__price">dès {{ '%.2f'|format(entry.min_price_cents / 100) }} €</span>
+              <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="btn-primary boutique-card__cta">Choisir le format</a>
+            </div>
+          </div>
+        </article>
+        {% else %}
+        {% set p = entry.product %}
+        {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
+        <article class="boutique-card reveal">
+          <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
+            {{ product_image(p, 'card') }}
+            <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>
+          </a>
+          <div class="boutique-card__body">
+            <h3 class="boutique-card__title">
+              <a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a>
+            </h3>
+            {% if p.weight_info %}
+            <p class="boutique-card__meta">{{ p.weight_info }}</p>
+            {% elif p.producer %}
+            <p class="boutique-card__meta">👩🏾‍🌾 {{ p.producer.name }}</p>
+            {% endif %}
+            <div class="boutique-card__footer">
+              <span class="boutique-card__price">{{ '%.2f'|format(p.price_euros()) }} €</span>
+              <div class="boutique-card__actions">
+                <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__link">Fiche</a>
+                <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
+                  <input type="hidden" name="product_id" value="{{ p.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ p.name }} au panier">
+                    <span aria-hidden="true">+</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </article>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="boutique-empty reveal">
+        <p class="boutique-empty__title">Aucun produit dans ce rayon</p>
+        <p class="boutique-empty__hint">Essayez une autre catégorie ou parcourez tout le catalogue.</p>
+        <a href="{{ url_for('boutique') }}" class="btn-primary">Voir tout le catalogue</a>
+      </div>
       {% endif %}
-      {% endfor %}
-    </div>
-    {% else %}
-    <div class="form-panel reveal" style="max-width:480px;text-align:center;">
-      <p class="form-panel-title">Aucun produit</p>
-      <p class="form-panel-hint">Ce filtre ne retourne aucune référence pour le moment.</p>
-      <a href="{{ url_for('boutique') }}" class="btn-primary">Voir tout le catalogue</a>
-    </div>
-    {% endif %}
-  </section>
+    </main>
+  </div>
 </div>
 {% endblock %}

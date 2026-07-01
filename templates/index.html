@@ -4,130 +4,85 @@
 {% block title %}Yombal Marché — Accueil{% endblock %}
 {% block main_class %}site-main--home{% endblock %}
 {% block content %}
-<section class="hero">
-  <div class="hero-bg" aria-hidden="true">
-    <span class="blob blob-1"></span>
-    <span class="blob blob-2"></span>
-    <span class="blob blob-3"></span>
-  </div>
-  <div class="hero-stripe" aria-hidden="true"></div>
-
-  <div class="hero-inner">
-    <div class="hero-left">
-      <p class="hero-eyebrow">Groupe YOMBAL</p>
-      <h1 class="hero-title">
-        <span class="word" style="animation-delay:0.55s">Courses</span>
-        <span class="word" style="animation-delay:0.62s">et</span>
-        <span class="word italic" style="animation-delay:0.72s">alimentation</span><span class="word" style="animation-delay:0.78s">,</span><br>
-        <span class="word" style="animation-delay:0.86s">livraison</span>
-        <span class="word" style="animation-delay:0.94s">à</span>
-        <span class="word" style="animation-delay:1.02s">domicile</span>
+<section class="home-hero">
+  <div class="home-hero__bg" aria-hidden="true"></div>
+  <div class="home-hero__inner">
+    <div class="home-hero__copy reveal">
+      <p class="section-eyebrow">Groupe YOMBAL · Boutique diaspora</p>
+      <h1 class="home-hero__title">
+        Le marché du quotidien, <em>livré</em> avec le goût du vrai.
       </h1>
-      <p class="hero-desc">
-        <strong>Yombal Marché</strong> vous propose des <strong>produits alimentaires</strong>, des <strong>produits cosmétiques</strong>, une <strong>livraison à domicile</strong>, des <strong>prix abordables</strong> et une <strong>boutique en ligne</strong> pour commander où vous voulez, quand vous voulez.
+      <p class="home-hero__lead">
+        Épicerie sénégalaise, céréales, huiles, boissons, soins naturels et coffrets —
+        un catalogue clair, des produits traçables, une commande sans compte.
       </p>
-      <div class="hero-btns">
-        <a href="{{ url_for('boutique') }}" class="btn-primary">Commander en ligne <span class="btn-arrow" aria-hidden="true">→</span></a>
-        <a href="{{ url_for('decouvrir') }}" class="btn-outline">Découvrir l'expérience</a>
+      <div class="home-hero__actions">
+        <a href="{{ url_for('boutique') }}" class="btn-primary">Ouvrir la boutique <span class="btn-arrow" aria-hidden="true">→</span></a>
+        <a href="{{ url_for('recettes') }}" class="btn-outline">Voir les paniers recettes</a>
       </div>
-      <div class="hero-mobile-stats" aria-label="Chiffres clés">
-        <div class="hero-stat"><strong>2</strong><span>Univers</span></div>
-        <div class="hero-stat"><strong>8+</strong><span>Produits</span></div>
-        <div class="hero-stat"><strong>24h</strong><span>Réponse</span></div>
+      <div class="home-hero__trust" aria-label="Avantages">
+        <span>Carte · PayPal · virement</span>
+        <span>Livraison suivie</span>
+        <span>Commande invité</span>
       </div>
     </div>
 
-    <div class="hero-right" aria-hidden="true">
-      <div class="float-card fc-main">
-        <p class="fc-tag alim">Alimentaire</p>
-        <p class="fc-title">Épicerie &amp; frais</p>
-        <div class="fc-icon-row">
-          <span class="fc-dot"></span><span class="fc-dot"></span><span class="fc-dot"></span>
-        </div>
+    <div class="home-hero__market reveal" aria-label="Aperçu Yombal Marché">
+      <div class="home-market-card home-market-card--main">
+        <span class="home-market-card__tag">Rayon phare</span>
+        <strong>Riz, huiles &amp; essentiels</strong>
+        <p>Formats regroupés, fiches détaillées, ajout au panier rapide.</p>
+        <a href="{{ url_for('boutique', categorie='cereales') }}">Voir les céréales →</a>
       </div>
-      <div class="float-card fc-cosm">
-        <p class="fc-tag cosm">Cosmétique</p>
-        <p class="fc-title">Soins &amp; hygiène</p>
-        <div class="fc-icon-row">
-          <span class="fc-dot"></span><span class="fc-dot"></span><span class="fc-dot"></span>
-        </div>
+      <div class="home-market-card home-market-card--small">
+        <span>🌾</span>
+        <strong>11</strong>
+        <p>formats de riz</p>
       </div>
-      <div class="float-card fc-stat">
-        <p class="fc-tag stat">Marché</p>
-        <p class="fc-number" data-count="5">0</p>
-        <p class="fc-label">Engagements</p>
-        <div class="fc-icon-row">
-          <span class="fc-dot"></span><span class="fc-dot"></span><span class="fc-dot"></span>
-        </div>
+      <div class="home-market-card home-market-card--small home-market-card--gold">
+        <span>🎁</span>
+        <strong>2</strong>
+        <p>coffrets prêts</p>
       </div>
     </div>
   </div>
-
-  <a href="#discover-anchor" class="scroll-hint">
-    <span class="scroll-mouse"><span class="scroll-dot"></span></span>
-    <span class="scroll-label">Découvrir</span>
-  </a>
 </section>
 
-<section class="features-strip" aria-label="Avantages Yombal Marché">
-  <div class="features-grid">
-    <article class="feature-card reveal">
-      <span class="fc-icon" aria-hidden="true">🛒</span>
-      <h3>Épicerie &amp; frais</h3>
-      <p>Sélection alimentaire soignée, origines tracées et fiches produits détaillées.</p>
-    </article>
-    <article class="feature-card reveal">
-      <span class="fc-icon" aria-hidden="true">✨</span>
-      <h3>Beauté &amp; soins</h3>
-      <p>Cosmétiques naturels, argan, karité et savons traditionnels.</p>
-    </article>
-    <article class="feature-card reveal">
-      <span class="fc-icon" aria-hidden="true">🚚</span>
-      <h3>Livraison</h3>
-      <p>Commande en ligne, suivi par e-mail et livraison à domicile.</p>
-    </article>
-    <article class="feature-card reveal">
-      <span class="fc-icon" aria-hidden="true">💳</span>
-      <h3>Paiement flexible</h3>
-      <p>Carte, PayPal, virement ou espèces à la livraison — sans compte obligatoire.</p>
-    </article>
-  </div>
-</section>
-
-<section class="discover-band" id="discover-anchor" aria-label="Expériences Yombal">
-  <div class="discover-band-inner reveal">
-    <a href="{{ url_for('saveurs') }}" class="discover-card discover-card--map">
-      <span class="discover-card-icon" aria-hidden="true">🗺️</span>
-      <h2>Carte des saveurs</h2>
-      <p>Explorez les origines et rencontrez nos producteurs sur une carte interactive.</p>
-      <span class="discover-card-cta">Explorer →</span>
+<section class="home-quick" id="discover-anchor" aria-label="Accès rapides">
+  <div class="home-quick__grid">
+    <a href="{{ url_for('boutique') }}" class="home-quick-card reveal">
+      <span class="home-quick-card__icon" aria-hidden="true">🛒</span>
+      <strong>Boutique</strong>
+      <p>Catalogue, filtres et commande rapide.</p>
     </a>
-    <a href="{{ url_for('recettes') }}" class="discover-card discover-card--recipes">
-      <span class="discover-card-icon" aria-hidden="true">🍲</span>
-      <h2>Recettes &amp; paniers</h2>
-      <p>Thiéb, bissap, soins karité… ajoutez tous les ingrédients en un clic.</p>
-      <span class="discover-card-cta">Cuisiner →</span>
+    <a href="{{ url_for('saveurs') }}" class="home-quick-card reveal">
+      <span class="home-quick-card__icon" aria-hidden="true">🗺️</span>
+      <strong>Carte des saveurs</strong>
+      <p>Origines, terroirs et producteurs.</p>
     </a>
-    <a href="{{ url_for('coffrets') }}" class="discover-card discover-card--gifts">
-      <span class="discover-card-icon" aria-hidden="true">🎁</span>
-      <h2>Coffrets diaspora</h2>
-      <p>Goûters d'enfance, soins maman, terroir sénégalais — prêts à offrir.</p>
-      <span class="discover-card-cta">Offrir →</span>
+    <a href="{{ url_for('recettes') }}" class="home-quick-card reveal">
+      <span class="home-quick-card__icon" aria-hidden="true">🍲</span>
+      <strong>Recettes</strong>
+      <p>Paniers prêts à commander.</p>
     </a>
-    <a href="{{ url_for('decouvrir') }}" class="discover-card discover-card--all">
-      <span class="discover-card-icon" aria-hidden="true">✦</span>
-      <h2>Tout découvrir</h2>
-      <p>Carte, recettes, coffrets et producteurs — l'expérience complète Yombal Marché.</p>
-      <span class="discover-card-cta">Explorer →</span>
+    <a href="{{ url_for('coffrets') }}" class="home-quick-card reveal">
+      <span class="home-quick-card__icon" aria-hidden="true">🎁</span>
+      <strong>Coffrets</strong>
+      <p>Idées cadeaux diaspora.</p>
     </a>
   </div>
 </section>
 
 {% if featured_recipes %}
-<section class="section">
-  <p class="section-eyebrow reveal">Idées du moment</p>
-  <h2 class="section-title reveal">Paniers <em>intelligents</em></h2>
-  <p class="section-sub reveal">Des recettes pensées avec nos produits — prêtes à commander.</p>
+<section class="section home-section home-section--recipes">
+  <div class="home-section-head reveal">
+    <div>
+      <p class="section-eyebrow">Idées du moment</p>
+      <h2 class="section-title">Paniers <em>intelligents</em></h2>
+      <p class="section-sub">Des recettes pensées avec nos produits — prêtes à commander.</p>
+    </div>
+    <a href="{{ url_for('recettes') }}" class="btn-outline">Toutes les recettes</a>
+  </div>
   <div class="recipe-grid recipe-grid--home">
     {% for recipe in featured_recipes %}
     <article class="recipe-card reveal">
@@ -148,17 +103,19 @@
     </article>
     {% endfor %}
   </div>
-  <p style="text-align:center;margin-top:32px;" class="reveal">
-    <a href="{{ url_for('recettes') }}" class="btn-outline">Toutes les recettes</a>
-  </p>
 </section>
 {% endif %}
 
 {% if featured_coffrets %}
-<section class="section">
-  <p class="section-eyebrow reveal">Cadeaux</p>
-  <h2 class="section-title reveal">Coffrets <em>diaspora</em></h2>
-  <p class="section-sub reveal">Paniers gourmands prêts à offrir — un clic pour tout ajouter au panier.</p>
+<section class="section home-section">
+  <div class="home-section-head reveal">
+    <div>
+      <p class="section-eyebrow">Cadeaux</p>
+      <h2 class="section-title">Coffrets <em>diaspora</em></h2>
+      <p class="section-sub">Paniers gourmands prêts à offrir — un clic pour tout ajouter au panier.</p>
+    </div>
+    <a href="{{ url_for('coffrets') }}" class="btn-outline">Tous les coffrets</a>
+  </div>
   <div class="coffret-grid coffret-grid--home">
     {% for c in featured_coffrets %}
     <article class="coffret-card reveal">
@@ -180,9 +137,6 @@
     </article>
     {% endfor %}
   </div>
-  <p style="text-align:center;margin-top:32px;" class="reveal">
-    <a href="{{ url_for('coffrets') }}" class="btn-outline">Tous les coffrets</a>
-  </p>
 </section>
 {% endif %}
 
@@ -205,10 +159,15 @@
   </div>
 </div>
 
-<section class="section" id="services-anchor">
-  <p class="section-eyebrow reveal">Offre</p>
-  <h2 class="section-title reveal">Nos <em>services</em></h2>
-  <p class="section-sub reveal">Cinq engagements au cœur de votre marché — détail et commande sur la page Services.</p>
+<section class="section home-section" id="services-anchor">
+  <div class="home-section-head reveal">
+    <div>
+      <p class="section-eyebrow">Offre</p>
+      <h2 class="section-title">Nos <em>services</em></h2>
+      <p class="section-sub">Cinq engagements au cœur de votre marché — détail et commande sur la page Services.</p>
+    </div>
+    <a href="{{ url_for('services') }}" class="btn-outline">Voir les services</a>
+  </div>
 
   <div class="cards-grid">
     {% set icons = ['🛒', '✨', '🚚', '💶', '🛍️'] %}
@@ -239,12 +198,17 @@
 </section>
 
 {% if featured_producers %}
-<section class="section producers-home">
-  <p class="section-eyebrow reveal">Traçabilité</p>
-  <h2 class="section-title reveal">Nos <em>producteurs</em></h2>
-  <p class="section-sub reveal">
-    Derrière chaque référence, un visage et un savoir-faire. Découvrez qui fabrique ce que vous achetez — confiance, émotion et soutien direct aux petits producteurs.
-  </p>
+<section class="section producers-home home-section">
+  <div class="home-section-head reveal">
+    <div>
+      <p class="section-eyebrow">Traçabilité</p>
+      <h2 class="section-title">Nos <em>producteurs</em></h2>
+      <p class="section-sub">
+        Derrière chaque référence, un visage et un savoir-faire.
+      </p>
+    </div>
+    <a href="{{ url_for('producteurs') }}" class="btn-outline">Toute la vitrine</a>
+  </div>
   <div class="producers-grid producers-grid--home">
     {% for pr in featured_producers %}
     <a href="{{ url_for('producteur_detail', slug=pr.slug) }}" class="producer-card producer-card--compact reveal">
@@ -258,43 +222,42 @@
     </a>
     {% endfor %}
   </div>
-  <p style="text-align:center;margin-top:32px;" class="reveal">
-    <a href="{{ url_for('producteurs') }}" class="btn-outline">Toute la vitrine producteurs</a>
-  </p>
 </section>
 {% endif %}
 
 {% if featured_products %}
-<section class="section">
-  <p class="section-eyebrow reveal">Sélection</p>
-  <h2 class="section-title reveal">Coups de <em>cœur</em></h2>
-  <p class="section-sub reveal">Chaque produit possède une fiche détaillée : description longue, origine, ingrédients et conseils.</p>
-  <div class="shop-grid">
+<section class="section home-section">
+  <div class="home-section-head reveal">
+    <div>
+      <p class="section-eyebrow">Sélection</p>
+      <h2 class="section-title">Coups de <em>cœur</em></h2>
+      <p class="section-sub">Des fiches détaillées : origine, ingrédients et conseils.</p>
+    </div>
+    <a href="{{ url_for('boutique') }}" class="btn-primary">Toute la boutique</a>
+  </div>
+  <div class="home-product-grid">
     {% for p in featured_products %}
-    <article class="shop-card reveal">
-      <div class="shop-card-img{% if p.image %} shop-card-img--photo{% endif %}">
+    <article class="boutique-card reveal">
+      <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
         {{ product_image(p, 'card') }}
-      </div>
-      <div class="shop-card-body">
-        {{ category_badge(p) }}
-        <h3>{{ p.name }}</h3>
-        <p>{{ p.summary }}</p>
-        <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
-        <div class="shop-card-actions">
-          <a href="{{ url_for('product_detail', slug=p.slug) }}" class="btn-primary">Détails complets</a>
-          <form method="post" action="{{ url_for('panier_ajouter') }}" style="display:inline;">
+        {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
+        <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>
+      </a>
+      <div class="boutique-card__body">
+        <h3 class="boutique-card__title"><a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a></h3>
+        <p class="boutique-card__summary">{{ p.summary }}</p>
+        <div class="boutique-card__footer">
+          <span class="boutique-card__price">{{ '%.2f'|format(p.price_euros()) }} €</span>
+          <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
             <input type="hidden" name="product_id" value="{{ p.id }}">
             <input type="hidden" name="quantity" value="1">
-            <button type="submit" class="btn-outline">Panier</button>
+            <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ p.name }} au panier"><span aria-hidden="true">+</span></button>
           </form>
         </div>
       </div>
     </article>
     {% endfor %}
   </div>
-  <p style="text-align:center;margin-top:32px;" class="reveal">
-    <a href="{{ url_for('boutique') }}" class="btn-primary">Toute la boutique</a>
-  </p>
 </section>
 {% endif %}
 

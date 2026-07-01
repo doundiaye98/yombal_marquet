@@ -17,7 +17,7 @@
   <a href="#main-content" class="skip-link">Aller au contenu</a>
 
   {% set ep = request.endpoint %}
-  {% set nav_shop = ep in ['boutique', 'product_detail', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'suivi_commande', 'suivi_commande_detail', 'commande_recommander', 'commande_annuler', 'api_commande_statut', 'admin_orders', 'admin_order_detail'] %}
+  {% set nav_shop = ep in ['boutique', 'product_detail', 'product_gamme', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'suivi_commande', 'suivi_commande_detail', 'commande_recommander', 'commande_annuler', 'api_commande_statut', 'admin_orders', 'admin_order_detail'] %}
   {% set nav_discover = ep in ['decouvrir', 'saveurs', 'recettes', 'recette_detail', 'recette_panier', 'coffrets', 'coffret_detail', 'coffret_panier'] %}
 
   <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
