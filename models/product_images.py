@@ -111,6 +111,30 @@ IMAGE_SOURCES = {
 }
 
 
+_IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp", ".gif")
+
+
+def discover_image_for_slug(app_root: str | None, slug: str) -> str | None:
+    """Cherche static/img/products/{slug}.ext — utile pour Render après déploiement Git."""
+    if not app_root or not slug:
+        return None
+    products_dir = os.path.join(app_root, "static", "img", "products")
+    if not os.path.isdir(products_dir):
+        return None
+    safe = slug.strip().lower()
+    for ext in _IMAGE_EXTENSIONS:
+        filename = f"{safe}{ext}"
+        if os.path.isfile(os.path.join(products_dir, filename)):
+            return f"img/products/{filename}"
+    return None
+
+
+def image_file_exists(app_root: str | None, rel_path: str | None) -> bool:
+    if not app_root or not rel_path:
+        return False
+    return os.path.isfile(os.path.join(app_root, "static", rel_path.replace("/", os.sep)))
+
+
 def install_product_images(app_root: str) -> int:
     """Copie img/ → static/img/products/ selon IMAGE_SOURCES. Retourne le nombre de fichiers copiés."""
     src_dir = os.path.join(app_root, "img")
@@ -144,11 +168,24 @@ def sync_product_images(app_root: str | None = None):
     if "image" not in cols:
         return
     changed = False
+
+    # 1) Cartographie explicite (catalogue historique)
     for slug, path in PRODUCT_IMAGES.items():
         product = Product.query.filter_by(slug=slug).first()
         if product and product.image != path:
             product.image = path
             changed = True
+
+    # 2) Fichiers déjà présents dans static/img/products/ (LabelAfrik, uploads commités Git)
+    for product in Product.query.all():
+        current = (product.image or "").strip()
+        if current and image_file_exists(app_root, current):
+            continue
+        discovered = discover_image_for_slug(app_root, product.slug)
+        if discovered and product.image != discovered:
+            product.image = discovered
+            changed = True
+
     if changed:
         db.session.commit()
 
