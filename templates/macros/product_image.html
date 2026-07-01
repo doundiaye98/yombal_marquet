@@ -1,7 +1,7 @@
 {% macro product_image(product, variant='card') %}
   {% if product.image %}
   <img
-    src="{{ url_for('static', filename=product.image) }}"
+    src="{{ product.image | media_url }}"
     alt="{{ product.name }}"
     class="product-photo product-photo--{{ variant }}"
     loading="lazy"

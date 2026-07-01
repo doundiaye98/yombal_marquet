@@ -3,7 +3,7 @@
 {% from "macros/checkout_steps.html" import checkout_steps %}
 {% block title %}Panier — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper{% if items %} has-cart-sticky{% endif %}">
+<div class="page-wrapper order-flow-page{% if items %} has-cart-sticky{% endif %}">
   {{ checkout_steps('cart') }}
 
   <header class="page-hero page-hero--compact">

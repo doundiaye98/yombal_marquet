@@ -306,6 +306,19 @@ def inject_globals():
     }
 
 
+@app.template_filter("media_url")
+def media_url_filter(path_or_url):
+    """URL static/ ou absolue (Cloudinary) pour afficher une image produit."""
+    from services.image_storage import image_display_url
+
+    if not path_or_url:
+        return ""
+    path = image_display_url(path_or_url)
+    if path.startswith(("http://", "https://")):
+        return path
+    return url_for("static", filename=path.lstrip("/"))
+
+
 @app.before_request
 def ensure_session_cart():
     session.setdefault("cart", {})
@@ -1448,11 +1461,18 @@ def bootstrap_admin_cli():
     """Flask CLI : flask bootstrap-admin (Render Shell)."""
     from services.admin_bootstrap import bootstrap_admin_users
 
-    created = bootstrap_admin_users()
+    result = bootstrap_admin_users()
+    created = result.get("created") or []
+    updated = result.get("updated") or []
     if created:
         print("Comptes créés:", ", ".join(created))
-    else:
-        print("Rien à créer (comptes existants ou BOOTSTRAP_ADMIN_PASSWORD absent).")
+    if updated:
+        print("Mots de passe mis à jour:", ", ".join(updated))
+    if not created and not updated:
+        print(
+            "Rien à faire. Vérifiez BOOTSTRAP_ADMIN_PASSWORD dans l'environnement. "
+            "Pour forcer une réinitialisation : FORCE_BOOTSTRAP_ADMIN=1"
+        )
 
 
 if __name__ == "__main__":

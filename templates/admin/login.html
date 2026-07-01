@@ -29,8 +29,10 @@
       </div>
       <button type="submit" class="btn-primary" style="width:100%;">Se connecter</button>
       <p class="form-panel-hint" style="margin-top:16px;">
-        Mot de passe par défaut (local) : <code>Yombal2026</code><br>
-        Pour le changer :
+        <strong>Render :</strong> définissez <code>ADMIN_EMAILS</code> et <code>BOOTSTRAP_ADMIN_PASSWORD</code>,
+        puis redéployez. Pour réinitialiser :
+        <code>FORCE_BOOTSTRAP_ADMIN=1</code><br>
+        <strong>Local :</strong>
         <code>python scripts/create_admin.py votre@email.com NouveauMotDePasse</code>
       </p>
     </form>

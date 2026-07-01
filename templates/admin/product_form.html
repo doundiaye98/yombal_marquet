@@ -12,7 +12,7 @@
         <p class="field-label">Photo produit</p>
         <div class="admin-product-image-preview">
           {% if product.image %}
-          <img src="{{ url_for('static', filename=product.image) }}" alt="Photo actuelle — {{ product.name }}" class="admin-product-image-preview__img">
+          <img src="{{ product.image | media_url }}" alt="Photo actuelle — {{ product.name }}" class="admin-product-image-preview__img">
           {% else %}
           <span class="admin-product-image-preview__fallback" aria-hidden="true">{{ product.icon or '🛒' }}</span>
           {% endif %}
@@ -33,7 +33,7 @@
           <div class="admin-gallery-grid">
             {% for img in product.gallery_images %}
             <label class="admin-gallery-item">
-              <img src="{{ url_for('static', filename=img.image) }}" alt="">
+              <img src="{{ img.image | media_url }}" alt="">
               <span><input type="checkbox" name="remove_gallery" value="{{ img.id }}"> Supprimer</span>
             </label>
             {% endfor %}

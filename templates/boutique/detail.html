@@ -19,13 +19,13 @@
         {% if gallery|length > 1 %}
         <div class="product-gallery" data-product-gallery>
           <div class="product-gallery-main">
-            <img src="{{ url_for('static', filename=gallery[0]) }}" alt="{{ product.name }}" class="product-gallery-main__img" id="product-gallery-main">
+            <img src="{{ gallery[0] | media_url }}" alt="{{ product.name }}" class="product-gallery-main__img" id="product-gallery-main">
           </div>
           <div class="product-gallery-thumbs" role="list">
             {% for path in gallery %}
             <button type="button" class="product-gallery-thumb{% if loop.first %} is-active{% endif %}" role="listitem"
-              data-gallery-src="{{ url_for('static', filename=path) }}" aria-label="Photo {{ loop.index }}">
-              <img src="{{ url_for('static', filename=path) }}" alt="">
+              data-gallery-src="{{ path | media_url }}" aria-label="Photo {{ loop.index }}">
+              <img src="{{ path | media_url }}" alt="">
             </button>
             {% endfor %}
           </div>

@@ -16,7 +16,7 @@
           <tr>
             <td class="admin-table-thumb">
               {% if p.image %}
-              <img src="{{ url_for('static', filename=p.image) }}" alt="" class="admin-table-thumb__img">
+              <img src="{{ p.image | media_url }}" alt="" class="admin-table-thumb__img">
               {% else %}
               <span class="admin-table-thumb__emoji">{{ p.icon or '🛒' }}</span>
               {% endif %}

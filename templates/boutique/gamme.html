@@ -3,83 +3,93 @@
 {% from "macros/category_badge.html" import category_badge %}
 {% block title %}{{ group.title }} — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper">
-  <header class="page-hero page-hero--compact">
-    <p class="section-eyebrow reveal">
-      <a href="{{ url_for('boutique', categorie=group.category) }}" class="admin-back-link">← Céréales</a>
-    </p>
-    <h1 class="section-title reveal">{{ group.emoji }} {{ group.title }}</h1>
-    <p class="section-sub reveal">{{ group.summary }}</p>
-    <p class="section-sub reveal gamme-hero-meta">
-      <strong>{{ variant_count }}</strong> format{{ 's' if variant_count > 1 else '' }} disponible{{ 's' if variant_count > 1 else '' }}
-      · dès <strong>{{ '%.2f'|format(min_price_cents / 100) }} €</strong>
-    </p>
+<div class="page-wrapper boutique-page gamme-page">
+  <header class="boutique-hero boutique-hero--compact reveal">
+    <div class="boutique-hero__bg" aria-hidden="true"></div>
+    <div class="boutique-hero__inner">
+      <p class="section-eyebrow">
+        <a href="{{ url_for('boutique', categorie=group.category) }}" class="admin-back-link">← Céréales</a>
+      </p>
+      <h1 class="boutique-hero__title">{{ group.emoji }} {{ group.title }}</h1>
+      <p class="boutique-hero__lead">{{ group.summary }}</p>
+      <div class="boutique-hero__stats gamme-hero-meta">
+        <span><strong>{{ variant_count }}</strong> format{{ 's' if variant_count > 1 else '' }}</span>
+        <span class="boutique-hero__dot" aria-hidden="true"></span>
+        <span>dès <strong>{{ '%.2f'|format(min_price_cents / 100) }} €</strong></span>
+      </div>
+    </div>
   </header>
 
-  <section class="section section--flush-top">
-    <div class="gamme-filters reveal" data-gamme-filters>
-      <div class="gamme-filter-block">
-        <span class="gamme-filter-label">Type de riz</span>
-        <div class="filter-row gamme-filter-row" role="group" aria-label="Filtrer par type">
-          <button type="button" class="filter-pill is-active" data-filter-kind="type" data-filter-value="">Tous</button>
-          {% for f in type_filters %}
-          <button type="button" class="filter-pill" data-filter-kind="type" data-filter-value="{{ f.key }}">{{ f.label }}</button>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="gamme-filter-block">
-        <span class="gamme-filter-label">Conditionnement</span>
-        <div class="filter-row gamme-filter-row" role="group" aria-label="Filtrer par format">
-          <button type="button" class="filter-pill is-active" data-filter-kind="format" data-filter-value="">Tous</button>
-          {% for f in format_filters %}
-          <button type="button" class="filter-pill" data-filter-kind="format" data-filter-value="{{ f.key }}">{{ f.label }}</button>
-          {% endfor %}
-        </div>
-      </div>
-      <p class="gamme-result-count muted-small" data-gamme-count aria-live="polite">
-        {{ variant_count }} référence{{ 's' if variant_count > 1 else '' }}
-      </p>
-    </div>
-
-    <div class="shop-grid gamme-grid" data-gamme-grid>
-      {% for row in variants %}
-      <article
-        class="shop-card reveal gamme-variant-card"
-        data-gamme-card
-        data-type="{{ row.type }}"
-        data-format="{{ row.format }}"
-      >
-        <div class="shop-card-img{% if row.product.image %} shop-card-img--photo{% endif %}">
-          {{ product_image(row.product, 'card') }}
-        </div>
-        <div class="shop-card-body">
-          <div class="gamme-variant-badges">
-            <span class="gamme-badge">{{ row.type_label }}</span>
-            <span class="gamme-badge gamme-badge--format">{{ row.format_label }}</span>
-          </div>
-          <h2 class="svc-name shop-card-title">{{ row.product.name }}</h2>
-          <p>{{ row.product.summary }}</p>
-          {% if row.product.weight_info %}
-          <p class="shop-meta">{{ row.product.weight_info }}</p>
-          {% endif %}
-          <p class="shop-price">{{ '%.2f'|format(row.product.price_euros()) }} €</p>
-          <div class="shop-card-actions">
-            <a href="{{ url_for('product_detail', slug=row.product.slug) }}" class="btn-primary">Voir la fiche</a>
-            <form method="post" action="{{ url_for('panier_ajouter') }}">
-              <input type="hidden" name="product_id" value="{{ row.product.id }}">
-              <input type="hidden" name="quantity" value="1">
-              <button type="submit" class="btn-outline">Panier</button>
-            </form>
+  <section class="boutique-shell boutique-shell--gamme">
+    <main class="boutique-main boutique-main--full">
+      <div class="gamme-filters reveal" data-gamme-filters>
+        <div class="gamme-filter-block">
+          <span class="gamme-filter-label">Type de riz</span>
+          <div class="filter-row gamme-filter-row" role="group" aria-label="Filtrer par type">
+            <button type="button" class="filter-pill is-active" data-filter-kind="type" data-filter-value="">Tous</button>
+            {% for f in type_filters %}
+            <button type="button" class="filter-pill" data-filter-kind="type" data-filter-value="{{ f.key }}">{{ f.label }}</button>
+            {% endfor %}
           </div>
         </div>
-      </article>
-      {% endfor %}
-    </div>
+        <div class="gamme-filter-block">
+          <span class="gamme-filter-label">Conditionnement</span>
+          <div class="filter-row gamme-filter-row" role="group" aria-label="Filtrer par format">
+            <button type="button" class="filter-pill is-active" data-filter-kind="format" data-filter-value="">Tous</button>
+            {% for f in format_filters %}
+            <button type="button" class="filter-pill" data-filter-kind="format" data-filter-value="{{ f.key }}">{{ f.label }}</button>
+            {% endfor %}
+          </div>
+        </div>
+        <p class="gamme-result-count muted-small" data-gamme-count aria-live="polite">
+          {{ variant_count }} référence{{ 's' if variant_count > 1 else '' }}
+        </p>
+      </div>
 
-    <div class="form-panel reveal gamme-empty is-hidden" data-gamme-empty style="max-width:480px;text-align:center;margin:24px auto 0;">
-      <p class="form-panel-title">Aucun format pour ce filtre</p>
-      <p class="form-panel-hint">Essayez un autre type ou conditionnement.</p>
-    </div>
+      <div class="boutique-grid gamme-grid" data-gamme-grid>
+        {% for row in variants %}
+        <article
+          class="boutique-card reveal gamme-variant-card"
+          data-gamme-card
+          data-type="{{ row.type }}"
+          data-format="{{ row.format }}"
+        >
+          <a href="{{ url_for('product_detail', slug=row.product.slug) }}" class="boutique-card__media{% if row.product.image %} boutique-card__media--photo{% endif %}">
+            {{ product_image(row.product, 'card') }}
+            <span class="boutique-card__cat">{{ row.type_label }}</span>
+            <span class="boutique-card__ribbon">{{ row.format_label }}</span>
+          </a>
+          <div class="boutique-card__body">
+            <h2 class="boutique-card__title">
+              <a href="{{ url_for('product_detail', slug=row.product.slug) }}">{{ row.product.name }}</a>
+            </h2>
+            {% if row.product.weight_info %}
+            <p class="boutique-card__meta">{{ row.product.weight_info }}</p>
+            {% endif %}
+            <p class="boutique-card__summary">{{ row.product.summary }}</p>
+            <div class="boutique-card__footer">
+              <span class="boutique-card__price">{{ '%.2f'|format(row.product.price_euros()) }} €</span>
+              <div class="boutique-card__actions">
+                <a href="{{ url_for('product_detail', slug=row.product.slug) }}" class="boutique-card__link">Fiche</a>
+                <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
+                  <input type="hidden" name="product_id" value="{{ row.product.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ row.product.name }} au panier">
+                    <span aria-hidden="true">+</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+      <div class="form-panel reveal gamme-empty is-hidden" data-gamme-empty>
+        <p class="form-panel-title">Aucun format pour ce filtre</p>
+        <p class="form-panel-hint">Essayez un autre type ou conditionnement.</p>
+      </div>
+    </main>
   </section>
 </div>
 {% endblock %}

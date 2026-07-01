@@ -4701,3 +4701,56 @@ body {
   }
 }
 
+/* —— Parcours commande (panier / checkout / paiement) —— */
+.order-flow-page {
+  padding-bottom: clamp(56px, 8vw, 96px);
+}
+.order-flow-page .checkout-steps {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 28px) 24px 0;
+}
+.order-flow-page .page-hero {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.order-flow-page .section {
+  max-width: var(--container);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.order-flow-page .checkout-summary-box,
+.order-flow-page .checkout-actions {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* —— Gamme produit (riz) —— */
+.boutique-hero--compact .boutique-hero__inner {
+  padding-top: clamp(28px, 4vw, 44px);
+  padding-bottom: clamp(20px, 3vw, 32px);
+}
+.boutique-shell--gamme {
+  grid-template-columns: minmax(0, 1fr);
+}
+.boutique-main--full {
+  width: 100%;
+}
+.gamme-page .gamme-filters {
+  margin-bottom: clamp(20px, 3vw, 28px);
+  padding: 20px 22px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+.gamme-page .gamme-empty {
+  max-width: 480px;
+  text-align: center;
+  margin: 24px auto 0;
+}

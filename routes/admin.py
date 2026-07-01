@@ -20,7 +20,7 @@ from models.order import Order
 from models.user import User
 from shop_auth import admin_emails_set, admin_required, is_shop_admin
 from services.product_admin import delete_product
-from services.product_upload import remove_product_image_file, save_product_image
+from services.image_storage import remove_product_image, save_product_image
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -120,7 +120,7 @@ def admin_product_edit(product_id):
             upload = request.files.get("image")
 
             if remove_image and product.image:
-                remove_product_image_file(static_folder, product.image)
+                remove_product_image(product.image, static_folder)
                 product.image = None
 
             if upload and upload.filename:
@@ -130,7 +130,7 @@ def admin_product_edit(product_id):
                     flash(err, "danger")
                 else:
                     if old_path and old_path != rel_path:
-                        remove_product_image_file(static_folder, old_path)
+                        remove_product_image(old_path, static_folder)
                     product.image = rel_path
 
             remove_gallery = request.form.getlist("remove_gallery")
@@ -141,7 +141,7 @@ def admin_product_edit(product_id):
                     continue
                 row = db.session.get(ProductImage, gid_int)
                 if row and row.product_id == product.id:
-                    remove_product_image_file(static_folder, row.image)
+                    remove_product_image(row.image, static_folder)
                     db.session.delete(row)
 
             gallery_uploads = request.files.getlist("gallery_uploads")

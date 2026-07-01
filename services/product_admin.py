@@ -6,7 +6,7 @@ import json
 from extensions import db
 from models.order import OrderItem
 from models.site_setting import SiteSetting
-from services.product_upload import remove_product_image_file
+from services.image_storage import remove_product_image
 
 ADMIN_REMOVED_KEY = "admin_removed_slugs"
 
@@ -56,9 +56,9 @@ def delete_product(product, static_folder: str) -> tuple[str, str]:
     slug = product.slug
     name = product.name
     if product.image:
-        remove_product_image_file(static_folder, product.image)
+        remove_product_image(product.image, static_folder)
     for row in list(product.gallery_images or []):
-        remove_product_image_file(static_folder, row.image)
+        remove_product_image(row.image, static_folder)
     mark_slug_admin_removed(slug)
     db.session.delete(product)
     return ("success", f"« {name} » a été supprimé définitivement.")

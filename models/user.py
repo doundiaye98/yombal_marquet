@@ -25,10 +25,23 @@ class User(UserMixin, TimestampMixin, db.Model):
     )
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        # pbkdf2 : compatible partout (Render, WAMP) ; les anciens hash scrypt restent valides
+        self.password_hash = generate_password_hash(
+            password,
+            method="pbkdf2:sha256",
+            salt_length=16,
+        )
 
     def check_password(self, password):
+        if not self.password_hash:
+            return False
         return check_password_hash(self.password_hash, password)
+
+    def has_valid_password_hash(self):
+        h = (self.password_hash or "").strip()
+        if len(h) < 20:
+            return False
+        return h.startswith(("pbkdf2:", "scrypt:", "argon2:"))
 
     def default_address(self):
         return self.addresses.filter_by(is_default=True).first() or self.addresses.first()
