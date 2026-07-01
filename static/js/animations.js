@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
       navBackdrop.classList.toggle("is-visible", open);
       navBackdrop.setAttribute("aria-hidden", open ? "false" : "true");
     }
+    document.body.classList.toggle("nav-open", open);
     if (!open) {
       document.querySelectorAll(".nav-item--dropdown.is-open").forEach((item) => {
         item.classList.remove("is-open");
@@ -213,17 +214,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ─── NAVBAR SCROLL STYLE ─── */
-  const nav = document.querySelector(".nav");
-  if (nav && motionOk) {
+  const navBar = document.querySelector(".header-shell");
+  if (navBar && motionOk) {
     const onScrollNav = () => {
-      nav.classList.toggle("is-scrolled", window.scrollY > 24);
-      if (window.scrollY > 60) {
-        nav.style.background = "rgba(255, 252, 248, 0.96)";
-        nav.style.boxShadow = "0 4px 40px rgba(26,61,43,0.1)";
-      } else {
-        nav.style.background = "";
-        nav.style.boxShadow = "";
-      }
+      navBar.classList.toggle("is-scrolled", window.scrollY > 24);
     };
     window.addEventListener("scroll", onScrollNav, { passive: true });
     onScrollNav();

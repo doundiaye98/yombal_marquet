@@ -12,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
 </head>
 <body>
   <a href="#main-content" class="skip-link">Aller au contenu</a>
@@ -27,7 +28,7 @@
   <div id="grain" aria-hidden="true"></div>
   <div id="toast-root" class="toast-root" role="status" aria-live="polite"></div>
 
-  <header class="nav" role="banner">
+  <div class="header-shell" role="banner">
     <a href="{{ url_for('index') }}" class="nav-logo" aria-label="Yombal Market — accueil">
       <img
         src="{{ url_for('static', filename='img/yombal-logo.png') }}"
@@ -39,11 +40,7 @@
       >
     </a>
 
-    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Ouvrir le menu">
-      <span></span>
-    </button>
-
-    <ul id="primary-nav" class="nav-links">
+    <ul id="primary-nav" class="nav-links" aria-label="Navigation principale">
       <li><a href="{{ url_for('index') }}" class="{{ 'active' if ep == 'index' else '' }}">Accueil</a></li>
       <li><a href="{{ url_for('boutique') }}" class="{{ 'active' if nav_shop else '' }}">Boutique</a></li>
       <li><a href="{{ url_for('producteurs') }}" class="{{ 'active' if ep in ['producteurs', 'producteur_detail'] else '' }}">Producteurs</a></li>
@@ -71,10 +68,14 @@
       {% endif %}
     </ul>
 
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Ouvrir le menu">
+      <span></span>
+    </button>
+
     <div class="nav-actions">
       <a href="{{ url_for('boutique') }}" class="btn-nav">Commander</a>
     </div>
-  </header>
+  </div>
 
   <main id="main-content" class="site-main {% block main_class %}{% endblock %}">
     {% with flashes = get_flashed_messages(with_categories=true) %}

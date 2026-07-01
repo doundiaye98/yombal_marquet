@@ -21,6 +21,7 @@
   --r-lg:    20px;
   --r-md:    14px;
   --r-pill:  100px;
+  --nav-h:   72px;
 }
 
 html { scroll-behavior: smooth; }
@@ -91,16 +92,42 @@ body {
   pointer-events: none;
 }
 
-.nav {
+.nav,
+.site-header,
+.header-shell {
   position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-  height: 84px;
+  height: var(--nav-h, 72px);
   display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
   padding: 0 56px;
-  background: rgba(245, 237, 224, 0.82);
-  backdrop-filter: blur(32px) saturate(1.4);
+  background: rgba(245, 237, 224, 0.92);
   border-bottom: 1px solid rgba(26,61,43,0.08);
-  transform: translateY(-84px);
-  animation: navSlideIn 0.8s cubic-bezier(.23,1,.32,1) 0.2s forwards;
+}
+
+.site-header-bar {
+  display: contents;
+}
+
+.header-shell .nav-logo {
+  flex-shrink: 0;
+}
+
+.header-shell .nav-links {
+  flex: 1;
+  justify-content: center;
+}
+
+.header-shell .nav-actions {
+  flex-shrink: 0;
+}
+
+@media (min-width: 901px) {
+  .nav,
+  .site-header,
+  .header-shell {
+    transform: translateY(calc(-1 * var(--nav-h, 72px)));
+    animation: navSlideIn 0.8s cubic-bezier(.23,1,.32,1) 0.2s forwards;
+  }
 }
 @keyframes navSlideIn {
   to { transform: translateY(0); }
@@ -187,7 +214,14 @@ body {
 .nav-toggle span::after { top: 6px; }
 
 .nav-links {
-  display: flex; gap: 36px; list-style: none; align-items: center;
+  display: flex;
+  gap: clamp(12px, 2vw, 36px);
+  list-style: none;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  justify-content: center;
 }
 .nav-links a {
   color: var(--text2); text-decoration: none;
@@ -723,7 +757,7 @@ body {
   display: block;
 }
 .site-main:not(.site-main--home) {
-  padding-top: 84px;
+  padding-top: var(--nav-h, 72px);
 }
 
 .page-wrapper {
@@ -1617,25 +1651,25 @@ a.shop-filter.is-active {
   text-decoration: none;
 }
 
-@media (max-width: 899px) {
-  .cart-item-qty-wrap {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px 16px;
-    padding-top: 14px;
-    border-top: 1px dashed rgba(26, 61, 43, 0.12);
+@media (min-width: 901px) {
+  body::before {
+    display: none;
   }
-  .cart-item-qty-label {
-    flex: 1 0 100%;
+
+  .nav-toggle {
+    display: none !important;
   }
-  .cart-item-subtotal-wrap {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    text-align: left;
-    padding-top: 4px;
+
+  .header-shell .nav-links {
+    display: flex !important;
+    position: static;
+    flex: 1;
+    justify-content: center;
+    overflow: visible;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
 }
 
@@ -2256,43 +2290,6 @@ a.shop-filter.is-active {
 }
 
 @media (max-width: 900px) {
-  .nav { padding: 0 24px; }
-  .nav-toggle { display: inline-flex; }
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 84px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    padding: 16px 24px 24px;
-    background: rgba(245, 237, 224, 0.97);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(26,61,43,0.08);
-    box-shadow: 0 24px 48px rgba(26,61,43,0.12);
-  }
-  .nav-links.is-open { display: flex; }
-  .nav-links li { width: 100%; }
-  .btn-nav-secondary { display: none; }
-  .nav-actions .btn-nav {
-    padding: 10px 18px;
-    font-size: 12px;
-  }
-  .nav-links a {
-    display: block;
-    padding: 14px 8px;
-    border-bottom: 1px solid rgba(26,61,43,0.06);
-  }
-  .nav-links > li > a,
-  .nav-links > li > .nav-dropdown-trigger {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .nav-links a::after { display: none; }
-
   .hero { padding: 100px 24px 60px; }
   .hero-inner { grid-template-columns: 1fr; gap: 48px; }
   .hero-right { display: none; }
@@ -2323,7 +2320,9 @@ a.shop-filter.is-active {
   }
   .strip-ticker { transform: none; }
   .blob { opacity: 0.6; }
-  .nav { animation: none; transform: translateY(0); }
+  .nav,
+  .site-header,
+  .header-shell { animation: none; transform: translateY(0); }
   .page-wrapper { animation: none; opacity: 1; transform: none; }
   /* Sans ces règles, le hero reste en opacity:0 si le navigateur désactive les animations. */
   .hero-eyebrow,

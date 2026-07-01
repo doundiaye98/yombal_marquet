@@ -362,9 +362,10 @@ def _can_download_invoice(order):
 
 def _order_receipt_pdf(order):
     shop = settings_svc.shop_settings()
+    from flask import current_app
     from services.invoice_pdf import build_invoice_pdf
 
-    pdf_bytes = build_invoice_pdf(order, shop=shop)
+    pdf_bytes = build_invoice_pdf(order, shop=shop, app_root=current_app.root_path)
     prefix = "recu" if order.is_paid() else "commande"
     filename = f"{prefix}-{order.public_ref}.pdf"
     return pdf_bytes, filename

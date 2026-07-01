@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Generation de recus / factures PDF pour les commandes."""
 
+import os
 import unicodedata
 from html import escape
 
@@ -14,6 +15,49 @@ PAYMENT_METHOD_LABELS = {
     "cash_delivery": "Especes a la livraison",
     "demo": "Simulation (demo)",
 }
+
+LOGO_YOMBAL_REL = os.path.join("static", "img", "yombal-logo.png")
+LOGO_UD_CANDIDATES = (
+    os.path.join("static", "img", "univers-diaspora-logo.png"),
+    os.path.join("img", "LOGO UNIVERS DIASPORA PNG.png"),
+)
+
+
+def _app_root_default() -> str:
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _resolve_logo(app_root: str, rel_path: str) -> str | None:
+    path = os.path.join(app_root, rel_path)
+    return path if os.path.isfile(path) else None
+
+
+def _find_ud_logo(app_root: str) -> str | None:
+    for rel in LOGO_UD_CANDIDATES:
+        found = _resolve_logo(app_root, rel)
+        if found:
+            return found
+    return None
+
+
+def _draw_invoice_logos(pdf, app_root: str) -> None:
+    """En-tete PDF : logo Yombal (gauche) + logo Univers Diaspora (droite)."""
+    margin = 10
+    logo_h = 20
+    y = 10
+
+    yombal = _resolve_logo(app_root, LOGO_YOMBAL_REL)
+    ud = _find_ud_logo(app_root)
+
+    if yombal:
+        pdf.image(yombal, x=margin, y=y, h=logo_h)
+    if ud:
+        pdf.image(ud, x=pdf.w - margin - 42, y=y, h=logo_h)
+
+    pdf.set_y(y + logo_h + 4)
+    pdf.set_draw_color(210, 210, 210)
+    pdf.line(margin, pdf.get_y(), pdf.w - margin, pdf.get_y())
+    pdf.ln(6)
 
 
 def _pdf_safe(text: str) -> str:
@@ -89,7 +133,7 @@ def invoice_html(order: Order, shop: dict | None = None) -> str:
         extra_rows += f"<br>Message cadeau : {escape(_pdf_safe(order.gift_message))}"
 
     return f"""
-    <h1>{shop_name}</h1>
+    <h2>{shop_name}</h2>
     <p>{shop_addr}<br>
     {f'E-mail : {shop_email}<br>' if shop_email else ''}
     {f'Tel. : {shop_phone}' if shop_phone else ''}</p>
@@ -134,14 +178,16 @@ def invoice_html(order: Order, shop: dict | None = None) -> str:
     """
 
 
-def build_invoice_pdf(order: Order, shop: dict | None = None) -> bytes:
+def build_invoice_pdf(order: Order, shop: dict | None = None, *, app_root: str | None = None) -> bytes:
     try:
         from fpdf import FPDF
     except ImportError as exc:
         raise RuntimeError("fpdf2 requis : pip install fpdf2") from exc
 
+    root = app_root or _app_root_default()
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
+    _draw_invoice_logos(pdf, root)
     pdf.write_html(invoice_html(order, shop))
     return bytes(pdf.output())
