@@ -41,6 +41,11 @@ def sitemap_urls(app, base_url: str) -> list[dict]:
         for product in Product.query.filter_by(is_active=True).order_by(Product.id):
             add(url_for("product_detail", slug=product.slug), "weekly", "0.8")
 
+        from services.product_groups import PRODUCT_GROUP_DEFS
+
+        for group_slug in PRODUCT_GROUP_DEFS:
+            add(url_for("product_gamme", group_slug=group_slug), "weekly", "0.85")
+
         for producer in Producer.query.filter_by(is_active=True).order_by(Producer.id):
             add(url_for("producteur_detail", slug=producer.slug), "monthly", "0.6")
 

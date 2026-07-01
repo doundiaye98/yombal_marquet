@@ -64,6 +64,7 @@ from services import settings as settings_svc
 from services import delivery_estimate as delivery_est_svc
 from services import order_ui as order_ui_svc
 from services import payment_simulation as pay_sim_svc
+from services import product_groups as product_groups_svc
 from services import shipping as shipping_svc
 from shop_auth import admin_required, is_shop_admin
 from models.contact_message import ContactMessage
@@ -497,13 +498,15 @@ def boutique():
     if cat:
         q = q.filter_by(category=cat)
     products = q.order_by(Product.category, Product.name).all()
+    catalog = product_groups_svc.catalog_entries(products)
     shop_counts = {
-        key: _product_query_active().filter_by(category=key).count()
+        key: product_groups_svc.display_count_for_category(_product_query_active(), key)
         for key in SHOP_CATEGORY_ORDER
     }
-    total_products = _product_query_active().count()
+    total_products = product_groups_svc.display_count(_product_query_active())
     return render_template(
         "boutique/index.html",
+        catalog=catalog,
         products=products,
         filter_cat=cat,
         shop_counts=shop_counts,
@@ -511,21 +514,39 @@ def boutique():
     )
 
 
+@app.route("/gamme/<group_slug>")
+def product_gamme(group_slug):
+    group = product_groups_svc.get_group_def(group_slug)
+    if not group:
+        abort(404)
+    members = product_groups_svc.load_group_products(group_slug, _product_query_active())
+    if not members:
+        abort(404)
+    view = product_groups_svc.build_group_view(group_slug, members)
+    return render_template("boutique/gamme.html", **view)
+
+
 @app.route("/produit/<slug>")
 def product_detail(slug):
     product = _product_query_active().filter_by(slug=slug).first_or_404()
-    related = (
-        _product_query_active()
-        .filter(Product.category == product.category, Product.id != product.id)
-        .limit(4)
-        .all()
-    )
+    product_group = product_groups_svc.group_for_product_slug(slug)
+    siblings = product_groups_svc.related_variants(_product_query_active(), product, limit=8)
+    if siblings is not None:
+        related = siblings
+    else:
+        related = (
+            _product_query_active()
+            .filter(Product.category == product.category, Product.id != product.id)
+            .limit(4)
+            .all()
+        )
     related_recipes = [
         _build_recipe_view(r) for r in content_svc.recipes_for_product_slug(slug)[:3]
     ]
     return render_template(
         "boutique/detail.html",
         product=product,
+        product_group=product_group,
         related=related,
         related_recipes=related_recipes,
     )

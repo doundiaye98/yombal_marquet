@@ -39,6 +39,13 @@
         {{ category_badge(product) }}
         <h1>{{ product.name }}</h1>
         <p class="product-detail-price">{{ '%.2f'|format(product.price_euros()) }} €</p>
+        {% if product_group %}
+        <p class="product-gamme-link">
+          <a href="{{ url_for('product_gamme', group_slug=product_group.slug) }}" class="btn-outline btn-sm">
+            {{ product_group.emoji }} Voir tous les formats {{ product_group.title }}
+          </a>
+        </p>
+        {% endif %}
         <p class="product-detail-desc">{{ product.summary }}</p>
 
         <div class="product-detail-meta">
@@ -146,7 +153,7 @@
 
     {% if related %}
     <aside class="product-related reveal">
-      <h2 class="section-title">Vous aimerez aussi</h2>
+      <h2 class="section-title">{% if product_group %}Autres formats{% else %}Vous aimerez aussi{% endif %}</h2>
       <div class="shop-grid">
         {% for p in related %}
         <a href="{{ url_for('product_detail', slug=p.slug) }}" class="shop-card shop-card--link">

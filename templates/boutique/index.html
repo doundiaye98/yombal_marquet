@@ -35,15 +35,34 @@
       <a href="{{ url_for('decouvrir') }}" class="experiences-strip-link">✦ Tout découvrir</a>
     </div>
 
-    {% if products %}
+    {% if catalog %}
     <p class="section-sub reveal shop-result-count">
-      <strong>{{ products|length }}</strong> référence{{ 's' if products|length > 1 else '' }}
+      <strong>{{ catalog|length }}</strong> référence{{ 's' if catalog|length > 1 else '' }}
       {% if filter_cat and product_categories.get(filter_cat) %}
       — {{ product_categories[filter_cat].label }}
       {% endif %}
     </p>
     <div class="shop-grid">
-      {% for p in products %}
+      {% for entry in catalog %}
+      {% if entry.kind == 'group' %}
+      <article class="shop-card shop-card--group reveal">
+        <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="shop-card-link-overlay" aria-label="Voir la gamme {{ entry.title }}"></a>
+        <div class="shop-card-img{% if entry.hero_product.image %} shop-card-img--photo{% endif %}">
+          {{ product_image(entry.hero_product, 'card') }}
+          <span class="shop-group-badge">{{ entry.variant_count }} formats</span>
+        </div>
+        <div class="shop-card-body">
+          <span class="category-badge">{{ entry.emoji }} Gamme</span>
+          <h2 class="svc-name shop-card-title">{{ entry.title }}</h2>
+          <p>{{ entry.summary }}</p>
+          <p class="shop-price">dès {{ '%.2f'|format(entry.min_price_cents / 100) }} €</p>
+          <div class="shop-card-actions">
+            <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="btn-primary">Choisir le format</a>
+          </div>
+        </div>
+      </article>
+      {% else %}
+      {% set p = entry.product %}
       <article class="shop-card reveal">
         <div class="shop-card-img{% if p.image %} shop-card-img--photo{% endif %}">
           {{ product_image(p, 'card') }}
@@ -66,6 +85,7 @@
           </div>
         </div>
       </article>
+      {% endif %}
       {% endfor %}
     </div>
     {% else %}
