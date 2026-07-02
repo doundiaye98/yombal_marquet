@@ -81,6 +81,30 @@ def _requirements_has(package: str, packages: set[str] | None = None) -> bool:
     return any(pkg == needle or pkg.startswith(f"{needle}-") for pkg in packages)
 
 
+def _score_pct(ok: int, checks: int) -> float:
+    """Pourcentage de réussite ; 0 % si aucune vérification."""
+    if checks == 0:
+        return 0.0
+    return ok / checks * 100.0
+
+
+def _pytest_in_requirements() -> bool:
+    packages = _parse_requirements_packages()
+    return packages is not None and _requirements_has("pytest", packages)
+
+
+def _package_in_requirements(package: str) -> bool:
+    packages = _parse_requirements_packages()
+    return packages is not None and _requirements_has(package, packages)
+
+
+def _psycopg2_in_requirements() -> bool:
+    packages = _parse_requirements_packages()
+    if packages is None:
+        return False
+    return _requirements_has("psycopg2", packages) or _requirements_has("psycopg2-binary", packages)
+
+
 def score_catalogue() -> tuple[float, list[str]]:
     notes: list[str] = []
     checks = 0
@@ -94,6 +118,11 @@ def score_catalogue() -> tuple[float, list[str]]:
             notes.append(f"  {CHECK} {msg_ok}")
         else:
             notes.append(f"  {CROSS} {msg_ko}")
+
+    def fail(msg_ko: str):
+        nonlocal checks
+        checks += 1
+        notes.append(f"  {CROSS} {msg_ko}")
 
     try:
         from app import app
@@ -114,11 +143,11 @@ def score_catalogue() -> tuple[float, list[str]]:
             )
             add(active >= 50, f"{active} produits actifs", f"Peu de produits actifs ({active})")
     except Exception as exc:
-        add(False, "", f"Base inaccessible : {exc}")
+        fail(f"Base inaccessible : {exc}")
 
     add(_path_exists("models/product_images.py"), "Module images catalogue", "models/product_images.py manquant")
     add(_path_exists("static/img/products"), "Dossier static/img/products", "Dossier images produits absent")
-    return (ok / checks * 100) if checks else 0, notes
+    return _score_pct(ok, checks), notes
 
 
 def score_design() -> tuple[float, list[str]]:
@@ -144,16 +173,16 @@ def score_design() -> tuple[float, list[str]]:
         "templates/paiement.html": "order-flow-page",
     }
     for path, marker in templates.items():
-        full = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), path)
-        if os.path.isfile(full):
+        full = os.path.join(_project_root(), path)
+        exists = os.path.isfile(full)
+        add(exists, f"{path} présent", f"{path} manquant")
+        if exists:
             text = open(full, encoding="utf-8").read()
             add(marker in text, f"{path} -> {marker}", f"{path} sans classe {marker}")
-        else:
-            add(False, "", f"{path} manquant")
 
     add(_path_exists("static/css/modern.css"), "Feuille modern.css", "modern.css manquant")
     add(_path_exists("templates/macros/product_image.html"), "Macro product_image", "Macro images manquante")
-    return (ok / checks * 100) if checks else 0, notes
+    return _score_pct(ok, checks), notes
 
 
 def score_checkout() -> tuple[float, list[str]]:
@@ -186,7 +215,7 @@ def score_checkout() -> tuple[float, list[str]]:
     add(_has("CONTACT_EMAIL"), "CONTACT_EMAIL défini", "CONTACT_EMAIL manquant")
     add(_path_exists("templates/checkout.html"), "Page checkout", "checkout.html manquant")
     add(_path_exists("templates/paiement.html"), "Page paiement", "paiement.html manquant")
-    return (ok / checks * 100) if checks else 0, notes
+    return _score_pct(ok, checks), notes
 
 
 def score_admin() -> tuple[float, list[str]]:
@@ -202,6 +231,11 @@ def score_admin() -> tuple[float, list[str]]:
             notes.append(f"  {CHECK} {msg_ok}")
         else:
             notes.append(f"  {CROSS} {msg_ko}")
+
+    def fail(msg_ko: str):
+        nonlocal checks
+        checks += 1
+        notes.append(f"  {CROSS} {msg_ko}")
 
     admins = [e.strip().lower() for e in _env("ADMIN_EMAILS").split(",") if e.strip()]
     add(bool(admins), f"ADMIN_EMAILS ({len(admins)} e-mail(s))", "ADMIN_EMAILS vide")
@@ -220,10 +254,10 @@ def score_admin() -> tuple[float, list[str]]:
                 valid = user and user.is_active and user.has_valid_password_hash()
                 add(valid, f"Compte admin {email}", f"Compte admin manquant ou mot de passe invalide : {email}")
     except Exception as exc:
-        add(False, "", f"Vérification comptes admin impossible : {exc}")
+        fail(f"Vérification comptes admin impossible : {exc}")
 
     add(_path_exists("routes/admin.py"), "Routes admin", "routes/admin.py manquant")
-    return (ok / checks * 100) if checks else 0, notes
+    return _score_pct(ok, checks), notes
 
 
 def score_render() -> tuple[float, list[str]]:
@@ -246,16 +280,16 @@ def score_render() -> tuple[float, list[str]]:
 
     add(_has("FLASK_SECRET_KEY"), "FLASK_SECRET_KEY", "FLASK_SECRET_KEY manquant")
 
-    req_ok = _path_exists("requirements.txt")
-    add(req_ok, "requirements.txt présent", "requirements.txt manquant")
-    if req_ok:
-        packages = _parse_requirements_packages() or set()
-        add(_requirements_has("gunicorn", packages), "gunicorn dans requirements.txt", "gunicorn absent de requirements.txt")
-        add(
-            _requirements_has("psycopg2", packages) or _requirements_has("psycopg2-binary", packages),
-            "psycopg2-binary dans requirements.txt",
-            "psycopg2-binary absent",
-        )
+    add(
+        _package_in_requirements("gunicorn"),
+        "gunicorn dans requirements.txt",
+        "requirements.txt manquant ou gunicorn absent",
+    )
+    add(
+        _psycopg2_in_requirements(),
+        "psycopg2-binary dans requirements.txt",
+        "requirements.txt manquant ou psycopg2-binary absent",
+    )
 
     add(_path_exists("render.yaml"), "render.yaml present", "render.yaml manquant - blueprint Render")
 
@@ -263,7 +297,7 @@ def score_render() -> tuple[float, list[str]]:
     add(cloud, "Cloudinary (images persistantes Render)", "Cloudinary non configure - uploads admin perdus au redeploiement")
 
     add(_path_exists("services/image_storage.py"), "Service image_storage", "image_storage.py manquant")
-    return (ok / checks * 100) if checks else 0, notes
+    return _score_pct(ok, checks), notes
 
 
 def score_mail() -> tuple[float, list[str]]:
@@ -294,7 +328,7 @@ def score_mail() -> tuple[float, list[str]]:
 
     add(_path_exists("mailer.py"), "Module mailer.py", "mailer.py manquant")
     add(_path_exists("scripts/test_mail.py"), "Script test_mail.py", "scripts/test_mail.py manquant")
-    return (ok / checks * 100) if checks else 0, notes
+    return _score_pct(ok, checks), notes
 
 
 def score_tests() -> tuple[float, list[str]]:
@@ -317,14 +351,14 @@ def score_tests() -> tuple[float, list[str]]:
     add(_path_exists("tests/test_stripe_webhook.py"), "Tests webhook Stripe", "tests/test_stripe_webhook.py manquant")
     add(_path_exists("tests/test_assistant.py"), "Tests assistant RAG", "tests/test_assistant.py manquant")
 
-    req_ok = _path_exists("requirements.txt")
-    add(req_ok, "requirements.txt présent", "requirements.txt manquant")
-    if req_ok:
-        packages = _parse_requirements_packages() or set()
-        add(_requirements_has("pytest", packages), "pytest dans requirements.txt", "pytest absent de requirements.txt")
+    add(
+        _pytest_in_requirements(),
+        "pytest dans requirements.txt",
+        "requirements.txt manquant ou pytest absent",
+    )
 
     notes.append("  -> Lancer : python -m pytest tests/")
-    return (ok / checks * 100) if checks else 0, notes
+    return _score_pct(ok, checks), notes
 
 
 AXES = [
