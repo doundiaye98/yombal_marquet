@@ -43,6 +43,44 @@ def _path_exists(rel: str) -> bool:
     return os.path.exists(os.path.join(root, rel))
 
 
+def _project_root() -> str:
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _parse_requirements_packages() -> set[str] | None:
+    """Lit requirements.txt ; None si le fichier est absent."""
+    req_path = os.path.join(_project_root(), "requirements.txt")
+    if not os.path.isfile(req_path):
+        return None
+    packages: set[str] = set()
+    with open(req_path, encoding="utf-8-sig") as handle:
+        for raw in handle:
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            token = line.split(";", 1)[0].strip()
+            name = token.split("[", 1)[0].strip()
+            for sep in ("==", ">=", "<=", "~=", "!=", ">", "<"):
+                if sep in name:
+                    name = name.split(sep, 1)[0].strip()
+                    break
+            if name:
+                packages.add(name.lower())
+    return packages
+
+
+def _requirements_has(package: str, packages: set[str] | None = None) -> bool:
+    """Vérifie qu'un paquet est déclaré (ex. pytest, gunicorn, psycopg2-binary)."""
+    if packages is None:
+        packages = _parse_requirements_packages()
+    if packages is None:
+        return False
+    needle = package.lower()
+    if needle in packages:
+        return True
+    return any(pkg == needle or pkg.startswith(f"{needle}-") for pkg in packages)
+
+
 def score_catalogue() -> tuple[float, list[str]]:
     notes: list[str] = []
     checks = 0
@@ -208,11 +246,14 @@ def score_render() -> tuple[float, list[str]]:
 
     add(_has("FLASK_SECRET_KEY"), "FLASK_SECRET_KEY", "FLASK_SECRET_KEY manquant")
 
-    req_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "requirements.txt")
-    if os.path.isfile(req_path):
-        req = open(req_path, encoding="utf-8").read().lower()
-        add("gunicorn" in req, "gunicorn dans requirements.txt", "gunicorn absent de requirements.txt")
-        add("psycopg2" in req, "psycopg2-binary dans requirements.txt", "psycopg2-binary absent")
+    packages = _parse_requirements_packages()
+    if packages is not None:
+        add(_requirements_has("gunicorn", packages), "gunicorn dans requirements.txt", "gunicorn absent de requirements.txt")
+        add(
+            _requirements_has("psycopg2", packages) or _requirements_has("psycopg2-binary", packages),
+            "psycopg2-binary dans requirements.txt",
+            "psycopg2-binary absent",
+        )
     else:
         add(False, "", "requirements.txt manquant")
 
@@ -274,11 +315,11 @@ def score_tests() -> tuple[float, list[str]]:
     add(_path_exists("tests/test_cart.py"), "Tests panier", "tests/test_cart.py manquant")
     add(_path_exists("tests/test_checkout.py"), "Tests checkout", "tests/test_checkout.py manquant")
     add(_path_exists("tests/test_stripe_webhook.py"), "Tests webhook Stripe", "tests/test_stripe_webhook.py manquant")
+    add(_path_exists("tests/test_assistant.py"), "Tests assistant RAG", "tests/test_assistant.py manquant")
 
-    req_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "requirements.txt")
-    if os.path.isfile(req_path):
-        req = open(req_path, encoding="utf-8").read().lower()
-        add("pytest" in req, "pytest dans requirements.txt", "pytest absent de requirements.txt")
+    packages = _parse_requirements_packages()
+    if packages is not None:
+        add(_requirements_has("pytest", packages), "pytest dans requirements.txt", "pytest absent de requirements.txt")
     else:
         add(False, "", "requirements.txt manquant")
 
