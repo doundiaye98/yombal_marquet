@@ -167,6 +167,53 @@
     </div>
   </div>
 
+  {% if assistant_enabled and not (ep and ep.startswith('admin.')) %}
+  <div id="assistant-widget" class="assistant-widget" data-ready="{{ '1' if assistant_ready else '0' }}">
+    <button
+      type="button"
+      id="assistant-fab"
+      class="assistant-fab"
+      aria-expanded="false"
+      aria-controls="assistant-panel"
+      aria-label="Ouvrir l'assistant Yombal Marché"
+    >
+      <span class="assistant-fab-icon" aria-hidden="true">💬</span>
+    </button>
+    <section
+      id="assistant-panel"
+      class="assistant-panel"
+      role="dialog"
+      aria-labelledby="assistant-title"
+      aria-hidden="true"
+    >
+      <header class="assistant-header">
+        <div class="assistant-header-text">
+          <h2 id="assistant-title">Assistant Yombal</h2>
+          <p>{% if assistant_ai_mode %}Produits, recettes &amp; FAQ (IA){% else %}Recherche catalogue &amp; FAQ{% endif %}</p>
+        </div>
+        <button type="button" id="assistant-close" class="assistant-close" aria-label="Fermer l'assistant">×</button>
+      </header>
+      <div id="assistant-messages" class="assistant-messages" aria-live="polite" aria-relevant="additions"></div>
+      <form id="assistant-form" class="assistant-form">
+        <label for="assistant-input" class="sr-only">Votre question</label>
+        <input
+          id="assistant-input"
+          class="assistant-input"
+          type="text"
+          name="question"
+          maxlength="500"
+          placeholder="Ex. : avez-vous du fonio ?"
+          autocomplete="off"
+          required
+        >
+        <button type="submit" class="assistant-send">Envoyer</button>
+      </form>
+    </section>
+  </div>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant.css') }}">
+  <script src="{{ url_for('static', filename='js/assistant-widget.js') }}" defer></script>
+  {% endif %}
+
   <script src="{{ url_for('static', filename='js/cookie-consent.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
   {% block extra_scripts %}{% endblock %}

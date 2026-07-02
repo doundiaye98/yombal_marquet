@@ -137,6 +137,7 @@ def score_checkout() -> tuple[float, list[str]]:
 
     stripe_ok = _has("STRIPE_SECRET_KEY") and _has("STRIPE_PUBLISHABLE_KEY")
     add(stripe_ok, "Clés Stripe configurées", "STRIPE_SECRET_KEY / STRIPE_PUBLISHABLE_KEY manquants")
+    add(_has("STRIPE_WEBHOOK_SECRET"), "STRIPE_WEBHOOK_SECRET (webhook /webhooks/stripe)", "STRIPE_WEBHOOK_SECRET manquant - paiements sans confirmation serveur")
 
     wire_ok = _has("BANK_IBAN") and _has("BANK_NAME")
     add(wire_ok, "Coordonnées virement", "BANK_IBAN ou BANK_NAME manquant")
@@ -255,10 +256,41 @@ def score_mail() -> tuple[float, list[str]]:
     return (ok / checks * 100) if checks else 0, notes
 
 
+def score_tests() -> tuple[float, list[str]]:
+    notes: list[str] = []
+    checks = 0
+    ok = 0
+
+    def add(cond: bool, msg_ok: str, msg_ko: str):
+        nonlocal checks, ok
+        checks += 1
+        if cond:
+            ok += 1
+            notes.append(f"  {CHECK} {msg_ok}")
+        else:
+            notes.append(f"  {CROSS} {msg_ko}")
+
+    add(_path_exists("tests/conftest.py"), "Suite pytest (conftest)", "tests/conftest.py manquant")
+    add(_path_exists("tests/test_cart.py"), "Tests panier", "tests/test_cart.py manquant")
+    add(_path_exists("tests/test_checkout.py"), "Tests checkout", "tests/test_checkout.py manquant")
+    add(_path_exists("tests/test_stripe_webhook.py"), "Tests webhook Stripe", "tests/test_stripe_webhook.py manquant")
+
+    req_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "requirements.txt")
+    if os.path.isfile(req_path):
+        req = open(req_path, encoding="utf-8").read().lower()
+        add("pytest" in req, "pytest dans requirements.txt", "pytest absent de requirements.txt")
+    else:
+        add(False, "", "requirements.txt manquant")
+
+    notes.append("  -> Lancer : python -m pytest tests/")
+    return (ok / checks * 100) if checks else 0, notes
+
+
 AXES = [
     ("Contenu catalogue", score_catalogue),
     ("Design vitrine", score_design),
     ("Parcours commande", score_checkout),
+    ("Tests automatisés", score_tests),
     ("Admin", score_admin),
     ("Production Render", score_render),
     ("Automatisation (mail)", score_mail),

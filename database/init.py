@@ -35,6 +35,7 @@ def ensure_database(app: Flask) -> None:
         from models.seed import sync_catalogue, retire_superseded_products
 
         from models.seed_content import seed_content_if_empty
+        from models.knowledge_chunk import KnowledgeChunk  # noqa: F401 — table RAG
 
         seed_products_if_empty()
         sync_catalogue()

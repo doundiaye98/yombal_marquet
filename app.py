@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 
 from dotenv import load_dotenv
+import click
 from flask import (
     Flask,
     abort,
@@ -66,6 +67,7 @@ from services import order_ui as order_ui_svc
 from services import payment_simulation as pay_sim_svc
 from services import product_groups as product_groups_svc
 from services import shipping as shipping_svc
+from services import assistant as assistant_svc
 from shop_auth import admin_required, is_shop_admin
 from models.contact_message import ContactMessage
 
@@ -303,6 +305,9 @@ def inject_globals():
         "order_status_pills": ORDER_STATUS_PILL,
         "delivery_countries": DELIVERY_COUNTRIES,
         "payment_simulation_enabled": pay_sim_svc.payment_simulation_enabled(),
+        "assistant_enabled": assistant_svc.assistant_enabled(),
+        "assistant_ready": assistant_svc.assistant_enabled(),
+        "assistant_ai_mode": assistant_svc.ai_mode_available(),
     }
 
 
@@ -1419,6 +1424,20 @@ def api_commande_statut(order_id):
     )
 
 
+@app.route("/api/assistant", methods=["POST"])
+def api_assistant():
+    """Assistant RAG — question JSON { \"question\": \"...\" }."""
+    if not assistant_svc.assistant_enabled():
+        return jsonify({"error": "assistant_disabled", "answer": assistant_svc.REFUSAL_NO_KEY}), 503
+
+    payload = request.get_json(silent=True) or {}
+    question = (payload.get("question") or "").strip()
+    if not question:
+        return jsonify({"error": "question_required", "answer": "Question vide."}), 400
+
+    return jsonify(assistant_svc.answer(question))
+
+
 @app.route("/commande/<int:order_id>/recommander", methods=["POST"])
 def commande_recommander(order_id):
     order = db.session.get(Order, order_id)
@@ -1476,6 +1495,28 @@ def bootstrap_admin_cli():
             "Rien à faire. Vérifiez BOOTSTRAP_ADMIN_PASSWORD dans l'environnement. "
             "Pour forcer une réinitialisation : FORCE_BOOTSTRAP_ADMIN=1"
         )
+
+
+@app.cli.command("index-rag")
+@click.option("--local", "local_only", is_flag=True, help="Sans OpenAI (quota épuisé).")
+def index_rag_cli(local_only):
+    """Flask CLI : flask index-rag — indexe le catalogue pour l'assistant."""
+    from services import embeddings as embed_svc
+    from services import rag_index
+
+    if not local_only and not embed_svc.is_configured():
+        print("OPENAI_API_KEY absent — mode local.")
+        local_only = True
+    before = rag_index.chunk_count()
+    print(f"Chunks avant : {before}")
+    stats = rag_index.index_all(local_only=local_only)
+    print(
+        f"Terminé [{stats.get('mode', 'ai')}] — sources: {stats['total']}, mis à jour: {stats['updated']}, "
+        f"ignorés: {stats['skipped']}, erreurs: {stats['errors']}, supprimés: {stats.get('removed', 0)}"
+    )
+    print(f"Chunks après : {rag_index.chunk_count()}")
+    if stats.get("quota_fallback"):
+        print("Quota OpenAI épuisé — index local appliqué.")
 
 
 if __name__ == "__main__":
