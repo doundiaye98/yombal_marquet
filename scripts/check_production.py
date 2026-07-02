@@ -82,10 +82,8 @@ def _requirements_has(package: str, packages: set[str] | None = None) -> bool:
 
 
 def _score_pct(ok: int, checks: int) -> float:
-    """Pourcentage de réussite ; 0 % si aucune vérification."""
-    if checks == 0:
-        return 0.0
-    return ok / checks * 100.0
+    """Pourcentage de réussite ; évite la division par zéro sans branche morte."""
+    return ok * 100.0 / max(checks, 1)
 
 
 def _pytest_in_requirements() -> bool:
@@ -135,7 +133,7 @@ def score_catalogue() -> tuple[float, list[str]]:
                 .filter(Product.image.isnot(None), Product.image != "")
                 .count()
             )
-            ratio = (with_img / active * 100) if active else 0
+            ratio = with_img * 100.0 / max(active, 1)
             add(
                 ratio >= 95,
                 f"Photos catalogue {with_img}/{active} ({ratio:.0f} %)",
