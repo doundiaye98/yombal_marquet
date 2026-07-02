@@ -246,16 +246,16 @@ def score_render() -> tuple[float, list[str]]:
 
     add(_has("FLASK_SECRET_KEY"), "FLASK_SECRET_KEY", "FLASK_SECRET_KEY manquant")
 
-    packages = _parse_requirements_packages()
-    if packages is not None:
+    req_ok = _path_exists("requirements.txt")
+    add(req_ok, "requirements.txt présent", "requirements.txt manquant")
+    if req_ok:
+        packages = _parse_requirements_packages() or set()
         add(_requirements_has("gunicorn", packages), "gunicorn dans requirements.txt", "gunicorn absent de requirements.txt")
         add(
             _requirements_has("psycopg2", packages) or _requirements_has("psycopg2-binary", packages),
             "psycopg2-binary dans requirements.txt",
             "psycopg2-binary absent",
         )
-    else:
-        add(False, "", "requirements.txt manquant")
 
     add(_path_exists("render.yaml"), "render.yaml present", "render.yaml manquant - blueprint Render")
 
@@ -317,11 +317,11 @@ def score_tests() -> tuple[float, list[str]]:
     add(_path_exists("tests/test_stripe_webhook.py"), "Tests webhook Stripe", "tests/test_stripe_webhook.py manquant")
     add(_path_exists("tests/test_assistant.py"), "Tests assistant RAG", "tests/test_assistant.py manquant")
 
-    packages = _parse_requirements_packages()
-    if packages is not None:
+    req_ok = _path_exists("requirements.txt")
+    add(req_ok, "requirements.txt présent", "requirements.txt manquant")
+    if req_ok:
+        packages = _parse_requirements_packages() or set()
         add(_requirements_has("pytest", packages), "pytest dans requirements.txt", "pytest absent de requirements.txt")
-    else:
-        add(False, "", "requirements.txt manquant")
 
     notes.append("  -> Lancer : python -m pytest tests/")
     return (ok / checks * 100) if checks else 0, notes
