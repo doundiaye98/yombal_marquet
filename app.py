@@ -309,12 +309,14 @@ def inject_globals():
 @app.template_filter("media_url")
 def media_url_filter(path_or_url):
     """URL static/ ou absolue (Cloudinary) pour afficher une image produit."""
+    from urllib.parse import urlsplit
+
     from services.image_storage import image_display_url
 
     if not path_or_url:
         return ""
     path = image_display_url(path_or_url)
-    if path.startswith(("http://", "https://")):
+    if urlsplit(path).scheme == "https":
         return path
     return url_for("static", filename=path.lstrip("/"))
 

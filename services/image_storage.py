@@ -5,10 +5,23 @@ from __future__ import annotations
 
 import os
 import re
+from urllib.parse import urlsplit, urlunsplit
 
 from services import product_upload as upload_svc
 
-_IMAGE_URL_PREFIXES = ("http://", "https://")
+
+def _parsed_url(path_or_url: str):
+    return urlsplit(path_or_url)
+
+
+def _is_absolute_url(path_or_url: str) -> bool:
+    parts = _parsed_url(path_or_url)
+    return bool(parts.scheme and parts.netloc)
+
+
+def _to_secure_url(path_or_url: str) -> str:
+    parts = _parsed_url(path_or_url)
+    return urlunsplit(("https", parts.netloc, parts.path, parts.query, parts.fragment))
 
 
 def cloudinary_enabled() -> bool:
@@ -82,7 +95,7 @@ def _save_cloudinary(file_storage, slug: str, *, filename_suffix: str = ""):
 def remove_product_image(path_or_url: str | None, static_folder: str) -> None:
     if not path_or_url:
         return
-    if path_or_url.startswith(_IMAGE_URL_PREFIXES) and "res.cloudinary.com" in path_or_url:
+    if is_remote_url(path_or_url) and "res.cloudinary.com" in path_or_url:
         if not cloudinary_enabled():
             return
         try:
@@ -101,7 +114,7 @@ def remove_product_image(path_or_url: str | None, static_folder: str) -> None:
         except Exception:
             pass
         return
-    if not path_or_url.startswith(_IMAGE_URL_PREFIXES):
+    if not is_remote_url(path_or_url):
         upload_svc.remove_product_image_file(static_folder, path_or_url)
 
 
@@ -109,10 +122,10 @@ def image_display_url(path_or_url: str | None) -> str | None:
     """URL absolue ou chemin relatif static/ pour les templates."""
     if not path_or_url:
         return None
-    if path_or_url.startswith(_IMAGE_URL_PREFIXES):
-        return path_or_url
+    if _is_absolute_url(path_or_url):
+        return _to_secure_url(path_or_url)
     return path_or_url.replace("\\", "/")
 
 
 def is_remote_url(path_or_url: str | None) -> bool:
-    return bool(path_or_url and path_or_url.startswith(_IMAGE_URL_PREFIXES))
+    return bool(path_or_url and _is_absolute_url(path_or_url))
