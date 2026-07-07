@@ -129,6 +129,59 @@ PRESTATION_CATEGORY = {
     "Produits cosmétiques": "cosmetique",
 }
 
+SERVICES_PAGE_META = {
+    "Produits alimentaires": {
+        "slug": "alimentaire",
+        "icon": "🌾",
+        "num": "01",
+        "lead": "Céréales, épices, légumineuses et saveurs du quotidien — du terroir jusqu'à votre table.",
+        "theme": "green",
+    },
+    "Produits cosmétiques": {
+        "slug": "cosmetique",
+        "icon": "✨",
+        "num": "02",
+        "lead": "Karité, savons noirs et soins naturels pour une routine douce et authentique.",
+        "theme": "gold",
+    },
+    "Livraison à domicile": {
+        "slug": "livraison",
+        "icon": "🚚",
+        "num": "03",
+        "lead": "Courses préparées avec soin, livrées selon votre commune.",
+        "theme": "terra",
+        "bullets": [
+            "Préparation attentive de chaque commande avant expédition.",
+            "Créneaux et modalités confirmés par message ou e-mail.",
+            "Suivi en ligne avec votre numéro de commande et l'e-mail d'achat.",
+        ],
+    },
+    "Prix abordables": {
+        "slug": "prix",
+        "icon": "💶",
+        "num": "04",
+        "lead": "Des tarifs justes, affichés clairement sur chaque fiche produit.",
+        "theme": "green",
+        "bullets": [
+            "Prix TTC visibles avant validation — pas de surprise au paiement.",
+            "Formats adaptés au quotidien comme aux grandes tablées.",
+            "Recettes et coffrets pour composer sans gaspiller.",
+        ],
+    },
+    "Boutique en ligne": {
+        "slug": "boutique",
+        "icon": "🛍️",
+        "num": "05",
+        "lead": "Panier, checkout et paiement en quelques clics — avec ou sans compte.",
+        "theme": "terra",
+        "bullets": [
+            "Commandez sans compte : e-mail et adresse suffisent.",
+            "Carte (Stripe), PayPal, virement ou espèces à la livraison.",
+            "Recettes et coffrets : tous les ingrédients ajoutés en un clic.",
+        ],
+    },
+}
+
 
 def _cart_raw():
     return cart_svc.cart_raw()
@@ -308,6 +361,7 @@ def inject_globals():
         "assistant_enabled": assistant_svc.assistant_enabled(),
         "assistant_ready": assistant_svc.assistant_enabled(),
         "assistant_ai_mode": assistant_svc.ai_mode_available(),
+        "prestation_slugs": {label: meta["slug"] for label, meta in SERVICES_PAGE_META.items()},
     }
 
 
@@ -489,26 +543,48 @@ def index():
     featured_producers = _producer_query_active().order_by(Producer.id).limit(4).all()
     featured_recipes = [_build_recipe_view(r) for r in content_svc.all_recipe_defs()[:3]]
     featured_coffrets = [_build_product_bundle(c) for c in content_svc.all_coffret_defs()[:2]]
+    product_count = _product_query_active().count()
+    producer_count = _producer_query_active().count()
+    recipe_count = len(content_svc.all_recipe_defs())
     return render_template(
         "index.html",
         featured_products=featured,
         featured_producers=featured_producers,
         featured_recipes=featured_recipes,
         featured_coffrets=featured_coffrets,
+        product_count=product_count,
+        producer_count=producer_count,
+        recipe_count=recipe_count,
     )
 
 
 @app.route("/services")
 def services():
     sections = []
-    for label in SERVICE_CATEGORIES[0]["prestations"]:
+    for i, label in enumerate(SERVICE_CATEGORIES[0]["prestations"], start=1):
+        meta = SERVICES_PAGE_META.get(label, {})
         cat = PRESTATION_CATEGORY.get(label)
-        products = (
-            _product_query_active().filter_by(category=cat).order_by(Product.name).all()
+        products_q = (
+            _product_query_active().filter_by(category=cat).order_by(Product.name)
             if cat
-            else []
+            else None
         )
-        sections.append({"title": label, "products": products, "has_products": bool(products)})
+        all_products = products_q.all() if products_q is not None else []
+        sections.append(
+            {
+                "title": label,
+                "slug": meta.get("slug", f"service-{i}"),
+                "icon": meta.get("icon", "✦"),
+                "num": meta.get("num", f"{i:02d}"),
+                "lead": meta.get("lead", ""),
+                "theme": meta.get("theme", "green"),
+                "bullets": meta.get("bullets", []),
+                "products": all_products[:4],
+                "product_count": len(all_products),
+                "has_products": bool(all_products),
+                "category": cat,
+            }
+        )
     return render_template("services.html", sections=sections)
 
 

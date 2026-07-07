@@ -9,10 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ─── Menu mobile + toasts (Flask) ─── */
   const navToggle = document.getElementById("nav-toggle");
-  const navMenu = document.getElementById("primary-nav");
+  const navMenu = document.getElementById("primary-nav-legacy") || document.getElementById("primary-nav");
   const navBackdrop = document.getElementById("nav-backdrop");
+  const cineNav = document.getElementById("cine-nav");
+  const useCineNav = document.body.classList.contains("site-premium") && cineNav;
 
   function setNavOpen(open) {
+    if (useCineNav) return;
     if (!navMenu || !navToggle) return;
     navMenu.classList.toggle("is-open", open);
     navToggle.setAttribute("aria-expanded", open ? "true" : "false");
@@ -35,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = open ? "hidden" : "";
   }
 
-  if (navToggle && navMenu) {
+  if (navToggle && navMenu && !useCineNav) {
     navToggle.addEventListener("click", () => {
       setNavOpen(!navMenu.classList.contains("is-open"));
     });
@@ -339,17 +342,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ─── SCROLL PROGRESS ─── */
   const bar = document.getElementById("progress-bar");
-  if (bar && motionOk) {
-    window.addEventListener(
-      "scroll",
-      () => {
-        const scrolled = window.scrollY;
-        const total = document.body.scrollHeight - window.innerHeight;
-        const pct = total > 0 ? (scrolled / total) * 100 : 0;
-        bar.style.width = pct + "%";
-      },
-      { passive: true }
-    );
+  const headerShell = document.querySelector(".header-shell");
+  const isHomeImmersive = false; /* design unifié — plus de mode sombre accueil */
+
+  function onPageScroll() {
+    const scrolled = window.scrollY;
+    if (bar && motionOk) {
+      const total = document.body.scrollHeight - window.innerHeight;
+      const pct = total > 0 ? (scrolled / total) * 100 : 0;
+      bar.style.width = pct + "%";
+    }
+    if (isHomeImmersive && headerShell) {
+      headerShell.classList.toggle("is-scrolled", scrolled > 24);
+    }
+  }
+
+  if (bar || (isHomeImmersive && headerShell)) {
+    window.addEventListener("scroll", onPageScroll, { passive: true });
+    onPageScroll();
   }
 
   /* ─── Contact : ouvre la zone modes de paiement (#modes-paiement) ─── */

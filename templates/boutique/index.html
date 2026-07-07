@@ -3,11 +3,13 @@
 {% block title %}Boutique — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper boutique-page">
-  <header class="boutique-hero reveal">
-    <div class="boutique-hero__bg" aria-hidden="true"></div>
+  <header class="boutique-hero boutique-hero--xd reveal">
+    <div class="boutique-hero__bg" aria-hidden="true">
+      <div class="inner-hero__aurora"><span></span><span></span></div>
+    </div>
     <div class="boutique-hero__inner">
-      <p class="section-eyebrow">Catalogue en ligne</p>
-      <h1 class="boutique-hero__title">La <em>boutique</em></h1>
+      <p class="xd-eyebrow"><span class="xd-eyebrow__dot"></span> Catalogue en ligne</p>
+      <h1 class="boutique-hero__title inner-hero__title">La <em>boutique</em></h1>
       <p class="boutique-hero__lead">
         Épicerie sénégalaise, céréales, huiles et produits du terroir —
         commandez sans compte, livraison à domicile.
@@ -72,7 +74,7 @@
       <div class="boutique-grid">
         {% for entry in catalog %}
         {% if entry.kind == 'group' %}
-        <article class="boutique-card boutique-card--gamme reveal">
+        <article class="boutique-card boutique-card--gamme boutique-card--shine reveal">
           <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="boutique-card__media">
             {{ product_image(entry.hero_product, 'card') }}
             <span class="boutique-card__ribbon">{{ entry.variant_count }} formats</span>
@@ -92,7 +94,7 @@
         {% else %}
         {% set p = entry.product %}
         {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
-        <article class="boutique-card reveal">
+        <article class="boutique-card boutique-card--shine reveal">
           <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
             {{ product_image(p, 'card') }}
             <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>

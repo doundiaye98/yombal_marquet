@@ -2,100 +2,111 @@
 {% from "macros/product_image.html" import product_image %}
 {% block title %}Nos services — Yombal Marché{% endblock %}
 {% block content %}
-<div class="page-wrapper">
-  <header class="page-hero page-hero--compact">
-    <p class="section-eyebrow reveal">Offre complète</p>
-    <h1 class="section-title reveal">Produits, cosmétiques &amp; <em>livraison</em></h1>
-    <p class="section-sub reveal">
-      <strong>Yombal Marché</strong> : boutique en ligne, fiches produits détaillées et paiement sécurisé après commande.
-    </p>
+<div class="page-wrapper services-page">
+  <header class="page-hero page-hero--editorial">
+    <div class="page-hero-bg" aria-hidden="true"></div>
+    <div class="page-hero-content">
+      <p class="section-eyebrow reveal">Offre Yombal</p>
+      <h1 class="section-title reveal">Nos <em>services</em></h1>
+      <p class="section-sub reveal page-hero-lead">
+        Épicerie fine, cosmétiques naturels, livraison et boutique en ligne —
+        cinq engagements pour vous simplifier le quotidien, sans perdre le goût du vrai.
+      </p>
+    </div>
   </header>
 
-  <section class="section section--flush-top">
-
-    <div class="cards-grid">
-      {% set icons = ['🛒', '✨', '🚚', '💶', '🛍️'] %}
+  <section class="section section--flush-top section--compact">
+    <nav class="services-nav reveal" aria-label="Parcourir nos services">
       {% for sec in sections %}
-      <a class="svc-card reveal" href="#svc-{{ loop.index0 }}">
-        <div class="svc-ico-wrap" aria-hidden="true">{{ icons[loop.index0 % (icons|length)] }}</div>
-        <h2 class="svc-name">{{ sec.title }}</h2>
-        <p class="svc-desc">
-          {% if sec.has_products %}
-          {{ sec.products|length }} référence{{ 's' if sec.products|length > 1 else '' }} — voir les produits et commandez en ligne.
-          {% else %}
-          Informations et modalités — cliquez pour les détails de notre offre.
-          {% endif %}
-        </p>
-        <span class="svc-arrow">Voir le détail →</span>
+      <a href="#{{ sec.slug }}" class="services-nav-pill">
+        <span aria-hidden="true">{{ sec.icon }}</span>
+        {{ sec.title }}
+      </a>
+      {% endfor %}
+    </nav>
+
+    <div class="services-overview reveal">
+      {% for sec in sections %}
+      <a href="#{{ sec.slug }}" class="services-overview-card services-overview-card--{{ sec.theme }}">
+        <span class="services-overview-num" aria-hidden="true">{{ sec.num }}</span>
+        <span class="services-overview-icon" aria-hidden="true">{{ sec.icon }}</span>
+        <h2>{{ sec.title }}</h2>
+        <p>{{ sec.lead }}</p>
+        <span class="services-overview-link">Détail →</span>
       </a>
       {% endfor %}
     </div>
 
     {% for sec in sections %}
-    <div class="services-detail reveal" id="svc-{{ loop.index0 }}">
-      <h2>{{ sec.title }}</h2>
+    <article
+      class="services-block reveal services-block--{{ sec.theme }}{% if sec.has_products %} services-block--catalog{% endif %}"
+      id="{{ sec.slug }}"
+    >
+      <header class="services-block-head">
+        <div class="services-block-id">
+          <span class="services-block-num" aria-hidden="true">{{ sec.num }}</span>
+          <span class="services-block-icon" aria-hidden="true">{{ sec.icon }}</span>
+        </div>
+        <div class="services-block-intro">
+          <h2>{{ sec.title }}</h2>
+          <p>{{ sec.lead }}</p>
+        </div>
+      </header>
 
       {% if sec.has_products %}
-      <div class="shop-grid" style="margin-top: 24px;">
-        {% set sec_idx = loop.index0 %}
+      <div class="services-product-strip">
         {% for p in sec.products %}
-        <article class="shop-card reveal">
-          <div class="shop-card-img{% if p.image %} shop-card-img--photo{% endif %}">
+        <article class="services-product-mini">
+          <a href="{{ url_for('product_detail', slug=p.slug) }}" class="services-product-mini-media{% if p.image %} services-product-mini-media--photo{% endif %}">
             {{ product_image(p, 'card') }}
-          </div>
-          <div class="shop-card-body">
-            <p class="shop-meta">{{ 'Alimentaire' if p.category == 'alimentaire' else 'Cosmétique' }}</p>
-            <h3>{{ p.name }}</h3>
-            <p>{{ p.summary }}</p>
-            <p class="shop-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
-            <div class="shop-card-actions">
-              <a href="{{ url_for('product_detail', slug=p.slug) }}" class="btn-primary">Fiche complète</a>
-              <form method="post" action="{{ url_for('panier_ajouter') }}" style="display:inline;">
-                <input type="hidden" name="product_id" value="{{ p.id }}">
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="btn-outline">Au panier</button>
-              </form>
-            </div>
+          </a>
+          <div class="services-product-mini-body">
+            <p class="services-product-mini-meta">{{ 'Alimentaire' if p.category == 'alimentaire' else 'Cosmétique' }}</p>
+            <h3><a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a></h3>
+            <p class="services-product-mini-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
+            <form method="post" action="{{ url_for('panier_ajouter') }}" class="services-product-mini-form">
+              <input type="hidden" name="product_id" value="{{ p.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="btn-outline btn-outline--sm">Au panier</button>
+            </form>
           </div>
         </article>
         {% endfor %}
       </div>
+      <footer class="services-block-foot">
+        <a href="{{ url_for('boutique', categorie=sec.category) }}" class="btn-primary">
+          Voir les {{ sec.product_count }} référence{{ 's' if sec.product_count > 1 else '' }}
+        </a>
+      </footer>
       {% else %}
-      <ul>
-        {% if sec.title == 'Livraison à domicile' %}
-        <li>Courses préparées avec soin et livraison sur créneaux selon votre commune.</li>
-        <li>Suivi par message après validation de commande sur le site.</li>
-        {% elif sec.title == 'Prix abordables' %}
-        <li>Gamme pensée pour des prix justes sur l’alimentaire et la cosmétique du quotidien.</li>
-        <li>Tarifs affichés TTC sur la boutique ; pas de mauvaise surprise au paiement.</li>
-        {% elif sec.title == 'Boutique en ligne' %}
-        <li>Panier, compte client, validation puis paiement Stripe (carte) ou mode démo sans carte si les clés ne sont pas configurées.</li>
-        <li>Pour un besoin spécifique, le formulaire Contact reste disponible.</li>
-        {% else %}
-        <li>Découvrez nos engagements sur cette thématique et commandez via la boutique.</li>
-        {% endif %}
+      <ul class="services-promises">
+        {% for item in sec.bullets %}
+        <li>{{ item }}</li>
+        {% endfor %}
       </ul>
-      {% endif %}
-
-      <div class="service-actions">
-        {% if sec.has_products %}
-        <a href="{{ url_for('boutique') }}" class="btn-commande">Voir toute la boutique</a>
+      <footer class="services-block-foot services-block-foot--links">
+        {% if sec.slug == 'livraison' %}
+        <a href="{{ url_for('suivi_commande') }}" class="btn-outline">Suivi de commande</a>
+        {% elif sec.slug == 'boutique' %}
+        <a href="{{ url_for('boutique') }}" class="btn-primary">Ouvrir la boutique</a>
+        <a href="{{ url_for('checkout') }}" class="btn-outline">Passer commande</a>
+        {% elif sec.slug == 'prix' %}
+        <a href="{{ url_for('boutique') }}" class="btn-primary">Voir les prix</a>
         {% endif %}
-        <a href="{{ url_for('contact') }}#modes-paiement" class="btn-outline" data-toast="Modes de paiement : consultez la page Contact.">Modes de paiement</a>
-        <a href="{{ url_for('checkout') }}" class="btn-outline">Finaliser une commande</a>
-        <a href="{{ url_for('contact') }}" class="btn-outline">Nous écrire</a>
-      </div>
-    </div>
+        <a href="{{ url_for('contact') }}#modes-paiement" class="btn-outline">Modes de paiement</a>
+      </footer>
+      {% endif %}
+    </article>
     {% endfor %}
 
-    <div class="boutique-band reveal">
+    <div class="boutique-band reveal services-cta-band">
       <div class="bb-left">
-        <h3 class="bb-title">Commander et payer sur le site</h3>
-        <p class="bb-sub">Ajoutez des produits au panier, validez sans compte si vous le souhaitez, puis réglez en ligne (carte, PayPal, virement ou espèces).</p>
+        <h3 class="bb-title">Prêt à commander ?</h3>
+        <p class="bb-sub">Parcourez le catalogue, composez votre panier et payez en ligne — sans compte obligatoire.</p>
         <div class="bb-tags">
-          <span class="bb-tag">Panier</span>
           <span class="bb-tag">Sans compte</span>
           <span class="bb-tag">Paiement sécurisé</span>
+          <span class="bb-tag">Livraison</span>
         </div>
       </div>
       <a href="{{ url_for('boutique') }}" class="btn-gold">Ouvrir la boutique</a>

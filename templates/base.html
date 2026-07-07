@@ -13,8 +13,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/lusion.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/yombal-unified.css') }}">
 </head>
-<body>
+<body class="{% if not (ep and ep.startswith('admin.')) %} site-premium{% endif %}">
   <a href="#main-content" class="skip-link">Aller au contenu</a>
 
   {% set ep = request.endpoint %}
@@ -68,14 +70,40 @@
       {% endif %}
     </ul>
 
-    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Ouvrir le menu">
-      <span></span>
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="cine-nav" aria-label="Ouvrir le menu">
+      <span class="nav-toggle__icon" aria-hidden="true"></span>
+      <span class="nav-toggle__label">Menu</span>
     </button>
 
     <div class="nav-actions">
       <a href="{{ url_for('boutique') }}" class="btn-nav">Commander</a>
     </div>
   </div>
+
+  <nav id="cine-nav" class="cine-nav" aria-label="Navigation principale" aria-hidden="true">
+    <div class="cine-nav__backdrop" data-cine-close aria-hidden="true"></div>
+    <div class="cine-nav__panel">
+      <div class="cine-nav__glow" aria-hidden="true"></div>
+      <button type="button" class="cine-nav__close" data-cine-close aria-label="Fermer le menu">×</button>
+      <p class="cine-nav__eyebrow">Yombal Marché · Groupe YOMBAL</p>
+      <ul class="cine-nav__links">
+        <li><a href="{{ url_for('index') }}" class="cine-nav__link{{ ' is-active' if ep == 'index' else '' }}"><span class="cine-nav__num">01</span><span class="cine-nav__text">Accueil</span></a></li>
+        <li><a href="{{ url_for('boutique') }}" class="cine-nav__link{{ ' is-active' if nav_shop else '' }}"><span class="cine-nav__num">02</span><span class="cine-nav__text">Boutique</span></a></li>
+        <li><a href="{{ url_for('producteurs') }}" class="cine-nav__link{{ ' is-active' if ep in ['producteurs', 'producteur_detail'] else '' }}"><span class="cine-nav__num">03</span><span class="cine-nav__text">Producteurs</span></a></li>
+        <li><a href="{{ url_for('decouvrir') }}" class="cine-nav__link{{ ' is-active' if ep == 'decouvrir' else '' }}"><span class="cine-nav__num">04</span><span class="cine-nav__text">Découvrir</span></a></li>
+        <li><a href="{{ url_for('saveurs') }}" class="cine-nav__link{{ ' is-active' if ep == 'saveurs' else '' }}"><span class="cine-nav__num">05</span><span class="cine-nav__text">Carte des saveurs</span></a></li>
+        <li><a href="{{ url_for('recettes') }}" class="cine-nav__link{{ ' is-active' if ep in ['recettes', 'recette_detail', 'recette_panier'] else '' }}"><span class="cine-nav__num">06</span><span class="cine-nav__text">Recettes</span></a></li>
+        <li><a href="{{ url_for('coffrets') }}" class="cine-nav__link{{ ' is-active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}"><span class="cine-nav__num">07</span><span class="cine-nav__text">Coffrets</span></a></li>
+        <li><a href="{{ url_for('panier') }}" class="cine-nav__link{{ ' is-active' if ep in ['panier', 'checkout'] else '' }}"><span class="cine-nav__num">08</span><span class="cine-nav__text">Panier{% if cart_count %} <em class="cine-nav__badge">{{ cart_count }}</em>{% endif %}</span></a></li>
+        <li><a href="{{ url_for('services') }}" class="cine-nav__link{{ ' is-active' if ep == 'services' else '' }}"><span class="cine-nav__num">09</span><span class="cine-nav__text">Services</span></a></li>
+        <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">10</span><span class="cine-nav__text">Contact</span></a></li>
+      </ul>
+      <div class="cine-nav__foot">
+        <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">Commander maintenant</a>
+        <a href="mailto:{{ shop_contact_email }}" class="cine-nav__email">{{ shop_contact_email }}</a>
+      </div>
+    </div>
+  </nav>
 
   <main id="main-content" class="site-main {% block main_class %}{% endblock %}">
     {% with flashes = get_flashed_messages(with_categories=true) %}
@@ -215,6 +243,7 @@
   {% endif %}
 
   <script src="{{ url_for('static', filename='js/cookie-consent.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/site-experience.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
   {% block extra_scripts %}{% endblock %}
 </body>

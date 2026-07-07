@@ -1,259 +1,218 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
-{% from "macros/category_badge.html" import category_badge %}
 {% block title %}Yombal Marché — Accueil{% endblock %}
-{% block main_class %}site-main--home{% endblock %}
+{% block main_class %}site-main--home site-main--xd{% endblock %}
 {% block content %}
-<section class="home-hero">
-  <div class="home-hero__bg" aria-hidden="true"></div>
-  <div class="home-hero__inner">
-    <div class="home-hero__copy reveal">
-      <p class="section-eyebrow">Groupe YOMBAL · Boutique diaspora</p>
-      <h1 class="home-hero__title">
-        Le marché du quotidien, <em>livré</em> avec le goût du vrai.
-      </h1>
-      <p class="home-hero__lead">
-        Épicerie sénégalaise, céréales, huiles, boissons, soins naturels et coffrets —
-        un catalogue clair, des produits traçables, une commande sans compte.
+
+{# ═══ HERO ═══ #}
+<section class="xd-hero" aria-label="Accueil Yombal Marché">
+  <div class="xd-hero__scene" aria-hidden="true">
+    <canvas id="home-hero-canvas" class="xd-hero__canvas"></canvas>
+    <div class="xd-hero__aurora">
+      <span class="xd-orb xd-orb--1"></span>
+      <span class="xd-orb xd-orb--2"></span>
+      <span class="xd-orb xd-orb--3"></span>
+    </div>
+    <div class="xd-hero__mesh"></div>
+    <div class="xd-hero__beam"></div>
+    <div class="xd-hero__grain"></div>
+    <div class="xd-hero__vignette"></div>
+    <p class="xd-hero__watermark" aria-hidden="true">YOMBAL</p>
+  </div>
+  <div class="xd-hero__cursor-glow" aria-hidden="true"></div>
+
+  <div class="xd-hero__body">
+    <div class="xd-hero__copy">
+      <p class="xd-eyebrow">
+        <span class="xd-eyebrow__dot"></span>
+        Groupe YOMBAL · Épicerie diaspora
       </p>
-      <div class="home-hero__actions">
-        <a href="{{ url_for('boutique') }}" class="btn-primary">Ouvrir la boutique <span class="btn-arrow" aria-hidden="true">→</span></a>
-        <a href="{{ url_for('recettes') }}" class="btn-outline">Voir les paniers recettes</a>
+      <h1 class="xd-hero__title">
+        <span class="xd-line" data-split>Le marché</span>
+        <span class="xd-line xd-line--stroke xd-line--shimmer" data-split>du quotidien</span>
+      </h1>
+      <p class="xd-hero__lead">
+        Riz, huiles, cosmétiques naturels et coffrets gourmands —
+        livrés chez vous avec la chaleur du marché sénégalais.
+      </p>
+      <div class="xd-hero__cta">
+        <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light xd-magnetic">
+          <span>Explorer la boutique</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost xd-magnetic">Paniers recettes</a>
       </div>
-      <div class="home-hero__trust" aria-label="Avantages">
-        <span>Carte · PayPal · virement</span>
-        <span>Livraison suivie</span>
-        <span>Commande invité</span>
-      </div>
-    </div>
-
-    <div class="home-hero__market reveal" aria-label="Aperçu Yombal Marché">
-      <div class="home-market-card home-market-card--main">
-        <span class="home-market-card__tag">Rayon phare</span>
-        <strong>Riz, huiles &amp; essentiels</strong>
-        <p>Formats regroupés, fiches détaillées, ajout au panier rapide.</p>
-        <a href="{{ url_for('boutique', categorie='cereales') }}">Voir les céréales →</a>
-      </div>
-      <div class="home-market-card home-market-card--small">
-        <span>🌾</span>
-        <strong>11</strong>
-        <p>formats de riz</p>
-      </div>
-      <div class="home-market-card home-market-card--small home-market-card--gold">
-        <span>🎁</span>
-        <strong>2</strong>
-        <p>coffrets prêts</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="home-quick" id="discover-anchor" aria-label="Accès rapides">
-  <div class="home-quick__grid">
-    <a href="{{ url_for('boutique') }}" class="home-quick-card reveal">
-      <span class="home-quick-card__icon" aria-hidden="true">🛒</span>
-      <strong>Boutique</strong>
-      <p>Catalogue, filtres et commande rapide.</p>
-    </a>
-    <a href="{{ url_for('saveurs') }}" class="home-quick-card reveal">
-      <span class="home-quick-card__icon" aria-hidden="true">🗺️</span>
-      <strong>Carte des saveurs</strong>
-      <p>Origines, terroirs et producteurs.</p>
-    </a>
-    <a href="{{ url_for('recettes') }}" class="home-quick-card reveal">
-      <span class="home-quick-card__icon" aria-hidden="true">🍲</span>
-      <strong>Recettes</strong>
-      <p>Paniers prêts à commander.</p>
-    </a>
-    <a href="{{ url_for('coffrets') }}" class="home-quick-card reveal">
-      <span class="home-quick-card__icon" aria-hidden="true">🎁</span>
-      <strong>Coffrets</strong>
-      <p>Idées cadeaux diaspora.</p>
-    </a>
-  </div>
-</section>
-
-{% if featured_recipes %}
-<section class="section home-section home-section--recipes">
-  <div class="home-section-head reveal">
-    <div>
-      <p class="section-eyebrow">Idées du moment</p>
-      <h2 class="section-title">Paniers <em>intelligents</em></h2>
-      <p class="section-sub">Des recettes pensées avec nos produits — prêtes à commander.</p>
-    </div>
-    <a href="{{ url_for('recettes') }}" class="btn-outline">Toutes les recettes</a>
-  </div>
-  <div class="recipe-grid recipe-grid--home">
-    {% for recipe in featured_recipes %}
-    <article class="recipe-card reveal">
-      <div class="recipe-card-top">
-        <span class="recipe-card-emoji" aria-hidden="true">{{ recipe.emoji }}</span>
-        <div>
-          <p class="recipe-card-kind">{{ recipe.kind_label }}</p>
-          <h3 class="recipe-card-title">
-            <a href="{{ url_for('recette_detail', slug=recipe.slug) }}">{{ recipe.title }}</a>
-          </h3>
+      <dl class="xd-stats">
+        <div class="xd-stat">
+          <dt><strong data-count="{{ product_count }}">{{ product_count }}</strong></dt>
+          <dd>produits</dd>
         </div>
-      </div>
-      <p class="recipe-card-summary">{{ recipe.summary }}</p>
-      <div class="recipe-card-footer">
-        <span class="recipe-card-price">dès {{ '%.2f'|format(recipe.total_cents / 100) }} €</span>
-        <a href="{{ url_for('recette_detail', slug=recipe.slug) }}" class="btn-primary">Voir la recette</a>
-      </div>
-    </article>
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
-
-{% if featured_coffrets %}
-<section class="section home-section">
-  <div class="home-section-head reveal">
-    <div>
-      <p class="section-eyebrow">Cadeaux</p>
-      <h2 class="section-title">Coffrets <em>diaspora</em></h2>
-      <p class="section-sub">Paniers gourmands prêts à offrir — un clic pour tout ajouter au panier.</p>
-    </div>
-    <a href="{{ url_for('coffrets') }}" class="btn-outline">Tous les coffrets</a>
-  </div>
-  <div class="coffret-grid coffret-grid--home">
-    {% for c in featured_coffrets %}
-    <article class="coffret-card reveal">
-      <div class="coffret-card-badge">Cadeau</div>
-      <div class="recipe-card-top">
-        <span class="recipe-card-emoji" aria-hidden="true">{{ c.emoji }}</span>
-        <div>
-          <p class="recipe-card-kind">{{ c.theme_label }}</p>
-          <h3 class="recipe-card-title">
-            <a href="{{ url_for('coffret_detail', slug=c.slug) }}">{{ c.title }}</a>
-          </h3>
+        <div class="xd-stat">
+          <dt><strong data-count="{{ producer_count }}">{{ producer_count }}</strong></dt>
+          <dd>producteurs</dd>
         </div>
-      </div>
-      <p class="coffret-gift-msg">« {{ c.gift_message }} »</p>
-      <div class="recipe-card-footer">
-        <span class="recipe-card-price">{{ '%.2f'|format(c.total_cents / 100) }} €</span>
-        <a href="{{ url_for('coffret_detail', slug=c.slug) }}" class="btn-gold">Voir le coffret</a>
-      </div>
-    </article>
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
-
-<div class="strip" aria-hidden="true">
-  <div class="strip-inner">
-    <div class="strip-ticker">
-      {% for cat in service_categories %}
-        {% for item in cat.prestations %}
-        <span class="strip-item"><span class="strip-ico">✦</span><span class="strip-txt">{{ item }}</span></span>
-        <span class="strip-sep"></span>
-        {% endfor %}
-      {% endfor %}
-      {% for cat in service_categories %}
-        {% for item in cat.prestations %}
-        <span class="strip-item"><span class="strip-ico">✦</span><span class="strip-txt">{{ item }}</span></span>
-        <span class="strip-sep"></span>
-        {% endfor %}
-      {% endfor %}
+        <div class="xd-stat">
+          <dt><strong data-count="{{ recipe_count }}">{{ recipe_count }}</strong></dt>
+          <dd>recettes</dd>
+        </div>
+      </dl>
     </div>
+
+    <div class="xd-hero__visual" aria-label="Aperçu catalogue">
+      <a href="{{ url_for('boutique', categorie='cereales') }}" class="xd-float-card xd-float-card--hero">
+        <span class="xd-float-card__label">Rayon phare</span>
+        <strong>Riz &amp; céréales</strong>
+        <p>11 formats · fiches détaillées</p>
+        <span class="xd-float-card__link">Découvrir →</span>
+      </a>
+      <div class="xd-float-card xd-float-card--stat">
+        <span aria-hidden="true">🌾</span>
+        <strong>Traçable</strong>
+        <p>Origine connue</p>
+      </div>
+      <div class="xd-float-card xd-float-card--gold">
+        <span aria-hidden="true">🎁</span>
+        <strong>Coffrets</strong>
+        <p>Prêts à offrir</p>
+      </div>
+    </div>
+  </div>
+
+  <a href="#univers" class="xd-scroll-hint" aria-label="Défiler pour explorer">
+    <span class="xd-scroll-hint__text">Explorer</span>
+    <span class="xd-scroll-hint__wheel" aria-hidden="true"></span>
+  </a>
+</section>
+
+{# ═══ MARQUEE ═══ #}
+<div class="xd-marquee" aria-hidden="true">
+  <div class="xd-marquee__track">
+    {% for _ in range(2) %}
+    <span>Épicerie fine</span><span class="xd-marquee__sep">✦</span>
+    <span>Produits locaux</span><span class="xd-marquee__sep">✦</span>
+    <span>Livraison suivie</span><span class="xd-marquee__sep">✦</span>
+    <span>Sans compte</span><span class="xd-marquee__sep">✦</span>
+    <span>Diaspora</span><span class="xd-marquee__sep">✦</span>
+    {% endfor %}
   </div>
 </div>
 
-<section class="section home-section" id="services-anchor">
-  <div class="home-section-head reveal">
+{# ═══ UNIVERS — BENTO ═══ #}
+<section class="xd-univers" id="univers" aria-label="Explorer Yombal">
+  <header class="xd-section-head xd-reveal">
+    <span class="xd-section-num">01</span>
     <div>
-      <p class="section-eyebrow">Offre</p>
-      <h2 class="section-title">Nos <em>services</em></h2>
-      <p class="section-sub">Cinq engagements au cœur de votre marché — détail et commande sur la page Services.</p>
+      <p class="xd-eyebrow">Univers</p>
+      <h2 class="xd-section-title">Tout le marché,<br><em>à portée de clic</em></h2>
     </div>
-    <a href="{{ url_for('services') }}" class="btn-outline">Voir les services</a>
-  </div>
-
-  <div class="cards-grid">
-    {% set icons = ['🛒', '✨', '🚚', '💶', '🛍️'] %}
-    {% for cat in service_categories %}
-      {% for item in cat.prestations %}
-      <a class="svc-card reveal" href="{{ url_for('services') }}#{{ cat.id }}">
-        <div class="svc-ico-wrap" aria-hidden="true">{{ icons[loop.index0 % (icons|length)] }}</div>
-        <h3 class="svc-name">{{ item }}</h3>
-        <p class="svc-desc">Qualité, transparence et proximité — cliquez pour en savoir plus.</p>
-        <span class="svc-arrow">En savoir plus →</span>
-      </a>
-      {% endfor %}
-    {% endfor %}
-  </div>
-
-  <div class="boutique-band reveal">
-    <div class="bb-left">
-      <h3 class="bb-title">Boutique &amp; livraison</h3>
-      <p class="bb-sub">Passez votre commande ou demandez des informations : nous vous répondons rapidement.</p>
-      <div class="bb-tags">
-        <span class="bb-tag">Alimentaire</span>
-        <span class="bb-tag">Cosmétique</span>
-        <span class="bb-tag">Livraison</span>
-      </div>
-    </div>
-    <a href="{{ url_for('boutique') }}" class="btn-gold">Ouvrir la boutique</a>
+  </header>
+  <div class="xd-bento xd-reveal">
+    <a href="{{ url_for('boutique') }}" class="xd-bento__cell xd-bento__cell--wide">
+      <span class="xd-bento__num">01</span>
+      <span class="xd-bento__icon" aria-hidden="true">🛒</span>
+      <strong>Boutique</strong>
+      <p>Catalogue complet, filtres par catégorie, ajout rapide au panier.</p>
+      <span class="xd-bento__arrow">→</span>
+    </a>
+    <a href="{{ url_for('saveurs') }}" class="xd-bento__cell">
+      <span class="xd-bento__num">02</span>
+      <span class="xd-bento__icon" aria-hidden="true">🗺️</span>
+      <strong>Saveurs</strong>
+      <p>Terroirs &amp; origines</p>
+      <span class="xd-bento__arrow">→</span>
+    </a>
+    <a href="{{ url_for('recettes') }}" class="xd-bento__cell">
+      <span class="xd-bento__num">03</span>
+      <span class="xd-bento__icon" aria-hidden="true">🍲</span>
+      <strong>Recettes</strong>
+      <p>Paniers prêts</p>
+      <span class="xd-bento__arrow">→</span>
+    </a>
+    <a href="{{ url_for('coffrets') }}" class="xd-bento__cell xd-bento__cell--accent">
+      <span class="xd-bento__num">04</span>
+      <span class="xd-bento__icon" aria-hidden="true">🎁</span>
+      <strong>Coffrets</strong>
+      <p>Idées cadeaux</p>
+      <span class="xd-bento__arrow">→</span>
+    </a>
+    <a href="{{ url_for('producteurs') }}" class="xd-bento__cell xd-bento__cell--tall">
+      <span class="xd-bento__num">05</span>
+      <span class="xd-bento__icon" aria-hidden="true">🌿</span>
+      <strong>Producteurs</strong>
+      <p>Visages, régions et savoir-faire derrière chaque référence.</p>
+      <span class="xd-bento__arrow">→</span>
+    </a>
   </div>
 </section>
 
-{% if featured_producers %}
-<section class="section producers-home home-section">
-  <div class="home-section-head reveal">
-    <div>
-      <p class="section-eyebrow">Traçabilité</p>
-      <h2 class="section-title">Nos <em>producteurs</em></h2>
-      <p class="section-sub">
-        Derrière chaque référence, un visage et un savoir-faire.
-      </p>
-    </div>
-    <a href="{{ url_for('producteurs') }}" class="btn-outline">Toute la vitrine</a>
-  </div>
-  <div class="producers-grid producers-grid--home">
-    {% for pr in featured_producers %}
-    <a href="{{ url_for('producteur_detail', slug=pr.slug) }}" class="producer-card producer-card--compact reveal">
-      <span class="producer-avatar producer-avatar--md" aria-hidden="true">{{ pr.avatar_emoji }}</span>
+{% if featured_products %}
+{# ═══ SÉLECTION — SCROLL HORIZONTAL ÉPINGLÉ ═══ #}
+<section class="xd-pin-scroll" id="xd-pin-products" aria-label="Coups de cœur">
+  <div class="xd-pin-scroll__sticky">
+    <header class="xd-section-head xd-section-head--light xd-pin-scroll__head">
+      <span class="xd-section-num" data-parallax-num>02</span>
       <div>
-        <p class="producer-region">📍 {{ pr.region }}</p>
-        <h3 class="producer-name">{{ pr.name }}</h3>
-        <p class="producer-flagship">🌿 {{ pr.flagship_product }}</p>
-        <span class="producer-link">Voir la fiche →</span>
+        <p class="xd-eyebrow">Sélection</p>
+        <h2 class="xd-section-title xd-split-heading">Coups de <em>cœur</em></h2>
+        <p class="xd-section-sub">Des produits choisis avec soin — origine, ingrédients, conseils.</p>
       </div>
-    </a>
-    {% endfor %}
+      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--dark xd-magnetic">Toute la boutique</a>
+    </header>
+    <div class="xd-pin-scroll__viewport">
+      <div class="xd-pin-scroll__track">
+        {% for p in featured_products %}
+        <article class="xd-product xd-product--premium">
+          <div class="xd-product__shine" aria-hidden="true"></div>
+          <span class="xd-product__index">{{ '%02d'|format(loop.index) }}</span>
+          <a href="{{ url_for('product_detail', slug=p.slug) }}" class="xd-product__media{% if p.image %} xd-product__media--photo{% endif %}">
+            {{ product_image(p, 'card') }}
+            {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
+            <span class="xd-product__cat">{{ meta.emoji }} {{ meta.label }}</span>
+          </a>
+          <div class="xd-product__body">
+            <h3><a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a></h3>
+            <p>{{ p.summary }}</p>
+            <div class="xd-product__foot">
+              <span class="xd-product__price">{{ '%.2f'|format(p.price_euros()) }} €</span>
+              <form method="post" action="{{ url_for('panier_ajouter') }}">
+                <input type="hidden" name="product_id" value="{{ p.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="xd-product__add" aria-label="Ajouter {{ p.name }}">
+                  <span aria-hidden="true">+</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="xd-pin-scroll__progress" aria-hidden="true"><span></span></div>
   </div>
 </section>
 {% endif %}
 
-{% if featured_products %}
-<section class="section home-section">
-  <div class="home-section-head reveal">
+{% if featured_recipes %}
+<section class="xd-panel xd-panel--dark" aria-label="Recettes">
+  <header class="xd-section-head xd-reveal">
+    <span class="xd-section-num">03</span>
     <div>
-      <p class="section-eyebrow">Sélection</p>
-      <h2 class="section-title">Coups de <em>cœur</em></h2>
-      <p class="section-sub">Des fiches détaillées : origine, ingrédients et conseils.</p>
+      <p class="xd-eyebrow">Cuisine</p>
+      <h2 class="xd-section-title">Paniers <em>intelligents</em></h2>
+      <p class="xd-section-sub">Recettes pensées avec nos produits — prêtes à commander.</p>
     </div>
-    <a href="{{ url_for('boutique') }}" class="btn-primary">Toute la boutique</a>
-  </div>
-  <div class="home-product-grid">
-    {% for p in featured_products %}
-    <article class="boutique-card reveal">
-      <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
-        {{ product_image(p, 'card') }}
-        {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
-        <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>
-      </a>
-      <div class="boutique-card__body">
-        <h3 class="boutique-card__title"><a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a></h3>
-        <p class="boutique-card__summary">{{ p.summary }}</p>
-        <div class="boutique-card__footer">
-          <span class="boutique-card__price">{{ '%.2f'|format(p.price_euros()) }} €</span>
-          <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
-            <input type="hidden" name="product_id" value="{{ p.id }}">
-            <input type="hidden" name="quantity" value="1">
-            <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ p.name }} au panier"><span aria-hidden="true">+</span></button>
-          </form>
-        </div>
+    <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost">Toutes les recettes</a>
+  </header>
+  <div class="xd-cards xd-cards--3 xd-reveal">
+    {% for recipe in featured_recipes %}
+    <article class="xd-card">
+      <span class="xd-card__emoji" aria-hidden="true">{{ recipe.emoji }}</span>
+      <p class="xd-card__kind">{{ recipe.kind_label }}</p>
+      <h3><a href="{{ url_for('recette_detail', slug=recipe.slug) }}">{{ recipe.title }}</a></h3>
+      <p class="xd-card__text">{{ recipe.summary }}</p>
+      <div class="xd-card__foot">
+        <span>dès {{ '%.2f'|format(recipe.total_cents / 100) }} €</span>
+        <a href="{{ url_for('recette_detail', slug=recipe.slug) }}" class="xd-link">Voir →</a>
       </div>
     </article>
     {% endfor %}
@@ -261,10 +220,106 @@
 </section>
 {% endif %}
 
-<section class="section">
-  <div class="quote-block reveal">
-    <p>« Des prix accessibles, des produits choisis avec soin, et la livraison qui vous évite la course du dimanche. »</p>
-    <cite>— Yombal Marché · Groupe YOMBAL</cite>
+{% if featured_producers %}
+<section class="xd-panel" aria-label="Producteurs">
+  <header class="xd-section-head xd-reveal">
+    <span class="xd-section-num">04</span>
+    <div>
+      <p class="xd-eyebrow">Traçabilité</p>
+      <h2 class="xd-section-title">Nos <em>producteurs</em></h2>
+    </div>
+    <a href="{{ url_for('producteurs') }}" class="xd-btn xd-btn--outline">Toute la vitrine</a>
+  </header>
+  <div class="xd-producers xd-reveal">
+    {% for pr in featured_producers %}
+    <a href="{{ url_for('producteur_detail', slug=pr.slug) }}" class="xd-producer">
+      <span class="xd-producer__avatar" aria-hidden="true">{{ pr.avatar_emoji }}</span>
+      <div>
+        <span class="xd-producer__region">{{ pr.region }}</span>
+        <strong>{{ pr.name }}</strong>
+        <span class="xd-producer__flag">{{ pr.flagship_product }}</span>
+      </div>
+      <span class="xd-producer__go" aria-hidden="true">→</span>
+    </a>
+    {% endfor %}
   </div>
 </section>
+{% endif %}
+
+{# ═══ MANIFESTE + SERVICES ═══ #}
+<section class="xd-manifesto xd-panel--dark" id="services-anchor">
+  <div class="xd-manifesto__inner xd-reveal">
+    <p class="xd-eyebrow">Notre promesse</p>
+    <blockquote class="xd-manifesto__quote">
+      Des prix accessibles, des produits choisis avec soin,
+      et la livraison qui vous évite la course du dimanche.
+    </blockquote>
+    <div class="xd-manifesto__services">
+      {% set icons = ['🛒', '✨', '🚚', '💶', '🛍️'] %}
+      {% for cat in service_categories %}
+        {% for item in cat.prestations %}
+        <a href="{{ url_for('services') }}#{{ prestation_slugs.get(item, 'boutique') }}" class="xd-service-line">
+          <span class="xd-service-line__ico" aria-hidden="true">{{ icons[loop.index0 % (icons|length)] }}</span>
+          <span class="xd-service-line__txt">{{ item }}</span>
+          <span class="xd-service-line__arrow">→</span>
+        </a>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <div class="xd-manifesto__cta">
+      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light xd-magnetic xd-btn--lg">Commander maintenant</a>
+      <a href="{{ url_for('services') }}" class="xd-btn xd-btn--ghost">Nos services</a>
+    </div>
+  </div>
+</section>
+
+{% if featured_coffrets %}
+<section class="xd-panel" aria-label="Coffrets">
+  <header class="xd-section-head xd-reveal">
+    <span class="xd-section-num">05</span>
+    <div>
+      <p class="xd-eyebrow">Cadeaux</p>
+      <h2 class="xd-section-title">Coffrets <em>diaspora</em></h2>
+    </div>
+    <a href="{{ url_for('coffrets') }}" class="xd-btn xd-btn--outline">Tous les coffrets</a>
+  </header>
+  <div class="xd-cards xd-cards--2 xd-reveal">
+    {% for c in featured_coffrets %}
+    <article class="xd-card xd-card--gift">
+      <span class="xd-card__badge">Cadeau</span>
+      <span class="xd-card__emoji" aria-hidden="true">{{ c.emoji }}</span>
+      <h3><a href="{{ url_for('coffret_detail', slug=c.slug) }}">{{ c.title }}</a></h3>
+      <p class="xd-card__quote">« {{ c.gift_message }} »</p>
+      <div class="xd-card__foot">
+        <span>{{ '%.2f'|format(c.total_cents / 100) }} €</span>
+        <a href="{{ url_for('coffret_detail', slug=c.slug) }}" class="xd-link xd-link--gold">Voir le coffret →</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{# ═══ CTA FINAL ═══ #}
+<section class="xd-finale" aria-label="Nous contacter">
+  <div class="xd-finale__rings" aria-hidden="true">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="xd-finale__glow" aria-hidden="true"></div>
+  <div class="xd-finale__particles" aria-hidden="true"></div>
+  <div class="xd-finale__inner xd-reveal">
+    <h2 class="xd-finale__title">Prêt à goûter<br><em>le vrai marché ?</em></h2>
+    <p>Livraison suivie · Paiement sécurisé · Commande sans compte</p>
+    <div class="xd-finale__actions">
+      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light xd-magnetic xd-btn--lg">Ouvrir la boutique</a>
+      <a href="{{ url_for('contact') }}" class="xd-btn xd-btn--ghost">Nous contacter</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/home-hero-3d.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/home-experience.js') }}" defer></script>
 {% endblock %}
