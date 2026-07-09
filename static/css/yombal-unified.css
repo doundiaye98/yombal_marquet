@@ -259,7 +259,12 @@ body.site-premium::before { display: none !important; }
   background: var(--y-green) !important;
   border-top: none;
 }
-.site-premium .site-footer .footer-logo-img { filter: brightness(0) invert(1); }
+.site-premium .site-footer .footer-logo-img {
+  filter: none;
+  opacity: 1;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+}
 
 .site-premium #xd-preloader { display: none !important; }
 .site-premium body.is-preloading .header-shell,

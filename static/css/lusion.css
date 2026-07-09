@@ -1137,7 +1137,12 @@
 }
 .site-footer a { color: rgba(255, 252, 247, 0.65); }
 .site-footer a:hover { color: var(--xd-gold); }
-.site-footer .footer-logo-img { filter: brightness(0) invert(1); opacity: 0.88; }
+.site-footer .footer-logo-img {
+  filter: none;
+  opacity: 1;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+}
 .site-footer .footer-bottom { border-top-color: var(--xd-line); }
 
 .scroll-progress {
