@@ -27,6 +27,21 @@ ORDER_HINT_PATTERNS = (
     r"\btracking\b",
 )
 
+THANKS_REPLY = (
+    "Je vous en prie, c'est un plaisir de vous accompagner. "
+    "Toute l'équipe Yombal Marché reste à votre disposition pour vos questions "
+    "sur nos produits, recettes ou services. "
+    "Nous vous souhaitons une excellente journée."
+)
+
+THANKS_ONLY_PATTERNS = (
+    r"^(?:un\s+)?(?:grand\s+)?merci(?:\s+(?:beaucoup|infiniment|bien|à\s+vous|pour\s+(?:tout|votre\s+aide|l'?info(?:rmation)?(?:rmations)?|votre\s+réponse|votre\s+message)))?[\s!.]*$",
+    r"^je\s+vous\s+remercie(?:\s+(?:beaucoup|infiniment|bien))?[\s!.]*$",
+    r"^(?:thanks?|thank\s+you)(?:\s+(?:a\s+lot|so\s+much))?[\s!.]*$",
+    r"^(?:ok|d'accord|parfait|super|génial|très\s+bien)[\s,!.]+(?:merci|je\s+vous\s+remercie)(?:\s+(?:beaucoup|infiniment|pour\s+tout))?[\s!.]*$",
+    r"^(?:merci|je\s+vous\s+remercie)[\s,!.]+(?:ok|d'accord|parfait|super|génial|très\s+bien)[\s!.]*$",
+)
+
 SYSTEM_PROMPT = """Tu es l'assistant de Yombal Marché, une épicerie sénégalaise en ligne.
 Réponds en français, de façon chaleureuse et concise (3 à 6 phrases max sauf liste de produits).
 
@@ -36,7 +51,8 @@ Règles strictes :
 - Si la question concerne le suivi d'une commande précise (numéro, statut, colis), indique d'utiliser la page « Suivi de commande » avec le numéro et l'e-mail d'achat.
 - Si tu ne sais pas, propose de contacter la boutique via la page Contact.
 - Mentionne les noms de produits ou recettes pertinents quand c'est utile.
-- Ne donne pas de conseils médicaux."""
+- Ne donne pas de conseils médicaux.
+- Si le client vous remercie simplement, répondez avec professionnalisme et courtoisie, sans relancer une vente."""
 
 REFUSAL_NO_KEY = (
     "L'assistant n'est pas disponible pour le moment. "
@@ -82,6 +98,16 @@ def _normalize_question(text: str) -> str:
 def _looks_like_order_tracking(question: str) -> bool:
     lower = question.lower()
     return any(re.search(pat, lower) for pat in ORDER_HINT_PATTERNS)
+
+
+def _looks_like_thanks(question: str) -> bool:
+    """Remerciement simple (pas « merci de… » = formule de politesse / demande)."""
+    q = (question or "").strip().lower()
+    if not q or len(q) > 120:
+        return False
+    if re.match(r"^merci\s+d[e']", q):
+        return False
+    return any(re.search(pat, q) for pat in THANKS_ONLY_PATTERNS)
 
 
 def _question_tokens(question: str) -> list[str]:
@@ -338,6 +364,9 @@ def answer(question: str) -> dict:
 
     if _looks_like_order_tracking(q):
         return {"answer": REFUSAL_ORDER, "sources": [], "hint": "order_tracking"}
+
+    if _looks_like_thanks(q):
+        return {"answer": THANKS_REPLY, "sources": [], "hint": "thanks", "mode": "courtesy"}
 
     if not embed_svc.is_configured():
         return answer_local(q)

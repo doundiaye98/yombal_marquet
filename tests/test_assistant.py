@@ -69,6 +69,37 @@ def test_assistant_order_hint(client, monkeypatch):
     assert "Suivi de commande" in data["answer"]
 
 
+@pytest.mark.parametrize(
+    "question",
+    [
+        "merci",
+        "Merci beaucoup !",
+        "Je vous remercie",
+        "Ok merci",
+        "Parfait, merci pour tout",
+    ],
+)
+def test_assistant_thanks_reply(client, monkeypatch, question):
+    monkeypatch.setenv("ASSISTANT_ENABLED", "1")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    rv = client.post("/api/assistant", json={"question": question})
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert data["hint"] == "thanks"
+    assert data["mode"] == "courtesy"
+    assert "Je vous en prie" in data["answer"]
+    assert "excellente journée" in data["answer"].lower()
+
+
+def test_assistant_merci_de_not_treated_as_thanks(client, monkeypatch):
+    monkeypatch.setenv("ASSISTANT_ENABLED", "1")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    rv = client.post("/api/assistant", json={"question": "Merci de me dire si vous avez du fonio"})
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert data.get("hint") != "thanks"
+
+
 @patch("services.assistant._call_chat", return_value="Le fonio est sans gluten et coûte 4,50 €.")
 @patch("services.embeddings.embed_texts", return_value=[[0.95, 0.05, 0.0]])
 def test_assistant_rag_answer(mock_embed, mock_chat, client, monkeypatch, indexed_chunks):
