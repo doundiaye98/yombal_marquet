@@ -3,7 +3,6 @@
 
 from flask import url_for
 
-from models.producer import Producer
 from models.product import Product
 
 
@@ -24,7 +23,6 @@ def sitemap_urls(app, base_url: str) -> list[dict]:
         static_pages = [
             (url_for("index"), "daily", "1.0"),
             (url_for("boutique"), "daily", "0.9"),
-            (url_for("producteurs"), "weekly", "0.7"),
             (url_for("decouvrir"), "monthly", "0.6"),
             (url_for("saveurs"), "monthly", "0.6"),
             (url_for("recettes"), "weekly", "0.7"),
@@ -45,9 +43,6 @@ def sitemap_urls(app, base_url: str) -> list[dict]:
 
         for group_slug in PRODUCT_GROUP_DEFS:
             add(url_for("product_gamme", group_slug=group_slug), "weekly", "0.85")
-
-        for producer in Producer.query.filter_by(is_active=True).order_by(Producer.id):
-            add(url_for("producteur_detail", slug=producer.slug), "monthly", "0.6")
 
     return urls
 

@@ -1,0 +1,914 @@
+[
+  {
+    "page": 60,
+    "category": "cereales",
+    "name": "400/600 Gr- Carton De 5 Kg",
+    "price_euros": 5.0,
+    "description": "Ce sont des capitaines Bar (Ombrine) de 400 à 600",
+    "source": "liste"
+  },
+  {
+    "page": 59,
+    "category": "cereales",
+    "name": "5 Kg- Vidée Écaillée",
+    "price_euros": 5.0,
+    "description": "Ce sont des dorades de 400 à 600 g, vidées et",
+    "source": "liste"
+  },
+  {
+    "page": 44,
+    "category": "cereales",
+    "name": "Accras De Morue",
+    "price_euros": 7.9,
+    "description": "Ce sont des accras de morue, beignets",
+    "source": "liste"
+  },
+  {
+    "page": 46,
+    "category": "cereales",
+    "name": "Ailes De Poulet Tex-Mex-Halal",
+    "price_euros": 17.5,
+    "description": "Ce sont des ailes de poulet Tex-Mex halal, en",
+    "source": "liste"
+  },
+  {
+    "page": 42,
+    "category": "cereales",
+    "name": "Arachides Crues Blanches 1 Kg",
+    "price_euros": 4.75,
+    "description": "Ce sont des arachides crues blanches en sac,",
+    "source": "liste"
+  },
+  {
+    "page": 58,
+    "category": "cereales",
+    "name": "Avec Tête - Carton De 10 Kg",
+    "price_euros": 5.0,
+    "description": "Ce sont des grosses dorades Diaregne avec tête,",
+    "source": "liste"
+  },
+  {
+    "page": 9,
+    "category": "alimentaire",
+    "name": "Better Than Quinoa",
+    "price_euros": 4.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 40,
+    "category": "snacks",
+    "name": "Biscuits Sucrés Gem",
+    "price_euros": 1.5,
+    "description": "Ce sont des biscuits sucrés Gem, croustillants",
+    "source": "liste"
+  },
+  {
+    "page": 33,
+    "category": "snacks",
+    "name": "Bissap Rouge En Vrac 1 Kg",
+    "price_euros": 10.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 33,
+    "category": "snacks",
+    "name": "Bissap Rouge Zena",
+    "price_euros": 2.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 28,
+    "category": "snacks",
+    "name": "Boisson De Gingembre",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 39,
+    "category": "snacks",
+    "name": "Boisson Instantanée Aromatisé",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 32,
+    "category": "snacks",
+    "name": "Butter Ghee (Beurre De Vache)",
+    "price_euros": 7.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 38,
+    "category": "snacks",
+    "name": "Café Touba 250 Gr",
+    "price_euros": 3.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 62,
+    "category": "cereales",
+    "name": "Carton 10 Kg",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 57,
+    "category": "cereales",
+    "name": "Carton De 10 Kg",
+    "price_euros": 90.0,
+    "description": "Ce sont des mérous Thiof, frais et savoureux,",
+    "source": "liste"
+  },
+  {
+    "page": 57,
+    "category": "cereales",
+    "name": "Carton De 5 Kg",
+    "price_euros": 50.0,
+    "description": "Ce sont des mérous Thiof, frais et savoureux,",
+    "source": "liste"
+  },
+  {
+    "page": 57,
+    "category": "cereales",
+    "name": "Carton De 5 Kg",
+    "price_euros": 65.0,
+    "description": "Ce sont des gros mérous Thiof sans tête, frais et",
+    "source": "liste"
+  },
+  {
+    "page": 57,
+    "category": "cereales",
+    "name": "Carton De 5 Kg",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 28,
+    "category": "snacks",
+    "name": "Chips De Plantain Doux",
+    "price_euros": 1.0,
+    "description": "Ce sont des chips de plantain doux,",
+    "source": "liste"
+  },
+  {
+    "page": 28,
+    "category": "snacks",
+    "name": "Chips De Plantain Doux Épicé",
+    "price_euros": 1.0,
+    "description": "Ce sont des chips de plantain doux épicé,",
+    "source": "liste"
+  },
+  {
+    "page": 28,
+    "category": "snacks",
+    "name": "Chips De Plantain Salé",
+    "price_euros": 1.0,
+    "description": "Ce sont des chips de plantain salé,",
+    "source": "liste"
+  },
+  {
+    "page": 20,
+    "category": "alimentaire",
+    "name": "comme les cheveux. Idéal pour les soins quotidiens,",
+    "price_euros": 3.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 29,
+    "category": "snacks",
+    "name": "Corned Beef Halal",
+    "price_euros": 2.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 42,
+    "category": "cereales",
+    "name": "Cornilles Haricots Blancs",
+    "price_euros": 2.5,
+    "description": "Ce sont des cornilles haricots blancs, riches en",
+    "source": "liste"
+  },
+  {
+    "page": 46,
+    "category": "cereales",
+    "name": "Crabe De Mangrove",
+    "price_euros": 14.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 44,
+    "category": "cereales",
+    "name": "Crevettes Crues Décortiquées",
+    "price_euros": 7.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 43,
+    "category": "cereales",
+    "name": "Datte Branchées",
+    "price_euros": 5.9,
+    "description": "Ce sont des dattes branchées, fraîches et",
+    "source": "liste"
+  },
+  {
+    "page": 43,
+    "category": "cereales",
+    "name": "Dattes Demies Sèches",
+    "price_euros": 3.9,
+    "description": "Ce sont des dattes demi-sèches, naturellement",
+    "source": "liste"
+  },
+  {
+    "page": 43,
+    "category": "cereales",
+    "name": "Dattes Sèches",
+    "price_euros": 3.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 16,
+    "category": "alimentaire",
+    "name": "digestion, à l’équilibre nutritionnel et à la vitalité quotidienne",
+    "price_euros": 2.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 36,
+    "category": "snacks",
+    "name": "Double Concentré De Tomates",
+    "price_euros": 7.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 35,
+    "category": "snacks",
+    "name": "Double Concentré Tomates Rolli",
+    "price_euros": 4.25,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 26,
+    "category": "cereales",
+    "name": "Farine De Manioc 1Kg",
+    "price_euros": 2.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 41,
+    "category": "cereales",
+    "name": "Farine De Maïs Blanc",
+    "price_euros": 2.25,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 41,
+    "category": "cereales",
+    "name": "Farine De Maïs Jaune",
+    "price_euros": 2.2,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 26,
+    "category": "cereales",
+    "name": "Farine De Mil 1 Kg",
+    "price_euros": 2.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 26,
+    "category": "cereales",
+    "name": "Farine De Riz 1 Kg",
+    "price_euros": 1.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 33,
+    "category": "snacks",
+    "name": "Feuille De Kinkéliba Séchées",
+    "price_euros": 2.5,
+    "description": "Ce sont des feuilles utilisées pour préparer des",
+    "source": "liste"
+  },
+  {
+    "page": 41,
+    "category": "cereales",
+    "name": "Fiono Guinée",
+    "price_euros": 3.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 29,
+    "category": "snacks",
+    "name": "Foufou - Farine De Manioc",
+    "price_euros": 2.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 30,
+    "category": "snacks",
+    "name": "Fufu - Farine De Plantain",
+    "price_euros": 4.95,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 26,
+    "category": "cereales",
+    "name": "Fécule De Pomme De Terre 1 Kg",
+    "price_euros": 1.2,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 45,
+    "category": "cereales",
+    "name": "Gambas Géantes Sauvages",
+    "price_euros": 20.0,
+    "description": "Ce sont des gambas géantes sauvages,",
+    "source": "liste"
+  },
+  {
+    "page": 41,
+    "category": "cereales",
+    "name": "Grain De Mil",
+    "price_euros": 2.5,
+    "description": "Ce sont des grains de mil, nutritifs et",
+    "source": "liste"
+  },
+  {
+    "page": 62,
+    "category": "cereales",
+    "name": "Gros Machoiron",
+    "price_euros": 8.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 61,
+    "category": "cereales",
+    "name": "Grosse Sole - Karabot",
+    "price_euros": 2.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 42,
+    "category": "cereales",
+    "name": "Haricots Noirs - Tersol",
+    "price_euros": 1.99,
+    "description": "Ce sont des haricots noirs Tersol, riches en",
+    "source": "liste"
+  },
+  {
+    "page": 27,
+    "category": "huiles",
+    "name": "Huile D'Arachide 1L",
+    "price_euros": 2.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 27,
+    "category": "huiles",
+    "name": "Huile De Palme 1L",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 27,
+    "category": "huiles",
+    "name": "Huile De Tournesol 1L",
+    "price_euros": 3.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 27,
+    "category": "huiles",
+    "name": "Huile De Tournesol 5L",
+    "price_euros": 17.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 22,
+    "category": "cereales",
+    "name": "Jumbo Ramadan",
+    "price_euros": 5.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 29,
+    "category": "snacks",
+    "name": "Jus De Citron Jaune De Sicile 1L",
+    "price_euros": 3.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 36,
+    "category": "snacks",
+    "name": "Lait Concentré Bonnet Rouge",
+    "price_euros": 2.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 38,
+    "category": "snacks",
+    "name": "Lait De Coco",
+    "price_euros": 2.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 19,
+    "category": "phares",
+    "name": "Madd",
+    "price_euros": 1.0,
+    "description": "",
+    "source": "fiche"
+  },
+  {
+    "page": 37,
+    "category": "snacks",
+    "name": "Madd 230 Gr",
+    "price_euros": 4.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 37,
+    "category": "snacks",
+    "name": "Madd 400 Gr",
+    "price_euros": 7.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 38,
+    "category": "snacks",
+    "name": "Miel De Fleurs 1 Kg",
+    "price_euros": 9.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 38,
+    "category": "snacks",
+    "name": "Miel De Fleurs 500 Gr",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 10,
+    "category": "alimentaire",
+    "name": "Moringa",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 45,
+    "category": "cereales",
+    "name": "Nems Au Poulet Halal È 50 Pièces",
+    "price_euros": 22.5,
+    "description": "Ce sont des nems au poulet halal, en lot de 50",
+    "source": "liste"
+  },
+  {
+    "page": 45,
+    "category": "cereales",
+    "name": "Nems Aux Crevettes - Poulet Halal",
+    "price_euros": 25.9,
+    "description": "Ce sont des nems aux crevettes et poulet",
+    "source": "liste"
+  },
+  {
+    "page": 12,
+    "category": "phares",
+    "name": "Niébé",
+    "price_euros": 4.0,
+    "description": "",
+    "source": "fiche"
+  },
+  {
+    "page": 4,
+    "category": "alimentaire",
+    "name": "P U R E A F R I C A N G O O D N E S S",
+    "price_euros": 3.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 22,
+    "category": "cereales",
+    "name": "Piment Rouge Antillais Fort",
+    "price_euros": 5.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 61,
+    "category": "cereales",
+    "name": "Poisson Fumé",
+    "price_euros": 8.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 22,
+    "category": "cereales",
+    "name": "Poudre Adjia",
+    "price_euros": 5.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 31,
+    "category": "snacks",
+    "name": "Poudre D'Arachide",
+    "price_euros": 2.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 31,
+    "category": "snacks",
+    "name": "Poudre De Baobab - Bouye 250 Gr",
+    "price_euros": 3.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 31,
+    "category": "snacks",
+    "name": "Poudre De Baobab - Zena 200 Gr",
+    "price_euros": 3.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 34,
+    "category": "snacks",
+    "name": "Poudre De Lait Nido - 1,8 Kg",
+    "price_euros": 26.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 34,
+    "category": "snacks",
+    "name": "Poudre De Lait Nido - 2,5 Kg",
+    "price_euros": 34.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 34,
+    "category": "snacks",
+    "name": "Poudre De Lait Nido - 400 Gr",
+    "price_euros": 8.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 34,
+    "category": "snacks",
+    "name": "Poudre De Lait Nodo - 900 Gr",
+    "price_euros": 15.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 32,
+    "category": "snacks",
+    "name": "Poudre En Feuilles De Moringa",
+    "price_euros": 3.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 22,
+    "category": "alimentaire",
+    "name": "Pâte D Arachide Dakatine",
+    "price_euros": 5.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 30,
+    "category": "snacks",
+    "name": "Pâte D'Arachide 2,5 Kg",
+    "price_euros": 15.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 30,
+    "category": "snacks",
+    "name": "Pâte D'Arachide Bonmafe",
+    "price_euros": 7.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 30,
+    "category": "snacks",
+    "name": "Pâte D'Arachide Pcd 500 Gr",
+    "price_euros": 2.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 36,
+    "category": "snacks",
+    "name": "Pâte De Sardinelle Pinton",
+    "price_euros": 2.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 46,
+    "category": "cereales",
+    "name": "Queues De Langoustes Blanches",
+    "price_euros": 20.0,
+    "description": "Ce sont des queues de langoustes blanches",
+    "source": "liste"
+  },
+  {
+    "page": 43,
+    "category": "cereales",
+    "name": "Raisins Secs Golden",
+    "price_euros": 3.9,
+    "description": "Ce sont des raisins secs golden, sucrés et",
+    "source": "liste"
+  },
+  {
+    "page": 25,
+    "category": "cereales",
+    "name": "Riz Brisé / Cassé 1 Fois - 1 Kg",
+    "price_euros": 1.8,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 24,
+    "category": "cereales",
+    "name": "Riz Brisé / Cassé 1 Fois - 5 Kg",
+    "price_euros": 8.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 23,
+    "category": "cereales",
+    "name": "Riz Brisé / Cassé 1 Fois -20 Kg",
+    "price_euros": 28.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 24,
+    "category": "cereales",
+    "name": "Riz Brisé / Cassé 2 Fois - 5Kg",
+    "price_euros": 7.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 25,
+    "category": "cereales",
+    "name": "Riz Brisé / Cassé 2 Fois -1 Kg",
+    "price_euros": 1.6,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 23,
+    "category": "cereales",
+    "name": "Riz Brisé / Cassé 2 Fois -20 Kg",
+    "price_euros": 8.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 25,
+    "category": "cereales",
+    "name": "Riz Cassé 1 Fois - 1 Kg",
+    "price_euros": 1.8,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 29,
+    "category": "snacks",
+    "name": "Riz Cassé 2 Fois - 1 Kg",
+    "price_euros": 1.6,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 25,
+    "category": "cereales",
+    "name": "Riz Long Parfumé - 1 Kg",
+    "price_euros": 2.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 23,
+    "category": "cereales",
+    "name": "Riz Long Parfumé -4,5 Kg",
+    "price_euros": 12.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 24,
+    "category": "cereales",
+    "name": "Riz Long Parfumé Thaï - 1Kg",
+    "price_euros": 2.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 61,
+    "category": "cereales",
+    "name": "Rouge Barbet",
+    "price_euros": 7.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 44,
+    "category": "cereales",
+    "name": "Samoussas Légumes - Halal",
+    "price_euros": 7.9,
+    "description": "Ce sont des samoussas aux légumes halal, en",
+    "source": "liste"
+  },
+  {
+    "page": 44,
+    "category": "cereales",
+    "name": "Samoussas Mouton - Halal",
+    "price_euros": 7.9,
+    "description": "Ce sont des samoussas au mouton halal, en",
+    "source": "liste"
+  },
+  {
+    "page": 45,
+    "category": "cereales",
+    "name": "Samoussas Poulet - 20 Pièces",
+    "price_euros": 5.5,
+    "description": "Ce sont des samoussas au poulet, en lot de 20",
+    "source": "liste"
+  },
+  {
+    "page": 6,
+    "category": "phares",
+    "name": "Sankhal",
+    "price_euros": 3.0,
+    "description": "",
+    "source": "fiche"
+  },
+  {
+    "page": 37,
+    "category": "snacks",
+    "name": "Sirop De Bissap",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 37,
+    "category": "snacks",
+    "name": "Sirop De Gingembre",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 39,
+    "category": "snacks",
+    "name": "Starling",
+    "price_euros": 2.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 11,
+    "category": "alimentaire",
+    "name": "T h e b a o b a b , A f r i c a ’ s i c o n i c “ t r e e o f l i f e , ” o f f e r s a f r u i t",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 40,
+    "category": "snacks",
+    "name": "Tamarind Doux",
+    "price_euros": 2.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 40,
+    "category": "snacks",
+    "name": "Tamarind Sachet De 150 Gr",
+    "price_euros": 2.0,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 40,
+    "category": "snacks",
+    "name": "Tamarind Sachet De 375 Gr",
+    "price_euros": 3.9,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 42,
+    "category": "cereales",
+    "name": "Thiacry De Mil",
+    "price_euros": 1.8,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 5,
+    "category": "phares",
+    "name": "Thiakhry",
+    "price_euros": 3.0,
+    "description": "",
+    "source": "fiche"
+  },
+  {
+    "page": 7,
+    "category": "phares",
+    "name": "Thiéré Lalo",
+    "price_euros": 3.0,
+    "description": "",
+    "source": "fiche"
+  },
+  {
+    "page": 36,
+    "category": "snacks",
+    "name": "Tomate",
+    "price_euros": 2.5,
+    "description": "Ce sont des sardinelles pilchards à la sauce",
+    "source": "liste"
+  },
+  {
+    "page": 35,
+    "category": "snacks",
+    "name": "Trofai - Sauce Graine De Palmier",
+    "price_euros": 4.1,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 35,
+    "category": "snacks",
+    "name": "Trofai - Sauce Graine De Palmier",
+    "price_euros": 3.5,
+    "description": "",
+    "source": "liste"
+  },
+  {
+    "page": 59,
+    "category": "cereales",
+    "name": "Vidée Écaillée",
+    "price_euros": 5.0,
+    "description": "",
+    "source": "liste"
+  }
+]

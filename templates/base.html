@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Yombal Marché — épicerie fine, cosmétiques et livraison à domicile. Boutique en ligne du Groupe YOMBAL.">
+  <meta name="description" content="Yombal Marché — épicerie fine, cosmétiques, électronique et livraison à domicile. Boutique en ligne du Groupe YOMBAL.">
   <meta name="theme-color" content="#1a3d2b">
   <title>{% block title %}Yombal Marché{% endblock %}</title>
   <link rel="icon" href="{{ url_for('static', filename='img/yombal-logo.png') }}" type="image/png">
@@ -15,12 +15,16 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lusion.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/yombal-unified.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/catalog-label.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ecosystem-nav.css') }}">
+  {% block extra_css %}{% endblock %}
 </head>
-<body class="{% if not (ep and ep.startswith('admin.')) %} site-premium{% endif %}">
+<body class="{% if not (ep and ep.startswith('admin.')) %} site-premium site-catalog-ud{% endif %}">
   <a href="#main-content" class="skip-link">Aller au contenu</a>
 
   {% set ep = request.endpoint %}
   {% set nav_shop = ep in ['boutique', 'product_detail', 'product_gamme', 'panier', 'checkout', 'paiement', 'paiement_succes', 'paiement_annule', 'paiement_demo', 'paiement_stripe_retour', 'paiement_valider_manuel', 'suivi_commande', 'suivi_commande_detail', 'commande_recommander', 'commande_annuler', 'api_commande_statut', 'admin_orders', 'admin_order_detail'] %}
+  {% set nav_ecosystem = ep == 'ecosysteme_detail' %}
   {% set nav_discover = ep in ['decouvrir', 'saveurs', 'recettes', 'recette_detail', 'recette_panier', 'coffrets', 'coffret_detail', 'coffret_panier'] %}
 
   <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
@@ -30,55 +34,81 @@
   <div id="grain" aria-hidden="true"></div>
   <div id="toast-root" class="toast-root" role="status" aria-live="polite"></div>
 
-  <div class="header-shell" role="banner">
-    <a href="{{ url_for('index') }}" class="nav-logo" aria-label="Yombal Market — accueil">
-      <img
-        src="{{ url_for('static', filename='img/yombal-logo.png') }}"
-        alt="Yombal Market — Le goût du vrai, la fierté du local"
-        class="nav-logo-img"
-        width="240"
-        height="72"
-        decoding="async"
-      >
-    </a>
+  <header class="site-header-unified{% if ep and ep.startswith('admin.') %} site-header-unified--solo{% endif %}" id="site-header" role="banner">
+    <div class="header-shell">
+      <a href="{{ url_for('index') }}" class="nav-logo" aria-label="Yombal Market — accueil">
+        <img
+          src="{{ url_for('static', filename='img/yombal-logo.png') }}"
+          alt="Yombal Market — Le goût du vrai, la fierté du local"
+          class="nav-logo-img"
+          width="240"
+          height="72"
+          decoding="async"
+        >
+      </a>
 
-    <ul id="primary-nav" class="nav-links" aria-label="Navigation principale">
-      <li><a href="{{ url_for('index') }}" class="{{ 'active' if ep == 'index' else '' }}">Accueil</a></li>
-      <li><a href="{{ url_for('boutique') }}" class="{{ 'active' if nav_shop else '' }}">Boutique</a></li>
-      <li><a href="{{ url_for('producteurs') }}" class="{{ 'active' if ep in ['producteurs', 'producteur_detail'] else '' }}">Producteurs</a></li>
-      <li class="nav-item nav-item--dropdown">
-        <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_discover else '' }}" aria-expanded="false" aria-controls="nav-discover-menu" aria-haspopup="true">
-          Découvrir <span class="nav-chevron" aria-hidden="true">▾</span>
-        </button>
-        <ul id="nav-discover-menu" class="nav-dropdown" role="menu">
-          <li role="none"><a href="{{ url_for('decouvrir') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep == 'decouvrir' else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">✦</span> Vue d'ensemble</a></li>
-          <li role="none"><a href="{{ url_for('saveurs') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep == 'saveurs' else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🗺️</span> Carte des saveurs</a></li>
-          <li role="none"><a href="{{ url_for('recettes') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep in ['recettes', 'recette_detail', 'recette_panier'] else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🍲</span> Recettes &amp; paniers</a></li>
-          <li role="none"><a href="{{ url_for('coffrets') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🎁</span> Coffrets cadeaux</a></li>
-        </ul>
-      </li>
-      <li><a href="{{ url_for('panier') }}" class="{{ 'active' if ep in ['panier', 'checkout'] else '' }}">Panier{% if cart_count %}<span class="nav-cart-badge">{{ cart_count }}</span>{% endif %}</a></li>
-      <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail', 'commande_recommander'] else '' }}">Commandes</a></li>
-      <li><a href="{{ url_for('services') }}" class="{{ 'active' if ep == 'services' else '' }}">Services</a></li>
-      <li><a href="{{ url_for('apropos') }}" class="{{ 'active' if ep == 'apropos' else '' }}">À propos</a></li>
-      <li><a href="{{ url_for('contact') }}" class="{{ 'active' if ep == 'contact' else '' }}">Contact</a></li>
-      {% if current_user.is_authenticated %}
-      {% if is_shop_admin %}
-      <li><a href="{{ url_for('admin.admin_dashboard') }}" class="{{ 'active' if ep and ep.startswith('admin.') else '' }}">Admin</a></li>
-      {% endif %}
-      <li><a href="{{ url_for('logout') }}">Déconnexion</a></li>
-      {% endif %}
-    </ul>
+      <ul id="primary-nav" class="nav-links" aria-label="Navigation principale">
+        <li><a href="{{ url_for('index') }}" class="{{ 'active' if ep == 'index' else '' }}">Accueil</a></li>
+        <li><a href="{{ url_for('apropos') }}" class="{{ 'active' if ep == 'apropos' else '' }}">À propos</a></li>
+        <li class="nav-item nav-item--mega">
+          <button
+            type="button"
+            class="nav-mega-trigger{{ ' active' if nav_shop else '' }}"
+            aria-expanded="false"
+            aria-controls="mega-boutique"
+            aria-haspopup="true"
+          >
+            Boutique
+            <svg class="nav-mega-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </li>
+        <li class="nav-item nav-item--dropdown">
+          <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_discover else '' }}" aria-expanded="false" aria-controls="nav-discover-menu" aria-haspopup="true">
+            Découvrir <span class="nav-chevron" aria-hidden="true">▾</span>
+          </button>
+          <ul id="nav-discover-menu" class="nav-dropdown" role="menu">
+            <li role="none"><a href="{{ url_for('decouvrir') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep == 'decouvrir' else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">✦</span> Vue d'ensemble</a></li>
+            <li role="none"><a href="{{ url_for('saveurs') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep == 'saveurs' else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🗺️</span> Carte des saveurs</a></li>
+            <li role="none"><a href="{{ url_for('recettes') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep in ['recettes', 'recette_detail', 'recette_panier'] else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🍲</span> Recettes &amp; paniers</a></li>
+            <li role="none"><a href="{{ url_for('coffrets') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🎁</span> Coffrets cadeaux</a></li>
+          </ul>
+        </li>
+        <li><a href="{{ url_for('panier') }}" class="{{ 'active' if ep in ['panier', 'checkout'] else '' }}">Panier{% if cart_count %}<span class="nav-cart-badge">{{ cart_count }}</span>{% endif %}</a></li>
+        <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail', 'commande_recommander'] else '' }}">Commandes</a></li>
+        {% if not (ep and ep.startswith('admin.')) %}
+        <li class="nav-links__sep" role="presentation" aria-hidden="true"></li>
+        {% for item in ecosystem_nav %}
+        <li>
+          <a
+            href="{{ item.external_url if item.external_url else url_for('ecosysteme_detail', slug=item.slug) }}"
+            class="{{ 'active' if not item.external_url and ep == 'ecosysteme_detail' and request.view_args.get('slug') == item.slug else '' }}"
+            {% if item.external_url %}target="_blank" rel="noopener noreferrer"{% endif %}
+            title="{{ item.title }}{% if item.external_url %} (nouvel onglet){% endif %}"
+          >{{ item.short_label }}</a>
+        </li>
+        {% endfor %}
+        {% endif %}
+        <li><a href="{{ url_for('contact') }}" class="{{ 'active' if ep == 'contact' else '' }}">Contact</a></li>
+        {% if current_user.is_authenticated %}
+        {% if is_shop_admin %}
+        <li><a href="{{ url_for('admin.admin_dashboard') }}" class="{{ 'active' if ep and ep.startswith('admin.') else '' }}">Admin</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('logout') }}">Déconnexion</a></li>
+        {% endif %}
+      </ul>
 
-    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="cine-nav" aria-label="Ouvrir le menu">
-      <span class="nav-toggle__icon" aria-hidden="true"></span>
-      <span class="nav-toggle__label">Menu</span>
-    </button>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="cine-nav" aria-label="Ouvrir le menu">
+        <span class="nav-toggle__icon" aria-hidden="true"></span>
+        <span class="nav-toggle__label">Menu</span>
+      </button>
 
-    <div class="nav-actions">
-      <a href="{{ url_for('boutique') }}" class="btn-nav">Commander</a>
+      <div class="nav-actions">
+        <a href="{{ url_for('boutique') }}" class="btn-nav">Commander</a>
+      </div>
     </div>
-  </div>
+
+    {% include 'macros/ecosystem_catbar.html' %}
+  </header>
 
   <nav id="cine-nav" class="cine-nav" aria-label="Navigation principale" aria-hidden="true">
     <div class="cine-nav__backdrop" data-cine-close aria-hidden="true"></div>
@@ -88,15 +118,18 @@
       <p class="cine-nav__eyebrow">Yombal Marché · Groupe YOMBAL</p>
       <ul class="cine-nav__links">
         <li><a href="{{ url_for('index') }}" class="cine-nav__link{{ ' is-active' if ep == 'index' else '' }}"><span class="cine-nav__num">01</span><span class="cine-nav__text">Accueil</span></a></li>
-        <li><a href="{{ url_for('boutique') }}" class="cine-nav__link{{ ' is-active' if nav_shop else '' }}"><span class="cine-nav__num">02</span><span class="cine-nav__text">Boutique</span></a></li>
-        <li><a href="{{ url_for('producteurs') }}" class="cine-nav__link{{ ' is-active' if ep in ['producteurs', 'producteur_detail'] else '' }}"><span class="cine-nav__num">03</span><span class="cine-nav__text">Producteurs</span></a></li>
+        <li><a href="{{ url_for('apropos') }}" class="cine-nav__link{{ ' is-active' if ep == 'apropos' else '' }}"><span class="cine-nav__num">02</span><span class="cine-nav__text">À propos</span></a></li>
+        <li><a href="{{ url_for('boutique') }}" class="cine-nav__link{{ ' is-active' if nav_shop else '' }}"><span class="cine-nav__num">03</span><span class="cine-nav__text">Boutique</span></a></li>
         <li><a href="{{ url_for('decouvrir') }}" class="cine-nav__link{{ ' is-active' if ep == 'decouvrir' else '' }}"><span class="cine-nav__num">04</span><span class="cine-nav__text">Découvrir</span></a></li>
         <li><a href="{{ url_for('saveurs') }}" class="cine-nav__link{{ ' is-active' if ep == 'saveurs' else '' }}"><span class="cine-nav__num">05</span><span class="cine-nav__text">Carte des saveurs</span></a></li>
         <li><a href="{{ url_for('recettes') }}" class="cine-nav__link{{ ' is-active' if ep in ['recettes', 'recette_detail', 'recette_panier'] else '' }}"><span class="cine-nav__num">06</span><span class="cine-nav__text">Recettes</span></a></li>
         <li><a href="{{ url_for('coffrets') }}" class="cine-nav__link{{ ' is-active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}"><span class="cine-nav__num">07</span><span class="cine-nav__text">Coffrets</span></a></li>
         <li><a href="{{ url_for('panier') }}" class="cine-nav__link{{ ' is-active' if ep in ['panier', 'checkout'] else '' }}"><span class="cine-nav__num">08</span><span class="cine-nav__text">Panier{% if cart_count %} <em class="cine-nav__badge">{{ cart_count }}</em>{% endif %}</span></a></li>
-        <li><a href="{{ url_for('services') }}" class="cine-nav__link{{ ' is-active' if ep == 'services' else '' }}"><span class="cine-nav__num">09</span><span class="cine-nav__text">Services</span></a></li>
-        <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">10</span><span class="cine-nav__text">Contact</span></a></li>
+        <li class="cine-nav__divider" role="separator"><span>Univers YOMBAL</span></li>
+        {% for item in ecosystem_nav %}
+        <li><a href="{{ item.external_url if item.external_url else url_for('ecosysteme_detail', slug=item.slug) }}" class="cine-nav__link{{ ' is-active' if not item.external_url and nav_ecosystem and request.view_args.get('slug') == item.slug else '' }}"{% if item.external_url %} target="_blank" rel="noopener noreferrer"{% endif %}><span class="cine-nav__num">{{ '%02d'|format(loop.index + 8) }}</span><span class="cine-nav__text">{{ item.icon }} {{ item.short_label }}{% if item.external_url %} ↗{% endif %}</span></a></li>
+        {% endfor %}
+        <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">15</span><span class="cine-nav__text">Contact</span></a></li>
       </ul>
       <div class="cine-nav__foot">
         <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">Commander maintenant</a>
@@ -146,9 +179,11 @@
       <nav class="footer-col" aria-label="Navigation boutique">
         <h3>Boutique</h3>
         <a href="{{ url_for('boutique') }}">Catalogue</a>
-        <a href="{{ url_for('boutique', categorie='alimentaire') }}">Alimentaire</a>
+        <a href="{{ url_for('boutique', type=shop_type_alimentaire) }}">Alimentaires</a>
+        <a href="{{ url_for('boutique', type=shop_type_non_alimentaire) }}">Non alimentaires</a>
         <a href="{{ url_for('boutique', categorie='cosmetique') }}">Cosmétique</a>
-        <a href="{{ url_for('producteurs') }}">Nos producteurs</a>
+        <a href="{{ url_for('boutique', categorie='electronique') }}">Électronique</a>
+        <a href="{{ url_for('boutique', categorie='poisson') }}">Produits de la mer</a>
         <a href="{{ url_for('decouvrir') }}">Découvrir l'expérience</a>
         <a href="{{ url_for('saveurs') }}">Carte des saveurs</a>
         <a href="{{ url_for('recettes') }}">Recettes &amp; paniers</a>
@@ -160,6 +195,7 @@
       <nav class="footer-col" aria-label="Informations">
         <h3>Informations</h3>
         <a href="{{ url_for('services') }}">Services</a>
+        <a href="{{ url_for('ecosysteme_detail', slug='immobilier-btp') }}">Immobilier &amp; BTP</a>
         <a href="{{ url_for('apropos') }}">À propos</a>
         <a href="{{ url_for('contact') }}">Contact &amp; paiement</a>
         <a href="{{ url_for('mentions_legales') }}">Mentions légales</a>
@@ -245,6 +281,7 @@
   <script src="{{ url_for('static', filename='js/cookie-consent.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/site-experience.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/ecosystem-nav.js') }}" defer></script>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>

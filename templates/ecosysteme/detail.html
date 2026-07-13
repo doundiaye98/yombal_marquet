@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ service.title }} — Groupe YOMBAL{% endblock %}
+{% block content %}
+<div class="page-wrapper ecosystem-page{% if service.slug in ecosystem_form_slugs %} ecosystem-page--with-form{% endif %}">
+  <header class="ecosystem-hero ecosystem-hero--{{ service.slug }}">
+    <div class="ecosystem-hero__inner">
+      <span class="ecosystem-hero__icon" aria-hidden="true">{{ service.icon }}</span>
+      <p class="ecosystem-hero__eyebrow">Groupe YOMBAL</p>
+      <h1 class="ecosystem-hero__title">{{ service.title }}</h1>
+      <p class="ecosystem-hero__tagline">{{ service.tagline }}</p>
+      <p class="ecosystem-hero__lead">{{ service.lead }}</p>
+      {% if service.boutique_category %}
+      <div class="ecosystem-hero__cta-row">
+        <a href="{{ url_for('boutique', type=shop_type_non_alimentaire, categorie=service.boutique_category) }}" class="btn-primary ecosystem-hero__cta">
+          {{ service.cta_label }}
+        </a>
+        {% if service.slug in ecosystem_form_slugs %}
+        <a href="#demande-form" class="btn-outline ecosystem-hero__cta ecosystem-hero__cta--secondary">
+          Nous contacter
+        </a>
+        {% endif %}
+      </div>
+      {% elif service.slug in ecosystem_form_slugs %}
+      <a href="#demande-form" class="btn-primary ecosystem-hero__cta">
+        {{ service.cta_label }}
+      </a>
+      {% else %}
+      <a href="{{ url_for('contact') }}" class="btn-primary ecosystem-hero__cta">
+        {{ service.cta_label }}
+      </a>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if service.slug == 'autres-services' and hub_services %}
+  <section class="section ecosystem-hub">
+    <div class="ecosystem-hub__inner">
+      <p class="section-eyebrow">Groupe YOMBAL</p>
+      <h2 class="ecosystem-hub__title">Tous nos services</h2>
+      <p class="ecosystem-hub__lead">Une demande, une équipe — choisissez le service qui vous concerne ou utilisez le formulaire ci-dessous.</p>
+      <div class="ecosystem-hub__grid">
+        {% for item in hub_services %}
+        <article class="ecosystem-hub__card">
+          <span class="ecosystem-hub__icon" aria-hidden="true">{{ item.icon }}</span>
+          <h3>{{ item.short_label }}</h3>
+          <p>{{ item.tagline }}</p>
+          {% if item.external_url %}
+          <a href="{{ item.external_url }}" class="ecosystem-hub__link" target="_blank" rel="noopener noreferrer">
+            Découvrir ↗
+          </a>
+          {% elif item.slug in ecosystem_form_slugs %}
+          <a href="{{ url_for('ecosysteme_detail', slug=item.slug) }}#demande-form" class="ecosystem-hub__link">
+            Faire une demande
+          </a>
+          {% elif item.slug == 'immobilier-btp' %}
+          <a href="{{ url_for('ecosysteme_detail', slug=item.slug) }}" class="ecosystem-hub__link">
+            Voir le programme
+          </a>
+          {% else %}
+          <a href="{{ url_for('ecosysteme_detail', slug=item.slug) }}" class="ecosystem-hub__link">
+            En savoir plus
+          </a>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="section ecosystem-detail">
+    <div class="ecosystem-detail__grid">
+      <div class="ecosystem-detail__card">
+        <h2>Ce que nous proposons</h2>
+        <ul class="ecosystem-detail__list">
+          {% for item in service.bullets %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <aside class="ecosystem-detail__aside">
+        <h3>Besoin d'aide ?</h3>
+        <p>Notre équipe vous répond pour un devis, une réservation ou une question.</p>
+        <a href="mailto:{{ shop_contact_email }}" class="email-chip">{{ shop_contact_email }}</a>
+        {% if service.slug in ecosystem_form_slugs %}
+        <a href="#demande-form" class="btn-primary ecosystem-detail__form">Envoyer une demande</a>
+        {% endif %}
+        <a href="{{ url_for('boutique') }}" class="btn-outline ecosystem-detail__shop">Voir la boutique</a>
+      </aside>
+    </div>
+  </section>
+
+  {% if service.slug in ecosystem_form_slugs %}
+  {% include "ecosysteme/partials/demande_form.html" %}
+  {% endif %}
+</div>
+{% endblock %}

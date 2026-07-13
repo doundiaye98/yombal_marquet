@@ -1,0 +1,62 @@
+{# Méga-menu boutique — intégré au header unifié #}
+{% if not (ep and ep.startswith('admin.')) %}
+<div id="mega-boutique" class="yombal-mega" role="region" aria-label="Boutique Yombal Marché" hidden>
+  <div class="yombal-mega__panel">
+    <div class="yombal-mega__cols">
+      <div class="yombal-mega__col">
+        <header class="yombal-mega__head">
+          <span class="yombal-mega__badge">{{ shop_universe_labels[shop_type_alimentaire].emoji }}</span>
+          <div>
+            <h3 class="yombal-mega__title">{{ shop_universe_labels[shop_type_alimentaire].label }}</h3>
+            <p class="yombal-mega__desc">{{ shop_universe_labels[shop_type_alimentaire].description }}</p>
+          </div>
+        </header>
+        <ul class="yombal-mega__links">
+          {% for key in shop_category_order %}
+          {% if key not in shop_non_alimentaire_rayons %}
+          {% set meta = product_categories[key] %}
+          <li>
+            <a href="{{ url_for('boutique', type=shop_type_alimentaire, categorie=key) }}">
+              <span class="yombal-mega__link-emoji" aria-hidden="true">{{ meta.emoji }}</span>
+              <span>{{ meta.label }}</span>
+            </a>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+        <a href="{{ url_for('boutique', type=shop_type_alimentaire) }}" class="yombal-mega__all">Tout l'alimentaire →</a>
+      </div>
+
+      <div class="yombal-mega__col yombal-mega__col--accent">
+        <header class="yombal-mega__head">
+          <span class="yombal-mega__badge">{{ shop_universe_labels[shop_type_non_alimentaire].emoji }}</span>
+          <div>
+            <h3 class="yombal-mega__title">{{ shop_universe_labels[shop_type_non_alimentaire].label }}</h3>
+            <p class="yombal-mega__desc">{{ shop_universe_labels[shop_type_non_alimentaire].description }}</p>
+          </div>
+        </header>
+        <ul class="yombal-mega__links">
+          {% for key in shop_non_alimentaire_rayons %}
+          {% set meta = product_categories[key] %}
+          <li>
+            <a href="{{ url_for('boutique', type=shop_type_non_alimentaire, categorie=key) }}">
+              <span class="yombal-mega__link-emoji" aria-hidden="true">{{ meta.emoji }}</span>
+              <span>{{ meta.label }}</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <a href="{{ url_for('boutique', type=shop_type_non_alimentaire) }}" class="yombal-mega__all">Tout le non alimentaire →</a>
+      </div>
+    </div>
+
+    <footer class="yombal-mega__foot">
+      <a href="{{ url_for('boutique') }}">Catalogue complet</a>
+      <span class="yombal-mega__foot-sep" aria-hidden="true">·</span>
+      <a href="{{ url_for('panier') }}">Mon panier</a>
+      <span class="yombal-mega__foot-sep" aria-hidden="true">·</span>
+      <a href="{{ url_for('recettes') }}">Paniers recettes</a>
+    </footer>
+  </div>
+</div>
+{% endif %}

@@ -1,18 +1,16 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
+{% from "macros/catalog_price.html" import catalog_price_badge %}
 {% block title %}Boutique — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper boutique-page">
-  <header class="boutique-hero boutique-hero--xd reveal">
-    <div class="boutique-hero__bg" aria-hidden="true">
-      <div class="inner-hero__aurora"><span></span><span></span></div>
-    </div>
+  <header class="boutique-hero boutique-hero--catalog">
     <div class="boutique-hero__inner">
-      <p class="xd-eyebrow"><span class="xd-eyebrow__dot"></span> Catalogue en ligne</p>
-      <h1 class="boutique-hero__title inner-hero__title">La <em>boutique</em></h1>
+      <p class="ud-cover__eyebrow">Univers Diaspora · LabelAfrik</p>
+      <h1 class="boutique-hero__title">Catalogue <em>officiel</em></h1>
       <p class="boutique-hero__lead">
-        Épicerie sénégalaise, céréales, huiles et produits du terroir —
-        commandez sans compte, livraison à domicile.
+        Épicerie africaine complète — riz, farines, huiles, snacks, boissons, produits de la mer et épices.
+        Prix du catalogue PDF, livraison à domicile.
       </p>
       <div class="boutique-hero__stats">
         <span><strong>{{ total_products }}</strong> références</span>
@@ -23,19 +21,39 @@
   </header>
 
   <div class="boutique-shell">
-    <aside class="boutique-sidebar reveal" aria-label="Filtrer le catalogue">
+    <aside class="boutique-sidebar" aria-label="Filtrer le catalogue">
       <div class="boutique-sidebar__panel">
-        <p class="boutique-sidebar__label">Rayons</p>
-        <nav class="boutique-cat-nav">
-          <a href="{{ url_for('boutique') }}" class="boutique-cat-link {{ 'is-active' if not filter_cat else '' }}">
-            <span class="boutique-cat-link__emoji" aria-hidden="true">✦</span>
-            <span class="boutique-cat-link__text">Tout le catalogue</span>
-            <span class="boutique-cat-link__count">{{ total_products }}</span>
+        <p class="boutique-sidebar__label">Univers boutique</p>
+        <nav class="boutique-universe-nav" aria-label="Alimentaire ou non alimentaire">
+          <a
+            href="{{ url_for('boutique') }}"
+            class="boutique-universe-link {{ 'is-active' if not filter_type and not filter_cat else '' }}"
+          >
+            <span>✦ Tout le catalogue</span>
+            <span class="boutique-universe-link__count">{{ total_products }}</span>
           </a>
-          {% for cat_key in shop_category_order %}
+          <a
+            href="{{ url_for('boutique', type=shop_type_alimentaire) }}"
+            class="boutique-universe-link {{ 'is-active' if filter_type == shop_type_alimentaire and not filter_cat else '' }}"
+          >
+            <span>{{ shop_universe_labels[shop_type_alimentaire].emoji }} {{ shop_universe_labels[shop_type_alimentaire].label }}</span>
+            <span class="boutique-universe-link__count">{{ universe_counts.get(shop_type_alimentaire, 0) }}</span>
+          </a>
+          <a
+            href="{{ url_for('boutique', type=shop_type_non_alimentaire) }}"
+            class="boutique-universe-link {{ 'is-active' if filter_type == shop_type_non_alimentaire and not filter_cat else '' }}"
+          >
+            <span>{{ shop_universe_labels[shop_type_non_alimentaire].emoji }} {{ shop_universe_labels[shop_type_non_alimentaire].label }}</span>
+            <span class="boutique-universe-link__count">{{ universe_counts.get(shop_type_non_alimentaire, 0) }}</span>
+          </a>
+        </nav>
+
+        <p class="boutique-sidebar__label boutique-sidebar__label--spaced">Rayons</p>
+        <nav class="boutique-cat-nav">
+          {% for cat_key in shop_rayons %}
           {% if shop_counts.get(cat_key, 0) > 0 %}
           {% set meta = product_categories[cat_key] %}
-          <a href="{{ url_for('boutique', categorie=cat_key) }}" class="boutique-cat-link {{ 'is-active' if filter_cat == cat_key else '' }}">
+          <a href="{{ url_for('boutique', categorie=cat_key, type=filter_type) if filter_type else url_for('boutique', categorie=cat_key) }}" class="boutique-cat-link {{ 'is-active' if filter_cat == cat_key else '' }}">
             <span class="boutique-cat-link__emoji" aria-hidden="true">{{ meta.emoji }}</span>
             <span class="boutique-cat-link__text">{{ meta.label }}</span>
             <span class="boutique-cat-link__count">{{ shop_counts[cat_key] }}</span>
@@ -43,91 +61,104 @@
           {% endif %}
           {% endfor %}
         </nav>
-
-        <p class="boutique-sidebar__label boutique-sidebar__label--spaced">À découvrir</p>
-        <nav class="boutique-discover-nav">
-          <a href="{{ url_for('saveurs') }}">Carte des saveurs</a>
-          <a href="{{ url_for('recettes') }}">Recettes</a>
-          <a href="{{ url_for('coffrets') }}">Coffrets</a>
-          <a href="{{ url_for('decouvrir') }}">Tout découvrir</a>
-        </nav>
       </div>
     </aside>
 
     <main class="boutique-main">
-      <div class="boutique-toolbar reveal">
+      {% macro render_entry(entry) %}
+      {% if entry.kind == 'group' %}
+      <article class="boutique-card boutique-card--gamme">
+        <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="boutique-card__media">
+          {{ product_image(entry.hero_product, 'card') }}
+          <span class="boutique-card__ribbon">{{ entry.variant_count }} formats</span>
+          <span class="boutique-card__cat">{{ entry.emoji }} Gamme</span>
+        </a>
+        <div class="boutique-card__body">
+          <h3 class="boutique-card__title">
+            <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}">{{ entry.title }}</a>
+          </h3>
+          <p class="boutique-card__summary">{{ entry.summary }}</p>
+          <div class="boutique-card__footer">
+            {{ catalog_price_badge(entry.min_price_cents / 100) }}
+            <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="btn-primary boutique-card__cta">Choisir le format</a>
+          </div>
+        </div>
+      </article>
+      {% else %}
+      {% set p = entry.product %}
+      {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
+      <article class="boutique-card">
+        <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
+          {{ product_image(p, 'card') }}
+          <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>
+        </a>
+        <div class="boutique-card__body">
+          <h3 class="boutique-card__title">
+            <a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a>
+          </h3>
+          {% if p.weight_info %}
+          <p class="boutique-card__meta">{{ p.weight_info }}</p>
+          {% endif %}
+          <div class="boutique-card__footer">
+            {{ catalog_price_badge(p.price_euros()) }}
+            <div class="boutique-card__actions">
+              <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__link">Fiche</a>
+              <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
+                <input type="hidden" name="product_id" value="{{ p.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ p.name }} au panier">+</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </article>
+      {% endif %}
+      {% endmacro %}
+
+      {% if catalog_sections %}
+      {% for section in catalog_sections %}
+      {% set meta = product_categories.get(section.key, {'label': 'Autres', 'emoji': '🛒'}) %}
+      <section class="catalog-rayon" id="rayon-{{ section.key }}">
+        <header class="catalog-rayon__head">
+          <h2 class="catalog-rayon__title">
+            <span aria-hidden="true">{{ meta.emoji }}</span>
+            {{ meta.label }}
+          </h2>
+          <span class="catalog-rayon__count">{{ section.entries|length }} réf.</span>
+        </header>
+        <div class="boutique-grid">
+          {% for entry in section.entries %}
+          {{ render_entry(entry) }}
+          {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
+      {% elif catalog %}
+      <div class="boutique-toolbar">
         <div>
           <h2 class="boutique-toolbar__title">
             {% if filter_cat and product_categories.get(filter_cat) %}
             {{ product_categories[filter_cat].emoji }} {{ product_categories[filter_cat].label }}
+            {% elif filter_type == shop_type_alimentaire %}
+            {{ shop_universe_labels[shop_type_alimentaire].emoji }} {{ shop_universe_labels[shop_type_alimentaire].label }}
+            {% elif filter_type == shop_type_non_alimentaire %}
+            {{ shop_universe_labels[shop_type_non_alimentaire].emoji }} {{ shop_universe_labels[shop_type_non_alimentaire].label }}
             {% else %}
             Tout le catalogue
             {% endif %}
           </h2>
           <p class="boutique-toolbar__meta">
-            <strong>{{ catalog|length }}</strong> référence{{ 's' if catalog|length > 1 else '' }} affichée{{ 's' if catalog|length > 1 else '' }}
+            <strong>{{ catalog|length }}</strong> référence{{ 's' if catalog|length > 1 else '' }}
           </p>
         </div>
       </div>
-
-      {% if catalog %}
       <div class="boutique-grid">
         {% for entry in catalog %}
-        {% if entry.kind == 'group' %}
-        <article class="boutique-card boutique-card--gamme boutique-card--shine reveal">
-          <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="boutique-card__media">
-            {{ product_image(entry.hero_product, 'card') }}
-            <span class="boutique-card__ribbon">{{ entry.variant_count }} formats</span>
-            <span class="boutique-card__cat">{{ entry.emoji }} Gamme</span>
-          </a>
-          <div class="boutique-card__body">
-            <h3 class="boutique-card__title">
-              <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}">{{ entry.title }}</a>
-            </h3>
-            <p class="boutique-card__summary">{{ entry.summary }}</p>
-            <div class="boutique-card__footer">
-              <span class="boutique-card__price">dès {{ '%.2f'|format(entry.min_price_cents / 100) }} €</span>
-              <a href="{{ url_for('product_gamme', group_slug=entry.slug) }}" class="btn-primary boutique-card__cta">Choisir le format</a>
-            </div>
-          </div>
-        </article>
-        {% else %}
-        {% set p = entry.product %}
-        {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
-        <article class="boutique-card boutique-card--shine reveal">
-          <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
-            {{ product_image(p, 'card') }}
-            <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>
-          </a>
-          <div class="boutique-card__body">
-            <h3 class="boutique-card__title">
-              <a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a>
-            </h3>
-            {% if p.weight_info %}
-            <p class="boutique-card__meta">{{ p.weight_info }}</p>
-            {% elif p.producer %}
-            <p class="boutique-card__meta">👩🏾‍🌾 {{ p.producer.name }}</p>
-            {% endif %}
-            <div class="boutique-card__footer">
-              <span class="boutique-card__price">{{ '%.2f'|format(p.price_euros()) }} €</span>
-              <div class="boutique-card__actions">
-                <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__link">Fiche</a>
-                <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
-                  <input type="hidden" name="product_id" value="{{ p.id }}">
-                  <input type="hidden" name="quantity" value="1">
-                  <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ p.name }} au panier">
-                    <span aria-hidden="true">+</span>
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </article>
-        {% endif %}
+        {{ render_entry(entry) }}
         {% endfor %}
       </div>
       {% else %}
-      <div class="boutique-empty reveal">
+      <div class="boutique-empty">
         <p class="boutique-empty__title">Aucun produit dans ce rayon</p>
         <p class="boutique-empty__hint">Essayez une autre catégorie ou parcourez tout le catalogue.</p>
         <a href="{{ url_for('boutique') }}" class="btn-primary">Voir tout le catalogue</a>

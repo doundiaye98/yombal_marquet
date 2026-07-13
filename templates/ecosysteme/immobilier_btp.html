@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block title %}{{ service.title }} — Groupe YOMBAL{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/immo-page.css') }}">
+{% endblock %}
+{% block main_class %}site-main--immo{% endblock %}
+{% block content %}
+<div class="page-wrapper immo-page">
+
+  <header class="immo-hero" aria-labelledby="immo-hero-title">
+    <div class="immo-hero__bg" aria-hidden="true">
+      <img src="{{ url_for('static', filename='img/immobilier/gemini-terrain.png') }}" alt="">
+      <div class="immo-hero__bg-shade"></div>
+    </div>
+    <div class="immo-hero__inner">
+      <div class="immo-hero__copy">
+        <p class="immo-hero__eyebrow">Groupe YOMBAL · {{ program.name }}</p>
+        <h1 id="immo-hero-title" class="immo-hero__title">{{ service.title }}</h1>
+        <p class="immo-hero__tagline">{{ program.tagline }}</p>
+        <p class="immo-hero__lead">{{ program.intro }}</p>
+        <div class="immo-hero__actions">
+          <a href="{{ url_for('immo_demande_projet') }}" class="btn-primary">Demander un projet</a>
+          <a href="#terrains" class="btn-outline immo-hero__btn-outline">Voir les terrains</a>
+        </div>
+      </div>
+      <ul class="immo-hero__stats" aria-label="Points clés du programme">
+        <li><strong>3</strong><span>Sites au Sénégal</span></li>
+        <li><strong>150&nbsp;m²</strong><span>Par parcelle</span></li>
+        <li><strong>0&nbsp;€</strong><span>Apport initial</span></li>
+        <li><strong>24–48</strong><span>Mois de paiement</span></li>
+      </ul>
+    </div>
+  </header>
+
+  <nav class="immo-sites-nav" aria-label="Navigation des terrains">
+    <div class="immo-sites-nav__inner">
+      {% for terrain in terrains %}
+      <a href="#terrain-{{ terrain.slug }}" class="immo-sites-nav__link{% if loop.first %} is-active{% endif %}">
+        <span class="immo-sites-nav__name">{{ terrain.location }}</span>
+        <span class="immo-sites-nav__price">{{ terrain.price_label }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </nav>
+
+  <section class="immo-terrains" id="terrains" aria-labelledby="immo-terrains-title">
+    <header class="immo-section-head">
+      <p class="section-eyebrow">Terrains à céder</p>
+      <h2 id="immo-terrains-title" class="section-title">Choisissez votre <em>emplacement</em></h2>
+      <p class="section-sub section-sub--tight">
+        Paiement échelonné, accompagnement diaspora et protocole d'accord pour chaque site.
+      </p>
+    </header>
+
+    <div class="immo-sites-list">
+      {% for terrain in terrains %}
+      <article
+        class="immo-site{% if loop.index is even %} immo-site--alt{% endif %}"
+        id="terrain-{{ terrain.slug }}"
+      >
+        <div class="immo-site__card">
+          <div class="immo-site__media">
+            <figure class="immo-site__cover">
+              <img
+                src="{{ url_for('static', filename=terrain.cover) }}"
+                alt="{{ terrain.cover_alt }}"
+                width="960"
+                height="640"
+                loading="{{ 'eager' if loop.first else 'lazy' }}"
+                decoding="async"
+              >
+              <span class="immo-site__surface">{{ terrain.surface_m2 }}&nbsp;m²</span>
+            </figure>
+            <button
+              type="button"
+              class="immo-site__affiche"
+              data-immo-dialog="dialog-{{ terrain.slug }}"
+              aria-haspopup="dialog"
+            >
+              <span class="immo-site__affiche-thumb" aria-hidden="true">
+                <img src="{{ url_for('static', filename=terrain.poster) }}" alt="" width="36" height="54" loading="lazy">
+              </span>
+              <span class="immo-site__affiche-text">
+                <strong>Affiche officielle</strong>
+                <span>Voir le détail de l'offre</span>
+              </span>
+              <span class="immo-site__affiche-arrow" aria-hidden="true">→</span>
+            </button>
+            <dialog class="immo-dialog" id="dialog-{{ terrain.slug }}" aria-label="Affiche {{ terrain.location }}">
+              <div class="immo-dialog__panel">
+                <button type="button" class="immo-dialog__close" data-immo-close aria-label="Fermer">×</button>
+                <img
+                  src="{{ url_for('static', filename=terrain.poster) }}"
+                  alt="Affiche {{ program.name }} — {{ terrain.location }}"
+                  width="600"
+                  height="900"
+                >
+              </div>
+            </dialog>
+          </div>
+
+          <div class="immo-site__panel">
+            <header class="immo-site__header">
+              <span class="immo-site__num" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span>
+              <div class="immo-site__header-text">
+                <p class="immo-site__eyebrow">{{ terrain.headline }}</p>
+                <h3 class="immo-site__title">{{ terrain.location }}</h3>
+                <p class="immo-site__loc">
+                  <span aria-hidden="true">📍</span> {{ terrain.country }}
+                </p>
+              </div>
+            </header>
+
+            <div class="immo-site__price-band">
+              <div class="immo-site__price-main">
+                <span class="immo-site__price-label">Prix total</span>
+                <strong class="immo-site__price-value">{{ terrain.price_label }}</strong>
+                <span class="immo-site__price-hint">Paiement échelonné · apport {{ terrain.deposit_label }}</span>
+              </div>
+              <dl class="immo-site__price-meta">
+                <div>
+                  <dt>Mensualité</dt>
+                  <dd>{{ terrain.monthly_label }}</dd>
+                </div>
+                <div>
+                  <dt>Durée</dt>
+                  <dd>{{ terrain.duration_months }} mois</dd>
+                </div>
+                <div>
+                  <dt>Surface</dt>
+                  <dd>{{ terrain.surface_m2 }}&nbsp;m²</dd>
+                </div>
+              </dl>
+            </div>
+
+            <dl class="immo-site__facts">
+              <div class="immo-site__fact">
+                <dt>Apport initial</dt>
+                <dd>{{ terrain.deposit_label }}</dd>
+              </div>
+              <div class="immo-site__fact">
+                <dt>Nature juridique</dt>
+                <dd>{{ terrain.legal_nature }}</dd>
+              </div>
+              <div class="immo-site__fact">
+                <dt>Modalité</dt>
+                <dd>Échelonné</dd>
+              </div>
+            </dl>
+
+            {% if terrain.highlights %}
+            <ul class="immo-site__tags">
+              {% for item in terrain.highlights %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div class="immo-site__includes">
+              <h4>Accompagnement inclus</h4>
+              <ul class="immo-site__checklist">
+                {% for item in terrain.services %}
+                <li>{{ item }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <div class="immo-site__actions">
+              <a
+                href="{{ url_for('immo_demande_projet', terrain=terrain.slug) }}"
+                class="btn-primary immo-site__cta"
+              >
+                Demander ce terrain
+              </a>
+              <a href="{{ contact.phone_href }}" class="immo-site__phone">{{ contact.phone }}</a>
+            </div>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="immo-btp-band" aria-labelledby="immo-btp-title">
+    <div class="immo-btp-band__media" aria-hidden="true">
+      <img src="{{ url_for('static', filename='img/immobilier/gemini-chantier-btp.png') }}" alt="">
+    </div>
+    <div class="immo-btp-band__content">
+      <p class="immo-btp-band__eyebrow">BTP · Groupe YOMBAL</p>
+      <h2 id="immo-btp-title" class="immo-btp-band__title">Construction &amp; <em>rénovation</em></h2>
+      <p class="immo-btp-band__lead">
+        Du terrain à la maison livrée : gros œuvre, extensions, finitions et suivi de chantier
+        pour concrétiser votre projet au Sénégal.
+      </p>
+      <ul class="immo-btp-band__list">
+        {% for item in service.bullets %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <section class="immo-contact-band" aria-labelledby="immo-contact-title">
+    <div class="immo-contact-band__inner">
+      <div class="immo-contact-band__intro">
+        <h2 id="immo-contact-title">Parlons de votre projet</h2>
+        <p>Visite de site, protocole d'accord ou devis BTP — notre équipe vous répond rapidement.</p>
+      </div>
+      <div class="immo-contact-band__channels">
+        <a href="{{ contact.phone_href }}" class="immo-contact-band__channel">
+          <span class="immo-contact-band__channel-label">Téléphone</span>
+          <strong>{{ contact.phone }}</strong>
+        </a>
+        <a href="mailto:{{ contact.email }}" class="immo-contact-band__channel">
+          <span class="immo-contact-band__channel-label">E-mail</span>
+          <strong>{{ contact.email }}</strong>
+        </a>
+        <div class="immo-contact-band__channel immo-contact-band__channel--static">
+          <span class="immo-contact-band__channel-label">Adresse</span>
+          <strong>{{ contact.address }}</strong>
+        </div>
+      </div>
+      <a href="{{ url_for('immo_demande_projet') }}" class="btn-primary immo-contact-band__form">
+        Demander un projet
+      </a>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  document.querySelectorAll("[data-immo-dialog]").forEach(function (btn) {
+    var id = btn.getAttribute("data-immo-dialog");
+    var dialog = document.getElementById(id);
+    if (!dialog) return;
+    btn.addEventListener("click", function () { dialog.showModal(); });
+    dialog.querySelectorAll("[data-immo-close]").forEach(function (closeBtn) {
+      closeBtn.addEventListener("click", function () { dialog.close(); });
+    });
+    dialog.addEventListener("click", function (e) {
+      if (e.target === dialog) dialog.close();
+    });
+  });
+
+  var navLinks = document.querySelectorAll(".immo-sites-nav__link");
+  var sections = document.querySelectorAll(".immo-site");
+  if (navLinks.length && sections.length && "IntersectionObserver" in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var id = entry.target.getAttribute("id");
+        navLinks.forEach(function (link) {
+          link.classList.toggle("is-active", link.getAttribute("href") === "#" + id);
+        });
+      });
+    }, { rootMargin: "-40% 0px -50% 0px", threshold: 0 });
+    sections.forEach(function (section) { observer.observe(section); });
+  }
+})();
+</script>
+{% endblock %}

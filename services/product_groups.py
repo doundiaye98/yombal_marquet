@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from models.constants import CATEGORY_CEREALES
+from models.constants import CATEGORY_CEREALES, SHOP_CATEGORY_ORDER
 
 # Libellés des filtres affichés sur la page gamme
 RIZ_TYPE_LABELS = {
@@ -225,6 +225,28 @@ def catalog_entries(products, *, include_groups: bool = True) -> list[dict]:
     return entries
 
 
+def catalog_sections(products, *, include_groups: bool = True) -> list[dict]:
+    """Regroupe les entrées catalogue par rayon (ordre PDF / boutique)."""
+    entries = catalog_entries(products, include_groups=include_groups)
+    buckets: dict[str, list] = {key: [] for key in SHOP_CATEGORY_ORDER}
+    other: list = []
+
+    for entry in entries:
+        cat = entry["category"] if entry["kind"] == "group" else entry["product"].category
+        if cat in buckets:
+            buckets[cat].append(entry)
+        else:
+            other.append(entry)
+
+    sections: list[dict] = []
+    for key in SHOP_CATEGORY_ORDER:
+        if buckets[key]:
+            sections.append({"key": key, "entries": buckets[key]})
+    if other:
+        sections.append({"key": "", "entries": other})
+    return sections
+
+
 def display_count(active_query) -> int:
     """Nombre d'entrées visibles dans le catalogue (gammes = 1 carte)."""
     from models.product import Product
@@ -237,6 +259,19 @@ def display_count_for_category(active_query, category_key: str) -> int:
     from models.product import Product
 
     products = active_query.filter_by(category=category_key).order_by(Product.id).all()
+    return len(catalog_entries(products))
+
+
+def display_count_for_categories(active_query, category_keys: tuple[str, ...]) -> int:
+    from models.product import Product
+
+    if not category_keys:
+        return 0
+    products = (
+        active_query.filter(Product.category.in_(category_keys))
+        .order_by(Product.category, Product.name)
+        .all()
+    )
     return len(catalog_entries(products))
 
 

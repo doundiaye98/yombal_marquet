@@ -68,6 +68,10 @@ from services import payment_simulation as pay_sim_svc
 from services import product_groups as product_groups_svc
 from services import shipping as shipping_svc
 from services import assistant as assistant_svc
+from services import ecosystem_nav as ecosystem_nav_svc
+from services import immobilier_programmes as immobilier_programmes_svc
+from services import immo_project_request as immo_request_svc
+from services import ecosystem_service_request as eco_request_svc
 from shop_auth import admin_required, is_shop_admin
 from models.contact_message import ContactMessage
 
@@ -117,6 +121,7 @@ SERVICE_CATEGORIES = [
         "prestations": [
             "Produits alimentaires",
             "Produits cosmétiques",
+            "Produits électroniques",
             "Livraison à domicile",
             "Prix abordables",
             "Boutique en ligne",
@@ -127,6 +132,7 @@ SERVICE_CATEGORIES = [
 PRESTATION_CATEGORY = {
     "Produits alimentaires": "alimentaire",
     "Produits cosmétiques": "cosmetique",
+    "Produits électroniques": "electronique",
 }
 
 SERVICES_PAGE_META = {
@@ -144,10 +150,17 @@ SERVICES_PAGE_META = {
         "lead": "Karité, savons noirs et soins naturels pour une routine douce et authentique.",
         "theme": "gold",
     },
+    "Produits électroniques": {
+        "slug": "electronique",
+        "icon": "📱",
+        "num": "03",
+        "lead": "Smartphones, accessoires, audio et petit électroménager — high-tech au quotidien.",
+        "theme": "terra",
+    },
     "Livraison à domicile": {
         "slug": "livraison",
         "icon": "🚚",
-        "num": "03",
+        "num": "04",
         "lead": "Courses préparées avec soin, livrées selon votre commune.",
         "theme": "terra",
         "bullets": [
@@ -159,7 +172,7 @@ SERVICES_PAGE_META = {
     "Prix abordables": {
         "slug": "prix",
         "icon": "💶",
-        "num": "04",
+        "num": "05",
         "lead": "Des tarifs justes, affichés clairement sur chaque fiche produit.",
         "theme": "green",
         "bullets": [
@@ -171,7 +184,7 @@ SERVICES_PAGE_META = {
     "Boutique en ligne": {
         "slug": "boutique",
         "icon": "🛍️",
-        "num": "05",
+        "num": "06",
         "lead": "Panier, checkout et paiement en quelques clics — avec ou sans compte.",
         "theme": "terra",
         "bullets": [
@@ -362,6 +375,12 @@ def inject_globals():
         "assistant_ready": assistant_svc.assistant_enabled(),
         "assistant_ai_mode": assistant_svc.ai_mode_available(),
         "prestation_slugs": {label: meta["slug"] for label, meta in SERVICES_PAGE_META.items()},
+        "ecosystem_nav": ecosystem_nav_svc.ecosystem_nav_items(),
+        "shop_universe_labels": ecosystem_nav_svc.SHOP_UNIVERSE_LABELS,
+        "shop_type_alimentaire": ecosystem_nav_svc.SHOP_TYPE_ALIMENTAIRE,
+        "shop_type_non_alimentaire": ecosystem_nav_svc.SHOP_TYPE_NON_ALIMENTAIRE,
+        "shop_non_alimentaire_rayons": ecosystem_nav_svc.SHOP_UNIVERSE_NON_ALIMENTAIRE,
+        "ecosystem_form_slugs": eco_request_svc.FORM_PAGE_SLUGS,
     }
 
 
@@ -540,20 +559,30 @@ def _apply_delivery_to_order(order, delivery):
 @app.route("/")
 def index():
     featured = _product_query_active().order_by(Product.id).limit(6).all()
-    featured_producers = _producer_query_active().order_by(Producer.id).limit(4).all()
     featured_recipes = [_build_recipe_view(r) for r in content_svc.all_recipe_defs()[:3]]
-    featured_coffrets = [_build_product_bundle(c) for c in content_svc.all_coffret_defs()[:2]]
     product_count = _product_query_active().count()
-    producer_count = _producer_query_active().count()
+    rayon_count = len(SHOP_CATEGORY_ORDER)
     recipe_count = len(content_svc.all_recipe_defs())
+    phare_slugs = (
+        "arraw-mil-labelafrik",
+        "thiakry-400g",
+        "sankhal-labelafrik",
+        "thiere-lalo-labelafrik",
+        "fonio-500g",
+        "bouye-baobab-250g",
+    )
+    phares_raw = {
+        p.slug: p
+        for p in _product_query_active().filter(Product.slug.in_(phare_slugs)).all()
+    }
+    catalogue_phares = [phares_raw[s] for s in phare_slugs if s in phares_raw]
     return render_template(
         "index.html",
         featured_products=featured,
-        featured_producers=featured_producers,
         featured_recipes=featured_recipes,
-        featured_coffrets=featured_coffrets,
+        catalogue_phares=catalogue_phares,
         product_count=product_count,
-        producer_count=producer_count,
+        rayon_count=rayon_count,
         recipe_count=recipe_count,
     )
 
@@ -588,25 +617,232 @@ def services():
     return render_template("services.html", sections=sections)
 
 
+def _ecosystem_service_form_state(slug: str) -> tuple[dict, bool, dict | None]:
+    form_data = {
+        "name": "",
+        "email": "",
+        "phone": "",
+        "message": "",
+        "topic_slug": request.args.get("topic", "").strip(),
+        "consent": False,
+    }
+    submitted = False
+    submission = None
+
+    if request.method != "POST" or slug not in eco_request_svc.FORM_PAGE_SLUGS:
+        return form_data, submitted, submission
+
+    form_data = {
+        "name": request.form.get("name", ""),
+        "email": request.form.get("email", ""),
+        "phone": request.form.get("phone", ""),
+        "message": request.form.get("message", ""),
+        "topic_slug": request.form.get("topic_slug", ""),
+        "consent": request.form.get("consent"),
+    }
+    parsed, errors = eco_request_svc.validate_form(form_data, slug)
+    if errors:
+        for err in errors:
+            flash(err, "danger")
+        return form_data, submitted, submission
+
+    subject = eco_request_svc.build_subject(parsed)
+    body = eco_request_svc.build_message_body(parsed)
+    msg = ContactMessage(
+        name=parsed["name"],
+        email=parsed["email"],
+        subject=subject,
+        message=body,
+    )
+    db.session.add(msg)
+    db.session.commit()
+    try:
+        mailer.notify_ecosystem_service_request(parsed)
+    except Exception:
+        pass
+    try:
+        mailer.notify_contact_message(msg)
+    except Exception:
+        pass
+    return form_data, True, parsed
+
+
+@app.route("/ecosysteme/immobilier-btp/demande", methods=["GET", "POST"])
+def immo_demande_projet():
+    service = ecosystem_nav_svc.get_ecosystem_service("immobilier-btp")
+    if not service:
+        abort(404)
+    program = immobilier_programmes_svc.YOMBAL_KEUR_PROGRAM
+    contact = immobilier_programmes_svc.IMMOBILIER_CONTACT
+    terrains = immobilier_programmes_svc.enriched_terrains()
+    preselect_terrain = request.args.get("terrain", "").strip() or None
+    if preselect_terrain and preselect_terrain not in immo_request_svc.TERRAIN_CHOICES:
+        preselect_terrain = None
+
+    form_data = {
+        "name": "",
+        "email": "",
+        "phone": "",
+        "country": "",
+        "project_type": "achat_terrain",
+        "terrain_slug": preselect_terrain or "",
+        "message": "",
+    }
+
+    if request.method == "POST":
+        form_data = {
+            "name": request.form.get("name", ""),
+            "email": request.form.get("email", ""),
+            "phone": request.form.get("phone", ""),
+            "country": request.form.get("country", ""),
+            "project_type": request.form.get("project_type", ""),
+            "terrain_slug": request.form.get("terrain_slug", ""),
+            "message": request.form.get("message", ""),
+            "consent": request.form.get("consent"),
+        }
+        parsed, errors = immo_request_svc.validate_form(form_data)
+        if errors:
+            for err in errors:
+                flash(err, "danger")
+        else:
+            subject = immo_request_svc.build_subject(parsed)
+            body = immo_request_svc.build_message_body(parsed)
+            msg = ContactMessage(
+                name=parsed["name"],
+                email=parsed["email"],
+                subject=subject,
+                message=body,
+            )
+            db.session.add(msg)
+            db.session.commit()
+            try:
+                mailer.notify_immo_project_request(parsed, contact)
+            except Exception:
+                pass
+            try:
+                mailer.notify_contact_message(msg)
+            except Exception:
+                pass
+            return render_template(
+                "ecosysteme/demande_projet.html",
+                service=service,
+                program=program,
+                contact=contact,
+                terrains=terrains,
+                project_types=immo_request_svc.PROJECT_TYPES,
+                submitted=True,
+                submission=parsed,
+                form_data=form_data,
+            )
+
+    return render_template(
+        "ecosysteme/demande_projet.html",
+        service=service,
+        program=program,
+        contact=contact,
+        terrains=terrains,
+        project_types=immo_request_svc.PROJECT_TYPES,
+        submitted=False,
+        submission=None,
+        form_data=form_data,
+    )
+
+
+@app.route("/ecosysteme/<slug>/demande", methods=["GET", "POST"])
+def ecosysteme_demande(slug):
+    if slug not in eco_request_svc.FORM_PAGE_SLUGS:
+        abort(404)
+    if request.method == "GET":
+        topic = request.args.get("topic", "").strip()
+        target = url_for("ecosysteme_detail", slug=slug)
+        if topic:
+            target = f"{target}?topic={topic}"
+        return redirect(f"{target}#demande-form")
+    return ecosysteme_detail(slug)
+
+
+@app.route("/ecosysteme/<slug>", methods=["GET", "POST"])
+def ecosysteme_detail(slug):
+    alias = ecosystem_nav_svc.ECOSYSTEM_SLUG_ALIASES.get(slug)
+    if alias:
+        return redirect(url_for("ecosysteme_detail", slug=alias), code=301)
+    service = ecosystem_nav_svc.get_ecosystem_service(slug)
+    if not service:
+        abort(404)
+    external_url = service.get("external_url")
+    if external_url:
+        return redirect(external_url, code=302)
+    custom_template = service.get("custom_template")
+    if slug == "immobilier-btp" or custom_template == "ecosysteme/immobilier_btp.html":
+        return render_template(
+            custom_template,
+            service=service,
+            program=immobilier_programmes_svc.YOMBAL_KEUR_PROGRAM,
+            terrains=immobilier_programmes_svc.enriched_terrains(),
+            contact=immobilier_programmes_svc.IMMOBILIER_CONTACT,
+            btp_gallery=immobilier_programmes_svc.BTP_GALLERY,
+        )
+
+    form_data, submitted, submission = _ecosystem_service_form_state(slug)
+    return render_template(
+        "ecosysteme/detail.html",
+        service=service,
+        hub_services=ecosystem_nav_svc.hub_services() if slug == "autres-services" else None,
+        form_data=form_data,
+        submitted=submitted,
+        submission=submission,
+        topic_choices=eco_request_svc.topic_choices(),
+        show_topic_select=slug == "autres-services",
+        form_action=url_for("ecosysteme_detail", slug=slug),
+    )
+
+
 @app.route("/boutique")
 def boutique():
     cat = request.args.get("categorie")
+    shop_type = request.args.get("type")
+    if shop_type and shop_type not in (
+        ecosystem_nav_svc.SHOP_TYPE_ALIMENTAIRE,
+        ecosystem_nav_svc.SHOP_TYPE_NON_ALIMENTAIRE,
+    ):
+        shop_type = None
     q = _product_query_active()
+    allowed_cats = ecosystem_nav_svc.categories_for_shop_type(shop_type)
+    if shop_type:
+        q = q.filter(Product.category.in_(allowed_cats))
     if cat:
+        if cat not in allowed_cats:
+            abort(404)
         q = q.filter_by(category=cat)
     products = q.order_by(Product.category, Product.name).all()
     catalog = product_groups_svc.catalog_entries(products)
+    catalog_sections = (
+        product_groups_svc.catalog_sections(products) if not cat else None
+    )
+    rayons = ecosystem_nav_svc.boutique_rayons_for_type(shop_type)
     shop_counts = {
         key: product_groups_svc.display_count_for_category(_product_query_active(), key)
-        for key in SHOP_CATEGORY_ORDER
+        for key in rayons
     }
-    total_products = product_groups_svc.display_count(_product_query_active())
+    universe_counts = {
+        ecosystem_nav_svc.SHOP_TYPE_ALIMENTAIRE: product_groups_svc.display_count_for_categories(
+            _product_query_active(), ecosystem_nav_svc.SHOP_UNIVERSE_ALIMENTAIRE
+        ),
+        ecosystem_nav_svc.SHOP_TYPE_NON_ALIMENTAIRE: product_groups_svc.display_count_for_categories(
+            _product_query_active(), ecosystem_nav_svc.SHOP_UNIVERSE_NON_ALIMENTAIRE
+        ),
+    }
+    total_products = product_groups_svc.display_count(q)
     return render_template(
         "boutique/index.html",
         catalog=catalog,
+        catalog_sections=catalog_sections,
         products=products,
         filter_cat=cat,
+        filter_type=shop_type,
         shop_counts=shop_counts,
+        shop_rayons=rayons,
+        universe_counts=universe_counts,
         total_products=total_products,
     )
 
@@ -651,15 +887,12 @@ def product_detail(slug):
 
 @app.route("/producteurs")
 def producteurs():
-    producers = _producer_query_active().order_by(Producer.name).all()
-    return render_template("producteurs/index.html", producers=producers)
+    return redirect(url_for("boutique"), code=301)
 
 
 @app.route("/producteur/<slug>")
 def producteur_detail(slug):
-    producer = _producer_query_active().filter_by(slug=slug).first_or_404()
-    products = producer.active_products().all()
-    return render_template("producteurs/detail.html", producer=producer, products=products)
+    return redirect(url_for("boutique"), code=301)
 
 
 # --- Carte des saveurs (expérience traçabilité) ---
@@ -1364,13 +1597,11 @@ def cgv():
 
 @app.route("/apropos")
 def apropos():
-    featured_producers = _producer_query_active().order_by(Producer.id).limit(3).all()
     return render_template(
         "apropos.html",
-        featured_producers=featured_producers,
         stats={
             "products": _product_query_active().count(),
-            "producers": _producer_query_active().count(),
+            "rayons": len(SHOP_CATEGORY_ORDER),
         },
     )
 

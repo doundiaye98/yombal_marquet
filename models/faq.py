@@ -24,7 +24,7 @@ FAQ_ITEMS = [
     },
     {
         "q": "Qu'est-ce que la carte des saveurs ?",
-        "a": "Une carte interactive pour découvrir nos producteurs par région, écouter leur histoire et ajouter leurs produits au panier.",
+        "a": "Une carte interactive pour découvrir les origines par région, écouter des histoires et ajouter les produits au panier.",
     },
     {
         "q": "Puis-je offrir un coffret cadeau ?",

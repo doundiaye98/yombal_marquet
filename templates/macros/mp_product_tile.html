@@ -1,0 +1,22 @@
+{% from "macros/product_image.html" import product_image %}
+{% macro mp_product_tile(product) %}
+<article class="mp-product">
+  <a href="{{ url_for('product_detail', slug=product.slug) }}" class="mp-product__media{% if product.image %} mp-product__media--photo{% endif %}">
+    {{ product_image(product, 'card') }}
+  </a>
+  <h3 class="mp-product__title">
+    <a href="{{ url_for('product_detail', slug=product.slug) }}">{{ product.name }}</a>
+  </h3>
+  <p class="mp-product__price">
+    {{ '%.2f'|format(product.price_euros()) }}&nbsp;€
+    {% if product.weight_info %}<small>{{ product.weight_info }}</small>{% endif %}
+  </p>
+  <div class="mp-product__actions">
+    <form method="post" action="{{ url_for('panier_ajouter') }}">
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <input type="hidden" name="quantity" value="1">
+      <button type="submit" class="mp-product__cart" aria-label="Ajouter {{ product.name }} au panier">+</button>
+    </form>
+  </div>
+</article>
+{% endmacro %}

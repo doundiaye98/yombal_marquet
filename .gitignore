@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 *.sqlite
 *.sqlite3
+
+# Catalogue source (trop volumineux pour GitHub — données extraites dans data/)
+img/*.pdf
+img/Catalogue LABEL (1).pdf

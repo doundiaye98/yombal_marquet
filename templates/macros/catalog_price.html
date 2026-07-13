@@ -1,0 +1,6 @@
+{% macro catalog_price_badge(price_euros) %}
+<span class="catalog-price-badge boutique-card__price" aria-label="Prix {{ '%.2f'|format(price_euros) }} euros">
+  <span class="catalog-price-badge__amount">{{ '%.2f'|format(price_euros) }} €</span>
+  <span class="catalog-price-badge__label">Prix</span>
+</span>
+{% endmacro %}

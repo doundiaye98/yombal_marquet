@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Demander un projet — {{ program.name }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/immo-page.css') }}">
+{% endblock %}
+{% block main_class %}site-main--immo{% endblock %}
+{% block content %}
+<div class="page-wrapper immo-page immo-page--demande">
+
+  <header class="immo-demande-hero">
+    <div class="immo-demande-hero__inner">
+      <a href="{{ url_for('ecosysteme_detail', slug='immobilier-btp') }}" class="immo-demande-hero__back">← Retour aux terrains</a>
+      <p class="immo-demande-hero__eyebrow">Groupe YOMBAL · {{ program.name }}</p>
+      <h1 class="immo-demande-hero__title">Demander <em>votre projet</em></h1>
+      <p class="immo-demande-hero__lead">
+        Remplissez ce formulaire pour être recontacté : visite de site, protocole d'accord,
+        plan de paiement ou devis BTP. Réponse sous 24 à 48&nbsp;h ouvrées.
+      </p>
+    </div>
+  </header>
+
+  <div class="immo-demande-layout">
+    <aside class="immo-demande-aside" aria-label="Informations utiles">
+      <div class="immo-demande-aside__card">
+        <h2>Comment ça marche ?</h2>
+        <ol class="immo-demande-steps">
+          <li><strong>1.</strong> Vous décrivez votre projet</li>
+          <li><strong>2.</strong> Un conseiller vous rappelle</li>
+          <li><strong>3.</strong> Visite de site &amp; protocole d'accord</li>
+          <li><strong>4.</strong> Paiement échelonné &amp; suivi BTP</li>
+        </ol>
+      </div>
+      <div class="immo-demande-aside__card immo-demande-aside__card--contact">
+        <h3>Besoin d'aide ?</h3>
+        <a href="{{ contact.phone_href }}" class="immo-demande-aside__phone">{{ contact.phone }}</a>
+        <a href="mailto:{{ contact.email }}" class="email-chip">{{ contact.email }}</a>
+        <p class="immo-demande-aside__addr">{{ contact.address }}</p>
+      </div>
+    </aside>
+
+    <div class="immo-demande-main">
+      {% if submitted %}
+      <div class="immo-demande-success" role="status">
+        <span class="immo-demande-success__icon" aria-hidden="true">✓</span>
+        <h2>Demande envoyée</h2>
+        <p>
+          Merci <strong>{{ submission.name }}</strong>, nous avons bien reçu votre demande
+          concernant <strong>{{ submission.project_type_label }}</strong>
+          {% if submission.terrain_label %} — terrain <strong>{{ submission.terrain_label }}</strong>{% endif %}.
+        </p>
+        <p>Un accusé de réception a été envoyé à <strong>{{ submission.email }}</strong>.</p>
+        <div class="immo-demande-success__actions">
+          <a href="{{ url_for('ecosysteme_detail', slug='immobilier-btp') }}" class="btn-primary">Voir les terrains</a>
+          <a href="{{ url_for('index') }}" class="btn-outline">Retour à l'accueil</a>
+        </div>
+      </div>
+      {% else %}
+      <form class="immo-demande-form" method="post" action="{{ url_for('immo_demande_projet') }}" novalidate>
+        <fieldset class="immo-demande-form__section">
+          <legend>Vos coordonnées</legend>
+          <div class="field-row-2">
+            <div class="field-group">
+              <label class="field-label" for="immo_name">Nom complet <span aria-hidden="true">*</span></label>
+              <input id="immo_name" class="field-input" name="name" required autocomplete="name"
+                value="{{ form_data.name }}">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="immo_email">E-mail <span aria-hidden="true">*</span></label>
+              <input id="immo_email" class="field-input" type="email" name="email" required autocomplete="email"
+                value="{{ form_data.email }}">
+            </div>
+          </div>
+          <div class="field-row-2">
+            <div class="field-group">
+              <label class="field-label" for="immo_phone">Téléphone <span aria-hidden="true">*</span></label>
+              <input id="immo_phone" class="field-input" type="tel" name="phone" required autocomplete="tel"
+                placeholder="06 12 34 56 78" value="{{ form_data.phone }}">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="immo_country">Pays de résidence <span aria-hidden="true">*</span></label>
+              <input id="immo_country" class="field-input" name="country" required autocomplete="country-name"
+                placeholder="France, Sénégal…" value="{{ form_data.country }}">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="immo-demande-form__section">
+          <legend>Votre projet</legend>
+          <div class="field-group">
+            <label class="field-label" for="immo_project_type">Type de demande <span aria-hidden="true">*</span></label>
+            <select id="immo_project_type" class="field-input" name="project_type" required>
+              {% for key, label in project_types.items() %}
+              <option value="{{ key }}"{% if form_data.project_type == key %} selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="immo_terrain">Terrain concerné</label>
+            <select id="immo_terrain" class="field-input" name="terrain_slug">
+              <option value="">— Je ne sais pas encore / autre —</option>
+              {% for terrain in terrains %}
+              <option value="{{ terrain.slug }}"{% if form_data.terrain_slug == terrain.slug %} selected{% endif %}>
+                {{ terrain.location }} — {{ terrain.price_label }} ({{ terrain.monthly_label }}/mois)
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="immo_message">Message complémentaire</label>
+            <textarea id="immo_message" class="field-textarea" name="message" rows="5"
+              placeholder="Précisez votre budget, vos délais, si vous avez un représentant légal au Sénégal…">{{ form_data.message }}</textarea>
+          </div>
+        </fieldset>
+
+        <label class="immo-demande-consent">
+          <input type="checkbox" name="consent" value="1" required>
+          <span>
+            J'accepte que mes données soient utilisées pour traiter ma demande et être recontacté(e)
+            par l'équipe YOMBAL / Univers Diaspora.
+            <a href="{{ url_for('mentions_legales') }}">Mentions légales</a>
+          </span>
+        </label>
+
+        <button type="submit" class="btn-primary immo-demande-form__submit">Envoyer ma demande</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

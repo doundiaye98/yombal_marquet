@@ -62,22 +62,6 @@
           </div>
           {% endif %}
 
-          {% if product.producer %}
-          <div class="detail-block producer-teaser-block">
-            <h3>👩🏾‍🌾 Producteur local</h3>
-            <div class="producer-inline">
-              <span class="producer-avatar producer-avatar--sm" aria-hidden="true">{{ product.producer.avatar_emoji }}</span>
-              <div>
-                <p><strong>{{ product.producer.name }}</strong> — {{ product.producer.region }}</p>
-                {% if product.producer.experience %}
-                <p class="producer-meta-line">⏳ {{ product.producer.experience }}</p>
-                {% endif %}
-                <a href="{{ url_for('producteur_detail', slug=product.producer.slug) }}" class="producer-link">Découvrir son histoire →</a>
-              </div>
-            </div>
-          </div>
-          {% endif %}
-
           <div class="detail-block">
             <h3>Description complète</h3>
             {% for block in product.description.split('\n\n') %}

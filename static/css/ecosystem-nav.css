@@ -1,0 +1,586 @@
+/* ═══ Header unifié — navigation + écosystème YOMBAL ═══ */
+
+:root {
+  --nav-h-primary: 72px;
+  --nav-h-ecosystem: 0px;
+  --nav-h: var(--nav-h-primary);
+}
+
+.site-header-unified--solo {
+  --nav-h-ecosystem: 0px;
+}
+
+/* Conteneur fixe unique */
+.site-header-unified {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  isolation: isolate;
+}
+
+.site-header-unified .header-shell {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  height: var(--nav-h-primary);
+  transform: none;
+  animation: none;
+  border-bottom: 1px solid rgba(26, 61, 43, 0.1);
+}
+
+/* Séparateur discret entre boutique et univers YOMBAL */
+.nav-links__sep {
+  flex-shrink: 0;
+  width: 1px;
+  height: 18px;
+  margin: 0 2px;
+  background: rgba(26, 61, 43, 0.16);
+  list-style: none;
+  align-self: center;
+}
+
+@media (max-width: 900px) {
+  .nav-links__sep {
+    display: none;
+  }
+}
+
+/* Déclencheur méga-menu Boutique (nav principale) */
+.nav-mega-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-mega-chevron {
+  opacity: 0.65;
+  transition: transform 0.2s ease;
+}
+
+.site-header-unified.is-mega-open .nav-mega-chevron {
+  transform: rotate(180deg);
+}
+
+.site-header-unified.is-mega-open .nav-mega-trigger {
+  color: var(--y-green, #1a3d2b) !important;
+}
+
+/* Méga-menu boutique */
+.yombal-mega {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  padding: 0 clamp(16px, 4vw, 48px) 16px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+}
+
+.site-header-unified.is-mega-open .yombal-mega {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.yombal-mega__panel {
+  max-width: 920px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid rgba(26, 61, 43, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 28px 80px rgba(8, 28, 18, 0.22);
+  overflow: hidden;
+}
+
+.yombal-mega__cols {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 0;
+}
+
+.yombal-mega__col {
+  padding: 24px 28px;
+}
+
+.yombal-mega__col--accent {
+  background: linear-gradient(165deg, #f8f4eb 0%, #fff 55%);
+  border-left: 1px solid rgba(26, 61, 43, 0.06);
+}
+
+.yombal-mega__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.yombal-mega__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  font-size: 1.15rem;
+  background: rgba(26, 77, 50, 0.08);
+  border-radius: 12px;
+}
+
+.yombal-mega__title {
+  margin: 0 0 4px;
+  font-family: "Fraunces", serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f3322;
+}
+
+.yombal-mega__desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #5c574f;
+}
+
+.yombal-mega__links {
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 8px;
+}
+
+.yombal-mega__links--single {
+  grid-template-columns: 1fr;
+}
+
+.yombal-mega__links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1c3d2b;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.yombal-mega__links a:hover {
+  background: rgba(26, 77, 50, 0.08);
+  color: #0f3322;
+}
+
+.yombal-mega__link-emoji {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.yombal-mega__all {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a4d32;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.yombal-mega__all:hover {
+  text-decoration: underline;
+}
+
+.yombal-mega__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px 28px;
+  border-top: 1px solid rgba(26, 61, 43, 0.08);
+  background: #f8f4eb;
+}
+
+.yombal-mega__foot a {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a4d32;
+  text-decoration: none;
+}
+
+.yombal-mega__foot a:hover {
+  text-decoration: underline;
+}
+
+.yombal-mega__foot-sep {
+  color: rgba(26, 61, 43, 0.25);
+  font-size: 12px;
+}
+
+/* Pages écosystème */
+.ecosystem-hero {
+  padding: 48px 24px 56px;
+  background: linear-gradient(155deg, #0f3322 0%, #1a4d32 55%, #245a40 100%);
+  color: #f8f4eb;
+}
+
+.ecosystem-hero__inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ecosystem-hero__icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.ecosystem-hero__eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #e8d49a;
+  margin: 0 0 12px;
+}
+
+.ecosystem-hero__title {
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin: 0 0 8px;
+}
+
+.ecosystem-hero__tagline {
+  font-style: italic;
+  color: #e8d49a;
+  margin: 0 0 16px;
+}
+
+.ecosystem-hero__lead {
+  line-height: 1.65;
+  opacity: 0.9;
+  margin: 0 0 24px;
+}
+
+.ecosystem-detail__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.ecosystem-detail__card,
+.ecosystem-detail__aside {
+  padding: 28px;
+  background: #fff;
+  border: 1px solid rgba(26, 61, 43, 0.1);
+  border-radius: 16px;
+}
+
+.ecosystem-detail__list {
+  margin: 16px 0 0;
+  padding-left: 1.2rem;
+  line-height: 1.7;
+}
+
+.ecosystem-detail__aside {
+  background: #f8f4eb;
+}
+
+.ecosystem-detail__shop {
+  display: inline-block;
+  margin-top: 16px;
+}
+
+.ecosystem-hero__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.ecosystem-hero__cta--secondary {
+  border-color: rgba(232, 212, 154, 0.55);
+  color: #f8f4eb;
+}
+
+.ecosystem-hero__cta--secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* Boutique — univers alimentaire / non alimentaire */
+.boutique-universe-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(26, 61, 43, 0.1);
+}
+
+.boutique-universe-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1c3d2b;
+  text-decoration: none;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.boutique-universe-link:hover {
+  background: rgba(26, 77, 50, 0.06);
+}
+
+.boutique-universe-link.is-active {
+  background: rgba(26, 77, 50, 0.1);
+  border-color: rgba(26, 77, 50, 0.2);
+  color: #0f3322;
+}
+
+.boutique-universe-link__count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(26, 77, 50, 0.1);
+}
+
+.cine-nav__divider {
+  margin: 12px 0 8px;
+  padding: 0 24px;
+  list-style: none;
+}
+
+.cine-nav__divider span {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 247, 0.35);
+}
+
+/* ─── Formulaire demande service ─── */
+.ecosystem-demande-back {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 252, 247, 0.85);
+  text-decoration: none;
+  margin-bottom: 16px;
+}
+
+.ecosystem-demande-back:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.ecosystem-demande-section {
+  padding-top: 0;
+}
+
+.ecosystem-demande-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.ecosystem-demande-form {
+  margin-top: -24px;
+  position: relative;
+  z-index: 2;
+}
+
+.ecosystem-demande-consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(12, 40, 25, 0.78);
+  margin: 0 0 20px;
+  cursor: pointer;
+}
+
+.ecosystem-demande-consent input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.ecosystem-demande-consent a {
+  color: #1a4d32;
+}
+
+.ecosystem-demande-success {
+  background: #fff;
+  border: 1px solid rgba(26, 77, 50, 0.12);
+  border-radius: 16px;
+  padding: clamp(28px, 5vw, 40px);
+  text-align: center;
+  margin-top: -24px;
+  box-shadow: 0 12px 40px rgba(12, 40, 25, 0.06);
+}
+
+.ecosystem-demande-success__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(26, 77, 50, 0.1);
+  color: #1a4d32;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.ecosystem-demande-success h2 {
+  font-family: "Fraunces", serif;
+  margin: 0 0 12px;
+}
+
+.ecosystem-demande-success p {
+  margin: 0 0 10px;
+  line-height: 1.6;
+  color: rgba(12, 40, 25, 0.82);
+}
+
+.ecosystem-demande-success__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.ecosystem-demande-wrap--inline {
+  max-width: 960px;
+}
+
+.ecosystem-demande-form--inline {
+  margin-top: 0;
+}
+
+.ecosystem-page--with-form .ecosystem-detail {
+  padding-bottom: 0;
+}
+
+/* Hub — page Autres services */
+.ecosystem-hub {
+  padding-top: 0;
+}
+
+.ecosystem-hub__inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.ecosystem-hub__title {
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin: 0 0 10px;
+  color: #0f3322;
+}
+
+.ecosystem-hub__lead {
+  margin: 0 0 28px;
+  line-height: 1.65;
+  color: rgba(12, 40, 25, 0.78);
+  max-width: 60ch;
+}
+
+.ecosystem-hub__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.ecosystem-hub__card {
+  background: #fff;
+  border: 1px solid rgba(26, 61, 43, 0.1);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 100%;
+}
+
+.ecosystem-hub__icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.ecosystem-hub__card h3 {
+  font-size: 1rem;
+  margin: 0;
+  color: #0f3322;
+}
+
+.ecosystem-hub__card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(12, 40, 25, 0.72);
+  flex: 1;
+}
+
+.ecosystem-hub__link {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a4d32;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.ecosystem-hub__link:hover {
+  text-decoration: underline;
+}
+
+.ecosystem-detail__form {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 900px) {
+  .yombal-mega {
+    padding: 0 12px 12px;
+  }
+
+  .yombal-mega__cols {
+    grid-template-columns: 1fr;
+  }
+
+  .yombal-mega__col--accent {
+    border-left: none;
+    border-top: 1px solid rgba(26, 61, 43, 0.06);
+  }
+
+  .yombal-mega__links {
+    grid-template-columns: 1fr;
+  }
+
+  .ecosystem-detail__grid {
+    grid-template-columns: 1fr;
+  }
+}

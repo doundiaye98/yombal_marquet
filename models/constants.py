@@ -100,6 +100,7 @@ PAYMENT_DEMO = "demo"
 
 CATEGORY_ALIMENTAIRE = "alimentaire"
 CATEGORY_COSMETIQUE = "cosmetique"
+CATEGORY_ELECTRONIQUE = "electronique"
 CATEGORY_BOISSONS = "boissons"
 CATEGORY_CEREALES = "cereales"
 CATEGORY_CONDIMENTS = "condiments"
@@ -108,10 +109,13 @@ CATEGORY_SNACKS = "snacks"
 CATEGORY_CONSERVES = "conserves"
 CATEGORY_LEGUMINEUSES = "legumineuses"
 CATEGORY_FRUITS_SECS = "fruits_secs"
+CATEGORY_POISSON = "poisson"
+CATEGORY_VIANDES = "viandes"
 
 PRODUCT_CATEGORIES = {
     CATEGORY_ALIMENTAIRE: {"label": "Alimentaire", "emoji": "🛒"},
     CATEGORY_COSMETIQUE: {"label": "Cosmétique", "emoji": "✨"},
+    CATEGORY_ELECTRONIQUE: {"label": "Électronique", "emoji": "📱"},
     CATEGORY_BOISSONS: {"label": "Boissons", "emoji": "🥤"},
     CATEGORY_CEREALES: {"label": "Céréales", "emoji": "🌾"},
     CATEGORY_CONDIMENTS: {"label": "Condiments", "emoji": "🧂"},
@@ -120,6 +124,8 @@ PRODUCT_CATEGORIES = {
     CATEGORY_CONSERVES: {"label": "Conserves", "emoji": "🫙"},
     CATEGORY_LEGUMINEUSES: {"label": "Légumineuses", "emoji": "🫘"},
     CATEGORY_FRUITS_SECS: {"label": "Fruits séchés", "emoji": "🥭"},
+    CATEGORY_POISSON: {"label": "Produits de la mer", "emoji": "🐟"},
+    CATEGORY_VIANDES: {"label": "Viandes & volailles", "emoji": "🍗"},
 }
 
 SHOP_CATEGORY_ORDER = (
@@ -132,7 +138,10 @@ SHOP_CATEGORY_ORDER = (
     CATEGORY_FRUITS_SECS,
     CATEGORY_SNACKS,
     CATEGORY_CONSERVES,
+    CATEGORY_POISSON,
+    CATEGORY_VIANDES,
     CATEGORY_COSMETIQUE,
+    CATEGORY_ELECTRONIQUE,
 )
 
 # Pays de livraison (code ISO → libellé)

@@ -236,3 +236,92 @@ def notify_contact_message(msg):
         f"Bonjour {msg.name},\n\nNous avons bien reçu votre message. "
         f"Notre équipe vous répondra sous 24 h en semaine.\n\n— Yombal Marché",
     )
+
+
+def notify_ecosystem_service_request(data: dict) -> None:
+    """Alerte équipe + accusé client — demande service écosystème."""
+    admins = _admin_recipients()
+    contact = (os.environ.get("CONTACT_EMAIL") or "").strip()
+    if not contact:
+        try:
+            from flask import has_app_context
+
+            if has_app_context():
+                from services.settings import shop_settings
+
+                contact = (shop_settings().get("shop_contact_email") or "").strip()
+        except Exception:
+            pass
+    if not contact:
+        contact = "compta@universdiasporas.com"
+    targets = admins or ([contact] if contact else [])
+    body = (
+        f"Nouvelle demande — {data['topic_label']}\n\n"
+        f"Nom : {data['name']}\n"
+        f"E-mail : {data['email']}\n"
+        f"Téléphone : {data['phone']}\n"
+        f"Service : {data['topic_label']}\n\n"
+        f"Message :\n{data['message']}\n"
+    )
+    if targets:
+        send_mail(
+            targets,
+            f"[Yombal] {data['topic_label']} — {data['name']}",
+            body,
+            reply_to=data["email"],
+        )
+    send_mail(
+        data["email"],
+        f"[Yombal] Votre demande — {data['topic_label']}",
+        (
+            f"Bonjour {data['name']},\n\n"
+            f"Nous avons bien reçu votre demande concernant {data['topic_label']}. "
+            "Notre équipe vous répondra sous 24 à 48 h ouvrées.\n\n"
+            "— Groupe YOMBAL"
+        ),
+    )
+
+
+def notify_immo_project_request(data: dict, immo_contact: dict) -> None:
+    """Alerte équipe immobilier (Univers Diaspora / YOMBAL KEUR)."""
+    immo_email = (immo_contact.get("email") or "").strip()
+    admins = _admin_recipients()
+    targets = []
+    if immo_email:
+        targets.append(immo_email)
+    for admin in admins:
+        if admin not in targets:
+            targets.append(admin)
+    if not targets:
+        return
+    terrain_line = f"Terrain : {data['terrain_label']}\n" if data.get("terrain_label") else ""
+    body = (
+        "Nouvelle demande de projet YOMBAL KEUR\n\n"
+        f"Nom : {data['name']}\n"
+        f"E-mail : {data['email']}\n"
+        f"Téléphone : {data['phone']}\n"
+        f"Pays : {data['country']}\n"
+        f"Type : {data['project_type_label']}\n"
+        f"{terrain_line}\n"
+        f"Message :\n{data.get('message') or '(aucun)'}\n"
+    )
+    subject_terrain = data.get("terrain_label") or "Projet immobilier"
+    send_mail(
+        targets,
+        f"[YOMBAL KEUR] Demande — {subject_terrain} — {data['name']}",
+        body,
+        reply_to=data["email"],
+    )
+    send_mail(
+        data["email"],
+        "[YOMBAL KEUR] Votre demande a bien été reçue",
+        (
+            f"Bonjour {data['name']},\n\n"
+            "Nous avons bien reçu votre demande concernant le programme YOMBAL KEUR. "
+            "Un conseiller immobilier vous contactera sous 24 à 48 h ouvrées "
+            "pour un protocole d'accord, une visite de site ou un devis BTP.\n\n"
+            f"Référence : {data.get('project_type_label')}"
+            + (f" — {data['terrain_label']}" if data.get("terrain_label") else "")
+            + "\n\n— Groupe YOMBAL · Univers Diaspora"
+        ),
+    )

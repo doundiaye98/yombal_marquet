@@ -13,7 +13,7 @@
       <p class="xd-eyebrow"><span class="xd-eyebrow__dot"></span> Traçabilité &amp; découverte</p>
       <h1 class="inner-hero__title">Carte des <em>saveurs</em></h1>
       <p class="inner-hero__lead">
-        Cliquez sur un point pour découvrir le producteur, son histoire et quelques références.
+        Cliquez sur un point pour découvrir une origine, son histoire et quelques références du catalogue.
       </p>
     </div>
   </header>
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <aside class="saveurs-sidebar" aria-label="Détails du producteur">
+      <aside class="saveurs-sidebar" aria-label="Détails de l'origine">
         {% if pins %}
         {% for pin in pins %}
         <div
@@ -90,8 +90,8 @@
           </div>
 
           <div class="saveur-panel-actions">
-            <a class="btn-primary" href="{{ url_for('producteur_detail', slug=pin.producer.slug) }}">
-              Voir la fiche →
+            <a class="btn-primary" href="{{ url_for('boutique') }}">
+              Voir le catalogue →
             </a>
           </div>
 
@@ -118,7 +118,7 @@
         </div>
         {% endfor %}
         {% else %}
-        <p class="section-sub reveal">Aucun producteur disponible pour la carte pour le moment.</p>
+        <p class="section-sub reveal">Aucune origine disponible sur la carte pour le moment.</p>
         {% endif %}
       </aside>
     </div>

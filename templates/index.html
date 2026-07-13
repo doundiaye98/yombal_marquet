@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
+{% from "macros/catalog_price.html" import catalog_price_badge %}
 {% block title %}Yombal Marché — Accueil{% endblock %}
 {% block main_class %}site-main--home site-main--xd{% endblock %}
 {% block content %}
 
-{# ═══ HERO ═══ #}
-<section class="xd-hero" aria-label="Accueil Yombal Marché">
+{# ═══ HERO (design original avant catalogue PDF) ═══ #}
+<section class="xd-hero xd-hero--no-photo" aria-label="Accueil Yombal Marché">
   <div class="xd-hero__scene" aria-hidden="true">
     <canvas id="home-hero-canvas" class="xd-hero__canvas"></canvas>
     <div class="xd-hero__aurora">
@@ -32,7 +33,7 @@
         <span class="xd-line xd-line--stroke xd-line--shimmer" data-split>du quotidien</span>
       </h1>
       <p class="xd-hero__lead">
-        Riz, huiles, cosmétiques naturels et coffrets gourmands —
+        Riz, huiles, cosmétiques, électronique et coffrets gourmands —
         livrés chez vous avec la chaleur du marché sénégalais.
       </p>
       <div class="xd-hero__cta">
@@ -48,8 +49,8 @@
           <dd>produits</dd>
         </div>
         <div class="xd-stat">
-          <dt><strong data-count="{{ producer_count }}">{{ producer_count }}</strong></dt>
-          <dd>producteurs</dd>
+          <dt><strong data-count="{{ rayon_count }}">{{ rayon_count }}</strong></dt>
+          <dd>rayons</dd>
         </div>
         <div class="xd-stat">
           <dt><strong data-count="{{ recipe_count }}">{{ recipe_count }}</strong></dt>
@@ -78,13 +79,102 @@
     </div>
   </div>
 
-  <a href="#univers" class="xd-scroll-hint" aria-label="Défiler pour explorer">
+  <a href="#rayons" class="xd-scroll-hint" aria-label="Défiler pour explorer">
     <span class="xd-scroll-hint__text">Explorer</span>
     <span class="xd-scroll-hint__wheel" aria-hidden="true"></span>
   </a>
 </section>
 
-{# ═══ MARQUEE ═══ #}
+<section class="xd-categories" id="rayons" aria-label="Rayons boutique">
+  <header class="xd-section-head xd-reveal">
+    <span class="xd-section-num">01</span>
+    <div>
+      <p class="xd-eyebrow">Boutique</p>
+      <h2 class="xd-section-title">Nos <em>rayons</em></h2>
+      <p class="xd-section-sub">Riz, huiles, épices, électronique… choisissez votre univers en un clic.</p>
+    </div>
+    <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--dark xd-magnetic">Catalogue complet</a>
+  </header>
+  <div class="xd-cat-grid xd-reveal">
+    <a href="{{ url_for('boutique') }}" class="xd-cat-cell xd-cat-cell--featured">
+      <span class="xd-cat-cell__icon" aria-hidden="true">✦</span>
+      <strong>Tout le catalogue</strong>
+      <span class="xd-cat-cell__hint">{{ product_count }} références</span>
+      <span class="xd-cat-cell__arrow" aria-hidden="true">→</span>
+    </a>
+    {% set rays = [
+      ('cereales', 'Riz & céréales', '🌾'),
+      ('huiles', 'Huiles & graisses', '🫒'),
+      ('snacks', 'Snacks & pâtisseries', '🍮'),
+      ('boissons', 'Boissons & sirops', '🥤'),
+      ('legumineuses', 'Légumineuses', '🫘'),
+      ('condiments', 'Condiments', '🧂'),
+      ('fruits_secs', 'Fruits séchés', '🥭'),
+      ('conserves', 'Conserves', '🫙'),
+      ('poisson', 'Produits de la mer', '🐟'),
+      ('viandes', 'Viandes & volailles', '🍗'),
+      ('cosmetique', 'Cosmétique', '✨'),
+      ('electronique', 'Électronique', '📱'),
+    ] %}
+    {% for key, label, emoji in rays %}
+    <a href="{{ url_for('boutique', categorie=key) }}" class="xd-cat-cell">
+      <span class="xd-cat-cell__icon" aria-hidden="true">{{ emoji }}</span>
+      <strong>{{ label }}</strong>
+      <span class="xd-cat-cell__arrow" aria-hidden="true">→</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if catalogue_phares %}
+<section class="xd-highlights" aria-label="Produits incontournables">
+  <div class="xd-highlights__inner">
+    <header class="xd-section-head xd-section-head--light xd-reveal">
+      <span class="xd-section-num">02</span>
+      <div>
+        <p class="xd-eyebrow">LabelAfrik</p>
+        <h2 class="xd-section-title">Les <em>incontournables</em></h2>
+        <p class="xd-section-sub">Thiakry, Fonio, Arraw, Baobab… le meilleur du terroir, sélectionné pour vous.</p>
+      </div>
+      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--outline xd-magnetic">Toute la boutique</a>
+    </header>
+
+    <div class="xd-highlights__grid">
+      {% for p in catalogue_phares %}
+      <article
+        class="xd-product xd-product--premium xd-highlights__card xd-reveal"
+        style="--stagger: {{ loop.index0 * 0.07 }}s"
+      >
+        <div class="xd-product__shine" aria-hidden="true"></div>
+        <span class="xd-product__index">{{ '%02d'|format(loop.index) }}</span>
+        <a href="{{ url_for('product_detail', slug=p.slug) }}" class="xd-product__media{% if p.image %} xd-product__media--photo{% endif %}">
+          {{ product_image(p, 'card') }}
+          {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
+          <span class="xd-product__cat">{{ meta.emoji }} {{ meta.label }}</span>
+        </a>
+        <div class="xd-product__body">
+          <h3><a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a></h3>
+          {% if p.weight_info %}
+          <p class="xd-highlights__weight">{{ p.weight_info }}</p>
+          {% endif %}
+          <div class="xd-product__foot">
+            <span class="xd-product__price">{{ '%.2f'|format(p.price_euros()) }} €</span>
+            <form method="post" action="{{ url_for('panier_ajouter') }}">
+              <input type="hidden" name="product_id" value="{{ p.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="xd-product__add" aria-label="Ajouter {{ p.name }} au panier">
+                <span aria-hidden="true">+</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <div class="xd-marquee" aria-hidden="true">
   <div class="xd-marquee__track">
     {% for _ in range(2) %}
@@ -97,122 +187,58 @@
   </div>
 </div>
 
-{# ═══ UNIVERS — BENTO ═══ #}
-<section class="xd-univers" id="univers" aria-label="Explorer Yombal">
-  <header class="xd-section-head xd-reveal">
-    <span class="xd-section-num">01</span>
-    <div>
-      <p class="xd-eyebrow">Univers</p>
-      <h2 class="xd-section-title">Tout le marché,<br><em>à portée de clic</em></h2>
-    </div>
-  </header>
-  <div class="xd-bento xd-reveal">
-    <a href="{{ url_for('boutique') }}" class="xd-bento__cell xd-bento__cell--wide">
-      <span class="xd-bento__num">01</span>
-      <span class="xd-bento__icon" aria-hidden="true">🛒</span>
-      <strong>Boutique</strong>
-      <p>Catalogue complet, filtres par catégorie, ajout rapide au panier.</p>
-      <span class="xd-bento__arrow">→</span>
-    </a>
-    <a href="{{ url_for('saveurs') }}" class="xd-bento__cell">
-      <span class="xd-bento__num">02</span>
-      <span class="xd-bento__icon" aria-hidden="true">🗺️</span>
-      <strong>Saveurs</strong>
-      <p>Terroirs &amp; origines</p>
-      <span class="xd-bento__arrow">→</span>
-    </a>
-    <a href="{{ url_for('recettes') }}" class="xd-bento__cell">
-      <span class="xd-bento__num">03</span>
-      <span class="xd-bento__icon" aria-hidden="true">🍲</span>
-      <strong>Recettes</strong>
-      <p>Paniers prêts</p>
-      <span class="xd-bento__arrow">→</span>
-    </a>
-    <a href="{{ url_for('coffrets') }}" class="xd-bento__cell xd-bento__cell--accent">
-      <span class="xd-bento__num">04</span>
-      <span class="xd-bento__icon" aria-hidden="true">🎁</span>
-      <strong>Coffrets</strong>
-      <p>Idées cadeaux</p>
-      <span class="xd-bento__arrow">→</span>
-    </a>
-    <a href="{{ url_for('producteurs') }}" class="xd-bento__cell xd-bento__cell--tall">
-      <span class="xd-bento__num">05</span>
-      <span class="xd-bento__icon" aria-hidden="true">🌿</span>
-      <strong>Producteurs</strong>
-      <p>Visages, régions et savoir-faire derrière chaque référence.</p>
-      <span class="xd-bento__arrow">→</span>
-    </a>
-  </div>
-</section>
-
 {% if featured_products %}
-{# ═══ SÉLECTION — SCROLL HORIZONTAL ÉPINGLÉ ═══ #}
-<section class="xd-pin-scroll" id="xd-pin-products" aria-label="Coups de cœur">
-  <div class="xd-pin-scroll__sticky">
-    <header class="xd-section-head xd-section-head--light xd-pin-scroll__head">
-      <span class="xd-section-num" data-parallax-num>02</span>
-      <div>
-        <p class="xd-eyebrow">Sélection</p>
-        <h2 class="xd-section-title xd-split-heading">Coups de <em>cœur</em></h2>
-        <p class="xd-section-sub">Des produits choisis avec soin — origine, ingrédients, conseils.</p>
+<section class="ud-selection" aria-label="Sélection boutique">
+  <header class="ud-selection__head">
+    <p class="section-eyebrow">Sélection</p>
+    <h2 class="section-title">Coups de <em>cœur</em></h2>
+    <a href="{{ url_for('boutique') }}" class="ud-btn ud-btn--outline ud-btn--sm">Toute la boutique</a>
+  </header>
+  <div class="ud-selection__grid">
+    {% for p in featured_products %}
+    <article class="boutique-card">
+      <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
+        {{ product_image(p, 'card') }}
+        {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
+        <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>
+      </a>
+      <div class="boutique-card__body">
+        <h3 class="boutique-card__title">
+          <a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a>
+        </h3>
+        <p class="boutique-card__summary">{{ p.summary }}</p>
+        <div class="boutique-card__footer">
+          {{ catalog_price_badge(p.price_euros()) }}
+          <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
+            <input type="hidden" name="product_id" value="{{ p.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ p.name }} au panier">+</button>
+          </form>
+        </div>
       </div>
-      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--dark xd-magnetic">Toute la boutique</a>
-    </header>
-    <div class="xd-pin-scroll__viewport">
-      <div class="xd-pin-scroll__track">
-        {% for p in featured_products %}
-        <article class="xd-product xd-product--premium">
-          <div class="xd-product__shine" aria-hidden="true"></div>
-          <span class="xd-product__index">{{ '%02d'|format(loop.index) }}</span>
-          <a href="{{ url_for('product_detail', slug=p.slug) }}" class="xd-product__media{% if p.image %} xd-product__media--photo{% endif %}">
-            {{ product_image(p, 'card') }}
-            {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
-            <span class="xd-product__cat">{{ meta.emoji }} {{ meta.label }}</span>
-          </a>
-          <div class="xd-product__body">
-            <h3><a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a></h3>
-            <p>{{ p.summary }}</p>
-            <div class="xd-product__foot">
-              <span class="xd-product__price">{{ '%.2f'|format(p.price_euros()) }} €</span>
-              <form method="post" action="{{ url_for('panier_ajouter') }}">
-                <input type="hidden" name="product_id" value="{{ p.id }}">
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="xd-product__add" aria-label="Ajouter {{ p.name }}">
-                  <span aria-hidden="true">+</span>
-                </button>
-              </form>
-            </div>
-          </div>
-        </article>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="xd-pin-scroll__progress" aria-hidden="true"><span></span></div>
+    </article>
+    {% endfor %}
   </div>
 </section>
 {% endif %}
 
 {% if featured_recipes %}
-<section class="xd-panel xd-panel--dark" aria-label="Recettes">
-  <header class="xd-section-head xd-reveal">
-    <span class="xd-section-num">03</span>
-    <div>
-      <p class="xd-eyebrow">Cuisine</p>
-      <h2 class="xd-section-title">Paniers <em>intelligents</em></h2>
-      <p class="xd-section-sub">Recettes pensées avec nos produits — prêtes à commander.</p>
-    </div>
-    <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost">Toutes les recettes</a>
+<section class="ud-panel ud-panel--green" aria-label="Recettes">
+  <header class="ud-panel__head">
+    <p class="section-eyebrow">Cuisine</p>
+    <h2 class="section-title">Paniers <em>intelligents</em></h2>
+    <a href="{{ url_for('recettes') }}" class="ud-btn ud-btn--outline ud-btn--sm">Toutes les recettes</a>
   </header>
-  <div class="xd-cards xd-cards--3 xd-reveal">
+  <div class="ud-cards">
     {% for recipe in featured_recipes %}
-    <article class="xd-card">
-      <span class="xd-card__emoji" aria-hidden="true">{{ recipe.emoji }}</span>
-      <p class="xd-card__kind">{{ recipe.kind_label }}</p>
+    <article class="ud-card">
+      <span class="ud-card__emoji" aria-hidden="true">{{ recipe.emoji }}</span>
+      <p class="ud-card__kind">{{ recipe.kind_label }}</p>
       <h3><a href="{{ url_for('recette_detail', slug=recipe.slug) }}">{{ recipe.title }}</a></h3>
-      <p class="xd-card__text">{{ recipe.summary }}</p>
-      <div class="xd-card__foot">
+      <p>{{ recipe.summary }}</p>
+      <div class="ud-card__foot">
         <span>dès {{ '%.2f'|format(recipe.total_cents / 100) }} €</span>
-        <a href="{{ url_for('recette_detail', slug=recipe.slug) }}" class="xd-link">Voir →</a>
+        <a href="{{ url_for('recette_detail', slug=recipe.slug) }}">Voir →</a>
       </div>
     </article>
     {% endfor %}
@@ -220,99 +246,13 @@
 </section>
 {% endif %}
 
-{% if featured_producers %}
-<section class="xd-panel" aria-label="Producteurs">
-  <header class="xd-section-head xd-reveal">
-    <span class="xd-section-num">04</span>
-    <div>
-      <p class="xd-eyebrow">Traçabilité</p>
-      <h2 class="xd-section-title">Nos <em>producteurs</em></h2>
-    </div>
-    <a href="{{ url_for('producteurs') }}" class="xd-btn xd-btn--outline">Toute la vitrine</a>
-  </header>
-  <div class="xd-producers xd-reveal">
-    {% for pr in featured_producers %}
-    <a href="{{ url_for('producteur_detail', slug=pr.slug) }}" class="xd-producer">
-      <span class="xd-producer__avatar" aria-hidden="true">{{ pr.avatar_emoji }}</span>
-      <div>
-        <span class="xd-producer__region">{{ pr.region }}</span>
-        <strong>{{ pr.name }}</strong>
-        <span class="xd-producer__flag">{{ pr.flagship_product }}</span>
-      </div>
-      <span class="xd-producer__go" aria-hidden="true">→</span>
-    </a>
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
-
-{# ═══ MANIFESTE + SERVICES ═══ #}
-<section class="xd-manifesto xd-panel--dark" id="services-anchor">
-  <div class="xd-manifesto__inner xd-reveal">
-    <p class="xd-eyebrow">Notre promesse</p>
-    <blockquote class="xd-manifesto__quote">
-      Des prix accessibles, des produits choisis avec soin,
-      et la livraison qui vous évite la course du dimanche.
-    </blockquote>
-    <div class="xd-manifesto__services">
-      {% set icons = ['🛒', '✨', '🚚', '💶', '🛍️'] %}
-      {% for cat in service_categories %}
-        {% for item in cat.prestations %}
-        <a href="{{ url_for('services') }}#{{ prestation_slugs.get(item, 'boutique') }}" class="xd-service-line">
-          <span class="xd-service-line__ico" aria-hidden="true">{{ icons[loop.index0 % (icons|length)] }}</span>
-          <span class="xd-service-line__txt">{{ item }}</span>
-          <span class="xd-service-line__arrow">→</span>
-        </a>
-        {% endfor %}
-      {% endfor %}
-    </div>
-    <div class="xd-manifesto__cta">
-      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light xd-magnetic xd-btn--lg">Commander maintenant</a>
-      <a href="{{ url_for('services') }}" class="xd-btn xd-btn--ghost">Nos services</a>
-    </div>
-  </div>
-</section>
-
-{% if featured_coffrets %}
-<section class="xd-panel" aria-label="Coffrets">
-  <header class="xd-section-head xd-reveal">
-    <span class="xd-section-num">05</span>
-    <div>
-      <p class="xd-eyebrow">Cadeaux</p>
-      <h2 class="xd-section-title">Coffrets <em>diaspora</em></h2>
-    </div>
-    <a href="{{ url_for('coffrets') }}" class="xd-btn xd-btn--outline">Tous les coffrets</a>
-  </header>
-  <div class="xd-cards xd-cards--2 xd-reveal">
-    {% for c in featured_coffrets %}
-    <article class="xd-card xd-card--gift">
-      <span class="xd-card__badge">Cadeau</span>
-      <span class="xd-card__emoji" aria-hidden="true">{{ c.emoji }}</span>
-      <h3><a href="{{ url_for('coffret_detail', slug=c.slug) }}">{{ c.title }}</a></h3>
-      <p class="xd-card__quote">« {{ c.gift_message }} »</p>
-      <div class="xd-card__foot">
-        <span>{{ '%.2f'|format(c.total_cents / 100) }} €</span>
-        <a href="{{ url_for('coffret_detail', slug=c.slug) }}" class="xd-link xd-link--gold">Voir le coffret →</a>
-      </div>
-    </article>
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
-
-{# ═══ CTA FINAL ═══ #}
-<section class="xd-finale" aria-label="Nous contacter">
-  <div class="xd-finale__rings" aria-hidden="true">
-    <span></span><span></span><span></span>
-  </div>
-  <div class="xd-finale__glow" aria-hidden="true"></div>
-  <div class="xd-finale__particles" aria-hidden="true"></div>
-  <div class="xd-finale__inner xd-reveal">
-    <h2 class="xd-finale__title">Prêt à goûter<br><em>le vrai marché ?</em></h2>
-    <p>Livraison suivie · Paiement sécurisé · Commande sans compte</p>
-    <div class="xd-finale__actions">
-      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light xd-magnetic xd-btn--lg">Ouvrir la boutique</a>
-      <a href="{{ url_for('contact') }}" class="xd-btn xd-btn--ghost">Nous contacter</a>
+<section class="ud-cta" aria-label="Commander">
+  <div class="ud-cta__inner">
+    <h2>Prêt à commander<br><em>le vrai marché ?</em></h2>
+    <p>Livraison suivie · Paiement sécurisé · Prix catalogue officiel</p>
+    <div class="ud-cta__actions">
+      <a href="{{ url_for('boutique') }}" class="ud-btn ud-btn--gold">Ouvrir la boutique</a>
+      <a href="{{ url_for('contact') }}" class="ud-btn ud-btn--outline">Nous contacter</a>
     </div>
   </div>
 </section>

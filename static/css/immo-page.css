@@ -1,0 +1,1134 @@
+/* ═══ Immobilier & BTP — page éditoriale YOMBAL KEUR ═══ */
+
+.immo-page {
+  --immo-ink: #0c2819;
+  --immo-green: #1a4d32;
+  --immo-green-deep: #0f3322;
+  --immo-gold: #c9a227;
+  --immo-gold-soft: #e8d49a;
+  --immo-cream: #f8f4eb;
+  --immo-sand: #ebe4d4;
+  --immo-navy: #152a45;
+  --immo-line: rgba(15, 51, 34, 0.1);
+  --immo-shadow: 0 20px 50px rgba(12, 40, 25, 0.1);
+  background: var(--immo-cream);
+  padding-bottom: 0;
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.site-main--immo {
+  padding-top: 0;
+}
+
+/* ─── Hero ─── */
+.immo-hero {
+  position: relative;
+  min-height: clamp(420px, 72vh, 620px);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  color: #fff;
+}
+
+.immo-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.immo-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.immo-hero__bg-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(105deg, rgba(12, 40, 25, 0.92) 0%, rgba(12, 40, 25, 0.55) 48%, rgba(12, 40, 25, 0.25) 100%),
+    linear-gradient(0deg, rgba(12, 40, 25, 0.85) 0%, transparent 45%);
+}
+
+.immo-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(100px, 14vw, 140px) clamp(20px, 4vw, 40px) clamp(40px, 6vw, 64px);
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: end;
+}
+
+.immo-hero__eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--immo-gold-soft);
+  margin: 0 0 14px;
+}
+
+.immo-hero__title {
+  font-family: "Fraunces", serif;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  line-height: 1.08;
+  margin: 0 0 10px;
+  max-width: 14ch;
+}
+
+.immo-hero__tagline {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  color: var(--immo-gold-soft);
+  margin: 0 0 16px;
+}
+
+.immo-hero__lead {
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 52ch;
+  opacity: 0.92;
+  margin: 0 0 28px;
+}
+
+.immo-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.immo-hero__btn-outline {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+  background: transparent;
+}
+
+.immo-hero__btn-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.immo-hero__stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.immo-hero__stats li {
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.immo-hero__stats strong {
+  display: block;
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  color: var(--immo-gold-soft);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.immo-hero__stats span {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* ─── Sticky site nav ─── */
+.immo-sites-nav {
+  position: sticky;
+  top: var(--nav-h, 72px);
+  z-index: 40;
+  background: rgba(248, 244, 235, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--immo-line);
+}
+
+.immo-sites-nav__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 10px clamp(16px, 3vw, 24px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.immo-sites-nav__link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.immo-sites-nav__link:hover {
+  background: rgba(26, 77, 50, 0.06);
+}
+
+.immo-sites-nav__link.is-active {
+  background: #fff;
+  border-color: rgba(26, 77, 50, 0.18);
+  box-shadow: 0 4px 16px rgba(15, 51, 34, 0.08);
+}
+
+.immo-sites-nav__name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--immo-ink);
+}
+
+.immo-sites-nav__price {
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+  color: var(--immo-gold);
+  font-weight: 700;
+}
+
+/* ─── Section head ─── */
+.immo-section-head {
+  max-width: 640px;
+  margin: 0 auto clamp(36px, 5vw, 56px);
+  text-align: center;
+}
+
+.immo-terrains {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 72px) clamp(20px, 4vw, 32px) clamp(56px, 8vw, 96px);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201, 162, 39, 0.06) 0%, transparent 55%),
+    var(--immo-cream);
+}
+
+.immo-sites-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 5vw, 48px);
+}
+
+/* ─── Terrain card ─── */
+.immo-site {
+  scroll-margin-top: calc(var(--nav-h, 72px) + 88px);
+}
+
+.immo-site__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 0;
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--immo-line);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 24px 60px rgba(12, 40, 25, 0.07);
+}
+
+.immo-site--alt .immo-site__card {
+  background: linear-gradient(145deg, #fff 0%, #faf6ee 100%);
+}
+
+.immo-site__media {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--immo-line);
+}
+
+.immo-site__cover {
+  position: relative;
+  margin: 0;
+  flex: 1;
+  min-height: 280px;
+  background: var(--immo-sand);
+}
+
+.immo-site__cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.immo-site__surface {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(15, 51, 34, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.immo-site__affiche {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 18px;
+  border: none;
+  border-top: 1px solid var(--immo-line);
+  background: var(--immo-cream);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.immo-site__affiche:hover {
+  background: #f0e9da;
+}
+
+.immo-site__affiche-thumb {
+  flex-shrink: 0;
+  width: 44px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 51, 34, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.immo-site__affiche-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.immo-site__affiche-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.immo-site__affiche-text strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--immo-ink);
+}
+
+.immo-site__affiche-text span {
+  font-size: 12px;
+  color: rgba(12, 40, 25, 0.55);
+}
+
+.immo-site__affiche-arrow {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  color: var(--immo-gold);
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.immo-site__affiche:hover .immo-site__affiche-arrow {
+  transform: translateX(3px);
+}
+
+/* ─── Info panel ─── */
+.immo-site__panel {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(24px, 3.5vw, 36px) clamp(24px, 3.5vw, 40px);
+}
+
+.immo-site__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--immo-line);
+}
+
+.immo-site__num {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  font-family: "Fraunces", serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--immo-gold);
+  background: rgba(201, 162, 39, 0.12);
+  border: 1px solid rgba(201, 162, 39, 0.25);
+}
+
+.immo-site__eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--immo-gold);
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+
+.immo-site__title {
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.45rem, 2.8vw, 1.85rem);
+  color: var(--immo-ink);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.immo-site__loc {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(12, 40, 25, 0.55);
+}
+
+/* Price band */
+.immo-site__price-band {
+  margin-bottom: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 51, 34, 0.12);
+}
+
+.immo-site__price-main {
+  padding: 20px 22px 16px;
+  background: linear-gradient(135deg, var(--immo-green-deep) 0%, #1e5638 100%);
+  color: #fff;
+}
+
+.immo-site__price-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--immo-gold-soft);
+  margin-bottom: 6px;
+}
+
+.immo-site__price-value {
+  display: block;
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.immo-site__price-hint {
+  display: block;
+  font-size: 12px;
+  opacity: 0.78;
+  font-weight: 500;
+}
+
+.immo-site__price-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  background: #fff;
+}
+
+.immo-site__price-meta > div {
+  padding: 14px 12px;
+  text-align: center;
+  border-right: 1px solid var(--immo-line);
+}
+
+.immo-site__price-meta > div:last-child {
+  border-right: none;
+}
+
+.immo-site__price-meta dt {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(12, 40, 25, 0.45);
+  margin: 0 0 4px;
+}
+
+.immo-site__price-meta dd {
+  margin: 0;
+  font-family: "Fraunces", serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--immo-ink);
+}
+
+/* Facts row */
+.immo-site__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 18px;
+}
+
+.immo-site__fact {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--immo-cream);
+  border: 1px solid rgba(15, 51, 34, 0.06);
+}
+
+.immo-site__fact dt {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(12, 40, 25, 0.45);
+  margin: 0 0 4px;
+}
+
+.immo-site__fact dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--immo-ink);
+  line-height: 1.35;
+}
+
+.immo-site__tags {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.immo-site__tags li {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(201, 162, 39, 0.12);
+  color: #7a5e0f;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+}
+
+.immo-site__includes {
+  margin-bottom: 24px;
+  flex: 1;
+}
+
+.immo-site__includes h4 {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(12, 40, 25, 0.45);
+  margin: 0 0 12px;
+}
+
+.immo-site__checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.immo-site__checklist li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(12, 40, 25, 0.82);
+}
+
+.immo-site__checklist li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--immo-green);
+  background: rgba(26, 77, 50, 0.1);
+  border-radius: 50%;
+}
+
+.immo-site__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 20px;
+  border-top: 1px solid var(--immo-line);
+  margin-top: auto;
+}
+
+.immo-site__cta {
+  flex: 1;
+  min-width: 180px;
+  text-align: center;
+}
+
+.immo-site__phone {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--immo-green);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.immo-site__phone:hover {
+  text-decoration: underline;
+}
+
+/* Dialog affiche */
+.immo-dialog {
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: min(92vw, 480px);
+}
+
+.immo-dialog::backdrop {
+  background: rgba(12, 40, 25, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.immo-dialog__panel {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.immo-dialog__panel img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.immo-dialog__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(15, 51, 34, 0.85);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* ─── BTP band ─── */
+.immo-btp-band {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 420px;
+  background: var(--immo-navy);
+  color: #fff;
+  overflow: hidden;
+}
+
+.immo-btp-band__media {
+  position: relative;
+  min-height: 280px;
+}
+
+.immo-btp-band__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.immo-btp-band__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--immo-navy) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.immo-btp-band__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(40px, 6vw, 72px) clamp(24px, 5vw, 56px);
+}
+
+.immo-btp-band__eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--immo-gold-soft);
+  margin: 0 0 12px;
+}
+
+.immo-btp-band__title {
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  margin: 0 0 16px;
+  line-height: 1.15;
+}
+
+.immo-btp-band__title em {
+  font-style: italic;
+  color: var(--immo-gold-soft);
+}
+
+.immo-btp-band__lead {
+  line-height: 1.7;
+  opacity: 0.9;
+  margin: 0 0 24px;
+  max-width: 48ch;
+}
+
+.immo-btp-band__list {
+  margin: 0;
+  padding-left: 1.2rem;
+  line-height: 1.75;
+  opacity: 0.92;
+  font-size: 15px;
+}
+
+/* ─── Contact band ─── */
+.immo-contact-band {
+  background: #fff;
+  border-top: 1px solid var(--immo-line);
+}
+
+.immo-contact-band__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 64px) clamp(20px, 4vw, 40px);
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 24px 40px;
+  align-items: center;
+}
+
+.immo-contact-band__intro h2 {
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  margin: 0 0 8px;
+  color: var(--immo-ink);
+}
+
+.immo-contact-band__intro p {
+  margin: 0;
+  color: rgba(12, 40, 25, 0.65);
+  font-size: 15px;
+  max-width: 36ch;
+}
+
+.immo-contact-band__channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.immo-contact-band__channel {
+  text-decoration: none;
+  color: inherit;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--immo-cream);
+  border: 1px solid var(--immo-line);
+  min-width: 160px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.immo-contact-band__channel:hover {
+  border-color: rgba(26, 77, 50, 0.25);
+  background: #fff;
+}
+
+.immo-contact-band__channel-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(12, 40, 25, 0.45);
+  margin-bottom: 4px;
+}
+
+.immo-contact-band__channel strong {
+  font-size: 14px;
+  color: var(--immo-green);
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.immo-contact-band__form {
+  white-space: nowrap;
+}
+
+/* ─── Page demande projet ─── */
+.immo-demande-hero {
+  background: linear-gradient(155deg, var(--immo-green-deep) 0%, var(--immo-green) 100%);
+  color: #fff;
+  padding: clamp(88px, 12vw, 120px) clamp(20px, 4vw, 40px) clamp(36px, 5vw, 52px);
+}
+
+.immo-demande-hero__inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.immo-demande-hero__back {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--immo-gold-soft);
+  text-decoration: none;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.immo-demande-hero__back:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.immo-demande-hero__eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--immo-gold-soft);
+  margin: 0 0 12px;
+}
+
+.immo-demande-hero__title {
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.85rem, 4vw, 2.6rem);
+  margin: 0 0 14px;
+  line-height: 1.1;
+}
+
+.immo-demande-hero__title em {
+  font-style: italic;
+  color: var(--immo-gold-soft);
+}
+
+.immo-demande-hero__lead {
+  margin: 0;
+  line-height: 1.7;
+  opacity: 0.92;
+  max-width: 56ch;
+}
+
+.immo-demande-layout {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 32px) clamp(64px, 8vw, 96px);
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 40px);
+  align-items: start;
+}
+
+.immo-demande-aside__card {
+  background: #fff;
+  border: 1px solid var(--immo-line);
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 28px rgba(12, 40, 25, 0.05);
+}
+
+.immo-demande-aside__card h2,
+.immo-demande-aside__card h3 {
+  font-family: "Fraunces", serif;
+  font-size: 1.15rem;
+  margin: 0 0 14px;
+  color: var(--immo-ink);
+}
+
+.immo-demande-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.immo-demande-steps li {
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(12, 40, 25, 0.82);
+  padding-left: 8px;
+  border-left: 2px solid var(--immo-gold);
+}
+
+.immo-demande-steps strong {
+  color: var(--immo-gold);
+  margin-right: 4px;
+}
+
+.immo-demande-aside__card--contact {
+  background: var(--immo-cream);
+}
+
+.immo-demande-aside__phone {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--immo-green);
+  text-decoration: none;
+  margin-bottom: 12px;
+}
+
+.immo-demande-aside__phone:hover {
+  text-decoration: underline;
+}
+
+.immo-demande-aside__addr {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: rgba(12, 40, 25, 0.6);
+}
+
+.immo-demande-form {
+  background: #fff;
+  border: 1px solid var(--immo-line);
+  border-radius: 20px;
+  padding: clamp(24px, 4vw, 36px);
+  box-shadow: var(--immo-shadow);
+}
+
+.immo-demande-form__section {
+  border: none;
+  margin: 0 0 28px;
+  padding: 0;
+}
+
+.immo-demande-form__section legend {
+  font-family: "Fraunces", serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--immo-ink);
+  margin-bottom: 18px;
+  padding: 0;
+  width: 100%;
+  border-bottom: 1px solid var(--immo-line);
+  padding-bottom: 10px;
+}
+
+.immo-demande-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(12, 40, 25, 0.75);
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+.immo-demande-consent input {
+  margin-top: 3px;
+  flex-shrink: 0;
+  accent-color: var(--immo-green);
+}
+
+.immo-demande-consent a {
+  color: var(--immo-green);
+}
+
+.immo-demande-form__submit {
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 15px;
+}
+
+.immo-demande-success {
+  background: #fff;
+  border: 1px solid rgba(26, 77, 50, 0.2);
+  border-radius: 20px;
+  padding: clamp(32px, 5vw, 48px);
+  text-align: center;
+  box-shadow: var(--immo-shadow);
+}
+
+.immo-demande-success__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(26, 77, 50, 0.12);
+  color: var(--immo-green);
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.immo-demande-success h2 {
+  font-family: "Fraunces", serif;
+  font-size: 1.75rem;
+  margin: 0 0 12px;
+  color: var(--immo-ink);
+}
+
+.immo-demande-success p {
+  margin: 0 0 12px;
+  line-height: 1.65;
+  color: rgba(12, 40, 25, 0.8);
+  max-width: 48ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.immo-demande-success__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 960px) {
+  .immo-hero__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .immo-hero__stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .immo-site__card {
+    grid-template-columns: 1fr;
+  }
+
+  .immo-site__media {
+    border-right: none;
+    border-bottom: 1px solid var(--immo-line);
+  }
+
+  .immo-site__cover {
+    min-height: 240px;
+  }
+
+  .immo-site__cover img {
+    min-height: 240px;
+  }
+
+  .immo-site__facts,
+  .immo-site__price-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .immo-site__price-meta > div {
+    border-right: none;
+    border-bottom: 1px solid var(--immo-line);
+    text-align: left;
+    padding-left: 18px;
+  }
+
+  .immo-site__price-meta > div:last-child {
+    border-bottom: none;
+  }
+
+  .immo-btp-band {
+    grid-template-columns: 1fr;
+  }
+
+  .immo-btp-band__media::after {
+    background: linear-gradient(0deg, var(--immo-navy) 0%, transparent 60%);
+  }
+
+  .immo-contact-band__inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .immo-contact-band__channels {
+    justify-content: center;
+  }
+
+  .immo-contact-band__form {
+    justify-self: center;
+  }
+
+  .immo-demande-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .immo-sites-nav__inner {
+    grid-template-columns: 1fr;
+    overflow-x: auto;
+    display: flex;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .immo-sites-nav__link {
+    flex: 0 0 min(260px, 80vw);
+    scroll-snap-align: start;
+  }
+
+  .immo-hero__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .immo-site__facts {
+    grid-template-columns: 1fr;
+  }
+
+  .immo-site__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .immo-site__phone {
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .immo-site__affiche,
+  .immo-site__affiche-arrow,
+  .immo-sites-nav__link {
+    transition: none;
+  }
+}

@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ─── SCROLL PROGRESS ─── */
   const bar = document.getElementById("progress-bar");
-  const headerShell = document.querySelector(".header-shell");
+  const headerShell = document.querySelector(".site-header-unified") || document.querySelector(".header-shell");
   const isHomeImmersive = false; /* design unifié — plus de mode sombre accueil */
 
   function onPageScroll() {

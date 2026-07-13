@@ -1,0 +1,63 @@
+<section class="section ecosystem-demande-section" id="demande-form" tabindex="-1">
+  <div class="ecosystem-demande-wrap ecosystem-demande-wrap--inline">
+    {% if submitted %}
+    <div class="ecosystem-demande-success" role="status">
+      <span class="ecosystem-demande-success__icon" aria-hidden="true">✓</span>
+      <h2>Demande envoyée</h2>
+      <p>
+        Merci <strong>{{ submission.name }}</strong>, nous avons bien reçu votre demande
+        concernant <strong>{{ submission.topic_label }}</strong>.
+      </p>
+      <p>Un accusé de réception a été envoyé à <strong>{{ submission.email }}</strong>.</p>
+    </div>
+    {% else %}
+    <div class="form-panel ecosystem-demande-form ecosystem-demande-form--inline">
+      <h2 class="form-panel-title">Votre demande</h2>
+      <p class="form-panel-hint">Décrivez votre besoin — réponse sous 24 à 48&nbsp;h ouvrées.</p>
+      <form method="post" action="{{ form_action }}" novalidate>
+        {% if show_topic_select %}
+        <div class="field-group">
+          <label class="field-label" for="eco_topic">Service concerné <span aria-hidden="true">*</span></label>
+          <select id="eco_topic" class="field-input" name="topic_slug" required>
+            <option value="">— Choisir —</option>
+            {% for key, label in topic_choices %}
+            <option value="{{ key }}"{% if form_data.topic_slug == key %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+        <div class="field-row-2">
+          <div class="field-group">
+            <label class="field-label" for="eco_name">Nom complet <span aria-hidden="true">*</span></label>
+            <input id="eco_name" class="field-input" name="name" required autocomplete="name"
+              value="{{ form_data.name }}">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="eco_email">E-mail <span aria-hidden="true">*</span></label>
+            <input id="eco_email" class="field-input" type="email" name="email" required autocomplete="email"
+              value="{{ form_data.email }}">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="eco_phone">Téléphone <span aria-hidden="true">*</span></label>
+          <input id="eco_phone" class="field-input" type="tel" name="phone" required autocomplete="tel"
+            placeholder="06 12 34 56 78" value="{{ form_data.phone }}">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="eco_message">Votre message <span aria-hidden="true">*</span></label>
+          <textarea id="eco_message" class="field-textarea" name="message" rows="5" required
+            placeholder="Précisez dates, lieu, budget ou toute information utile…">{{ form_data.message }}</textarea>
+        </div>
+        <label class="ecosystem-demande-consent">
+          <input type="checkbox" name="consent" value="1" required{% if form_data.consent %} checked{% endif %}>
+          <span>
+            J'accepte que mes données soient utilisées pour traiter ma demande et être recontacté(e).
+            <a href="{{ url_for('mentions_legales') }}">Mentions légales</a>
+          </span>
+        </label>
+        <button type="submit" class="btn-primary">Envoyer ma demande</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</section>
