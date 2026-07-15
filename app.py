@@ -25,6 +25,7 @@ from extensions import db, login_manager, migrate
 import mailer
 import smser
 from database import ensure_database
+from services.database_url import normalize_database_url
 from models import (
     ORDER_STATUSES,
     ORDER_STATUS_AWAITING_PAYPAL,
@@ -83,9 +84,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY") or "dev-secret-change-me"
 _sqlite_path = os.path.join(app.instance_path, "yombal.sqlite").replace("\\", "/")
-_db_url = (os.environ.get("DATABASE_URL") or "").strip()
-if _db_url.startswith("postgres://"):
-    _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+_db_url = normalize_database_url(os.environ.get("DATABASE_URL") or "")
 app.config["SQLALCHEMY_DATABASE_URI"] = _db_url or ("sqlite:///" + _sqlite_path)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["MAX_CONTENT_LENGTH"] = 6 * 1024 * 1024  # uploads admin (photos produits)

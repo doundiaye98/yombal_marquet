@@ -30,5 +30,9 @@ services:
         fromDatabase:
           name: yombal-marquet-db
           property: connectionString
+      # Si erreur DNS « could not translate host name dpg-…-a » :
+      # Dashboard → Postgres → Connect → External → coller l’URL ici (optionnel)
+      # - key: DATABASE_EXTERNAL_URL
+      #   sync: false
       - key: FLASK_SECRET_KEY
         generateValue: true
