@@ -87,6 +87,11 @@ _sqlite_path = os.path.join(app.instance_path, "yombal.sqlite").replace("\\", "/
 _db_url = normalize_database_url(os.environ.get("DATABASE_URL") or "")
 app.config["SQLALCHEMY_DATABASE_URI"] = _db_url or ("sqlite:///" + _sqlite_path)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+if _db_url.startswith("postgresql"):
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    }
 app.config["MAX_CONTENT_LENGTH"] = 6 * 1024 * 1024  # uploads admin (photos produits)
 
 db.init_app(app)

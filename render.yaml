@@ -22,6 +22,8 @@ services:
     # CONTACT_EMAIL, STRIPE_*, PAYPAL_*, BANK_*, MAIL_*,
     # CLOUDINARY_* (images admin persistantes), PAYMENT_SIMULATION=0
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
       - key: FLASK_APP
         value: app.py
       - key: PAYMENT_SIMULATION
