@@ -20,6 +20,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy.exc import OperationalError, SQLAlchemyError
 
 from extensions import db, login_manager, migrate
 import mailer
@@ -494,22 +495,60 @@ def _paypal_env():
 
 
 _db_bootstrapped = False
+_db_bootstrap_error = None
+
+
+def _database_unavailable_html():
+    return (
+        "<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'>"
+        "<meta name='viewport' content='width=device-width,initial-scale=1'>"
+        "<title>Yombal Marché — base indisponible</title>"
+        "<style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;color:#1a3d2b}"
+        "h1{font-size:1.4rem}p{line-height:1.5}</style></head><body>"
+        "<h1>Boutique temporairement indisponible</h1>"
+        "<p>La base de données PostgreSQL n'est pas accessible. "
+        "Sur Render, vérifiez que <strong>yombal-marquet-db</strong> est "
+        "<strong>Available</strong> (pas expirée / suspendue) et que "
+        "<strong>DATABASE_URL</strong> pointe vers la bonne base, "
+        "dans la même région que le Web Service.</p>"
+        "<p>Si la base gratuite a expiré : créez une nouvelle base Postgres "
+        "ou passez au plan payant, puis mettez à jour "
+        "<strong>DATABASE_URL</strong> et redéployez.</p>"
+        "</body></html>"
+    ), 503, {"Content-Type": "text/html; charset=utf-8"}
 
 
 def _bootstrap_database():
-    global _db_bootstrapped
+    global _db_bootstrapped, _db_bootstrap_error
     if _db_bootstrapped:
         return
-    ensure_database(app)
-    _db_bootstrapped = True
+    if _db_bootstrap_error is not None:
+        raise _db_bootstrap_error
+    try:
+        ensure_database(app)
+        _db_bootstrapped = True
+    except (OperationalError, SQLAlchemyError) as exc:
+        _db_bootstrap_error = exc
+        logger.critical("PostgreSQL indisponible au démarrage : %s", exc)
+        raise
+
+
+@app.errorhandler(OperationalError)
+@app.errorhandler(SQLAlchemyError)
+def _handle_database_error(exc):
+    logger.exception("Erreur base de données : %s", exc)
+    return _database_unavailable_html()
 
 
 if os.environ.get("RENDER"):
     @app.before_request
     def _lazy_database_bootstrap():
-        if request.endpoint == "healthz":
+        if request.endpoint in ("healthz", None):
             return
-        _bootstrap_database()
+        try:
+            _bootstrap_database()
+        except (OperationalError, SQLAlchemyError):
+            return _database_unavailable_html()
 else:
     with app.app_context():
         ensure_database(app)

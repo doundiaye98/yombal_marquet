@@ -18,7 +18,10 @@ DEFAULTS = {
 
 
 def shop_settings():
-    stored = all_settings_dict()
+    try:
+        stored = all_settings_dict()
+    except Exception:
+        stored = {}
     out = dict(DEFAULTS)
     out.update(stored)
     out["shop_contact_email"] = (
