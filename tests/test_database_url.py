@@ -9,7 +9,17 @@ def test_postgres_scheme_normalized():
     assert normalize_database_url(url).startswith("postgresql://")
 
 
-def test_render_internal_host_expanded_with_ssl(monkeypatch):
+def test_render_keeps_internal_host(monkeypatch):
+    monkeypatch.setenv("RENDER", "true")
+    monkeypatch.delenv("DATABASE_EXTERNAL_URL", raising=False)
+    url = "postgresql://u:p@dpg-d8nrk3pkh4rs73fgs440-a/yombal"
+    fixed = normalize_database_url(url)
+    assert fixed == url
+    assert "sslmode" not in fixed
+
+
+def test_render_internal_host_expanded_off_render(monkeypatch):
+    monkeypatch.delenv("RENDER", raising=False)
     monkeypatch.delenv("DATABASE_EXTERNAL_URL", raising=False)
     monkeypatch.setenv("RENDER_REGION", "frankfurt")
     url = "postgresql://u:p@dpg-d8nrk3pkh4rs73fgs440-a/yombal"

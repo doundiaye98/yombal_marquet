@@ -493,8 +493,26 @@ def _paypal_env():
     }
 
 
-with app.app_context():
+_db_bootstrapped = False
+
+
+def _bootstrap_database():
+    global _db_bootstrapped
+    if _db_bootstrapped:
+        return
     ensure_database(app)
+    _db_bootstrapped = True
+
+
+if os.environ.get("RENDER"):
+    @app.before_request
+    def _lazy_database_bootstrap():
+        if request.endpoint == "healthz":
+            return
+        _bootstrap_database()
+else:
+    with app.app_context():
+        ensure_database(app)
 
 
 def _product_query_active():

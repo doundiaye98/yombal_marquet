@@ -10,6 +10,10 @@ from urllib.parse import parse_qs, quote, urlparse, urlencode, urlunparse
 logger = logging.getLogger(__name__)
 
 
+def _on_render() -> bool:
+    return bool(os.environ.get("RENDER"))
+
+
 def _is_render_postgres_host(host: str) -> bool:
     host = (host or "").strip().lower()
     return host.startswith("dpg-") and (
@@ -47,7 +51,7 @@ def _ensure_sslmode(url: str, mode: str = "require") -> str:
 
 
 def normalize_database_url(url: str) -> str:
-    """Corrige postgres://, hostname Render incomplet et SSL externe."""
+    """Corrige postgres://, hostname Render et SSL selon le contexte."""
     url = (url or "").strip()
     if not url:
         return ""
@@ -70,6 +74,18 @@ def normalize_database_url(url: str) -> str:
     host = (parsed.hostname or "").strip()
 
     if _needs_host_expansion(host):
+        force_external = os.environ.get("DATABASE_FORCE_EXTERNAL", "").strip().lower() in (
+            "1",
+            "true",
+            "yes",
+        )
+        if _on_render() and not force_external:
+            logger.info(
+                "DATABASE_URL : connexion Postgres interne Render (%s, sans SSL)",
+                host,
+            )
+            return url
+
         region = (os.environ.get("RENDER_REGION") or "frankfurt").strip().lower()
         new_host = f"{host}.{region}-postgres.render.com"
         url = urlunparse(parsed._replace(netloc=_rebuild_netloc(parsed, new_host)))
