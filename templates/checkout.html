@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/checkout_steps.html" import checkout_steps %}
+{% from "macros/order_trust.html" import order_trust_panel with context %}
 {% block title %}Commande — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper order-flow-page">
@@ -8,10 +9,12 @@
   <header class="page-hero page-hero--compact">
     <p class="section-eyebrow reveal">Commande</p>
     <h1 class="section-title reveal">Récapitulatif</h1>
-    <p class="section-sub reveal">Vérifiez votre panier, indiquez vos coordonnées de livraison puis passez au paiement sécurisé.</p>
+    <p class="section-sub reveal">Coordonnées, adresse, puis paiement — <strong>sans compte obligatoire</strong>.</p>
   </header>
 
   <section class="section section--flush-top">
+    {{ order_trust_panel('checkout') }}
+
     <div class="cart-summary checkout-summary-box reveal">
       <ul class="checkout-list checkout-list--flush">
         {% for row in items %}
@@ -150,6 +153,7 @@
       </div>
 
       <div class="checkout-actions-footer">
+        <p class="checkout-pay-reassure">Ensuite : choix du paiement (carte, PayPal, virement ou espèces à la livraison).</p>
         <button type="submit" class="btn-primary">Confirmer et payer</button>
         <a href="{{ url_for('panier') }}" class="btn-outline">Modifier le panier</a>
       </div>

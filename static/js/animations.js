@@ -119,51 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ─── CUSTOM CURSOR ─── */
-  const dot = document.getElementById("cursor-dot");
-  const ring = document.getElementById("cursor-ring");
-
-  if (motionOk && mqFine.matches && dot && ring) {
-    let mouseX = 0;
-    let mouseY = 0;
-    let ringX = 0;
-    let ringY = 0;
-
-    document.addEventListener("mousemove", (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      dot.style.left = mouseX + "px";
-      dot.style.top = mouseY + "px";
-    });
-
-    function animateRing() {
-      ringX += (mouseX - ringX) * 0.14;
-      ringY += (mouseY - ringY) * 0.14;
-      ring.style.left = ringX + "px";
-      ring.style.top = ringY + "px";
-      requestAnimationFrame(animateRing);
-    }
-    animateRing();
-
-    document
-      .querySelectorAll("a, button, .svc-card, .float-card, .c-card")
-      .forEach((el) => {
-        el.addEventListener("mouseenter", () => {
-          dot.style.width = "16px";
-          dot.style.height = "16px";
-          ring.style.width = "56px";
-          ring.style.height = "56px";
-          ring.style.borderColor = "rgba(200,80,58,0.6)";
-        });
-        el.addEventListener("mouseleave", () => {
-          dot.style.width = "8px";
-          dot.style.height = "8px";
-          ring.style.width = "36px";
-          ring.style.height = "36px";
-          ring.style.borderColor = "rgba(200,80,58,0.4)";
-        });
-      });
-  }
+  /* Curseur custom désactivé — pointeur système (cursor: pointer) */
 
   /* ─── SCROLL REVEAL (stagger) ─── */
   if ("IntersectionObserver" in window && motionOk) {

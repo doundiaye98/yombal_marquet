@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
 {% from "macros/checkout_steps.html" import checkout_steps %}
+{% from "macros/order_trust.html" import order_trust_panel with context %}
 {% block title %}Paiement — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper order-flow-page">
@@ -33,6 +34,7 @@
   </header>
 
   <section class="section section--flush-top">
+    {{ order_trust_panel('payment') }}
 
     <ul class="order-line-list order-line-list--compact reveal">
       {% for line in order.items %}

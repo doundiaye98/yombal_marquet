@@ -1,0 +1,60 @@
+{# Bloc confiance commande — panier / checkout / paiement #}
+{% macro order_trust_panel(variant='full') %}
+{% set shop = shop_settings %}
+{% set dmin = shop.get('shop_delivery_days_min', '3') %}
+{% set dmax = shop.get('shop_delivery_days_max', '7') %}
+{% set est = checkout_delivery_estimate() %}
+<aside class="order-trust order-trust--{{ variant }} reveal" aria-label="Acheter en confiance">
+  <header class="order-trust__head">
+    <h2 class="order-trust__title">Acheter en confiance</h2>
+    <p class="order-trust__lead">Commandez tranquillement — infos claires avant le paiement.</p>
+  </header>
+
+  <ul class="order-trust__grid">
+    <li class="order-trust__item">
+      <span class="order-trust__icon" aria-hidden="true">👤</span>
+      <div>
+        <strong>Sans compte obligatoire</strong>
+        <p>Indiquez vos coordonnées à la commande. Pas besoin de créer un compte.</p>
+      </div>
+    </li>
+    <li class="order-trust__item">
+      <span class="order-trust__icon" aria-hidden="true">🚚</span>
+      <div>
+        <strong>Livraison {{ dmin }}–{{ dmax }} j. ouvrés</strong>
+        <p>Estimation typique : <strong>{{ est.label }}</strong> (selon adresse et préparation).</p>
+      </div>
+    </li>
+    <li class="order-trust__item">
+      <span class="order-trust__icon" aria-hidden="true">🌍</span>
+      <div>
+        <strong>Zones desservies</strong>
+        <p>
+          <strong>France</strong> (tarif selon code postal) ·
+          <strong>Europe</strong> (BE, LU, DE, ES, IT, CH, GB…) ·
+          <strong>Afrique</strong> (SN, CI, ML, MA…).
+          Forfait international affiché après le code postal.
+        </p>
+      </div>
+    </li>
+    <li class="order-trust__item">
+      <span class="order-trust__icon" aria-hidden="true">💳</span>
+      <div>
+        <strong>Modes de paiement</strong>
+        <p>Carte bancaire (Stripe) · PayPal · Virement · Espèces à la livraison.</p>
+      </div>
+    </li>
+    <li class="order-trust__item order-trust__item--contact">
+      <span class="order-trust__icon" aria-hidden="true">💬</span>
+      <div>
+        <strong>Une question ?</strong>
+        <p>
+          <a href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }}</a>
+          · <a href="{{ url_for('contact') }}">Formulaire contact</a>
+          · <a href="{{ url_for('suivi_commande') }}">Suivi commande</a>
+        </p>
+      </div>
+    </li>
+  </ul>
+</aside>
+{% endmacro %}

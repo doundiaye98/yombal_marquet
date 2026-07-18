@@ -237,6 +237,22 @@ body.site-premium::before { display: none !important; }
   opacity: 1;
 }
 
+/* Hero allégé — une colonne, copy lisible */
+.site-premium .xd-hero--simple .xd-hero__body {
+  grid-template-columns: 1fr;
+  max-width: 42rem;
+  margin-inline: auto;
+  justify-items: start;
+  min-height: min(70vh, 640px);
+  align-content: center;
+}
+.site-premium .xd-hero--simple .xd-hero__copy {
+  max-width: 38rem;
+}
+.site-premium .xd-hero--simple .xd-hero__cta {
+  margin-bottom: 0;
+}
+
 .site-premium .xd-hero:not(.xd-hero--no-photo) .xd-hero__vignette,
 .site-premium .xd-hero:not(.xd-hero--no-photo) .xd-hero__beam,
 .site-premium .xd-hero:not(.xd-hero--no-photo) .xd-hero__watermark,

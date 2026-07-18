@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
 {% from "macros/checkout_steps.html" import checkout_steps %}
+{% from "macros/order_trust.html" import order_trust_panel with context %}
 {% block title %}Panier — Yombal Marché{% endblock %}
 {% block content %}
 <div class="page-wrapper order-flow-page{% if items %} has-cart-sticky{% endif %}">
@@ -9,16 +10,12 @@
   <header class="page-hero page-hero--compact">
     <p class="section-eyebrow reveal">Panier</p>
     <h1 class="section-title reveal">Vos <em>articles</em>{% if cart_item_count %} <span class="cart-count-badge">{{ cart_item_count }}</span>{% endif %}</h1>
-    <p class="section-sub reveal">Modifiez les quantités puis validez — commande possible sans créer de compte.</p>
+    <p class="section-sub reveal">Modifiez les quantités puis validez — <strong>commande possible sans créer de compte</strong>.</p>
   </header>
 
   <section class="section section--cart section--flush-top">
     {% if items %}
-    <ul class="cart-trust-row reveal" aria-label="Garanties">
-      <li><span aria-hidden="true">🔒</span> Paiement sécurisé</li>
-      <li><span aria-hidden="true">📦</span> Suivi commande</li>
-      <li><span aria-hidden="true">↩</span> Support réactif</li>
-    </ul>
+    {{ order_trust_panel('cart') }}
 
     <ul class="cart-list reveal">
       {% for row in items %}
@@ -62,6 +59,7 @@
         <span class="cart-summary-label">Total TTC <span class="cart-summary-hint">({{ cart_item_count }} article{{ 's' if cart_item_count > 1 else '' }})</span></span>
         <span class="cart-summary-total">{{ '%.2f'|format(total_cents / 100) }} €</span>
       </div>
+      <p class="cart-summary-trust-note">Sans compte · Livraison {{ shop_settings.get('shop_delivery_days_min', '3') }}–{{ shop_settings.get('shop_delivery_days_max', '7') }} j. · Carte, PayPal, virement ou espèces</p>
       <div class="cart-summary-actions cart-summary-actions--desktop">
         <a href="{{ url_for('checkout') }}" class="btn-primary">Passer commande</a>
         <a href="{{ url_for('boutique') }}" class="btn-outline">Continuer les achats</a>

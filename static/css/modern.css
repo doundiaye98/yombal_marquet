@@ -3878,6 +3878,109 @@ body {
   align-items: center;
   gap: 6px;
 }
+
+/* Bloc confiance commande (panier / checkout / paiement) */
+.order-trust {
+  margin: 0 0 24px;
+  padding: 20px 22px;
+  background: linear-gradient(165deg, #eef5f0 0%, #f7faf8 55%, #fff 100%);
+  border: 1px solid rgba(26, 61, 43, 0.14);
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(26, 61, 43, 0.06);
+}
+.order-trust__head {
+  margin-bottom: 16px;
+}
+.order-trust__title {
+  margin: 0 0 6px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: -0.02em;
+}
+.order-trust__lead {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text2, rgba(26, 61, 43, 0.65));
+  line-height: 1.45;
+}
+.order-trust__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.order-trust__item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(26, 61, 43, 0.08);
+  border-radius: 12px;
+}
+.order-trust__icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  background: var(--green-l, #e8f0eb);
+  border-radius: 10px;
+}
+.order-trust__item strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.92rem;
+  color: var(--green);
+}
+.order-trust__item p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text2, rgba(26, 61, 43, 0.7));
+}
+.order-trust__item a {
+  color: var(--green2);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.order-trust__item--contact {
+  grid-column: 1 / -1;
+}
+.cart-summary-trust-note {
+  margin: 8px 0 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--green2);
+  line-height: 1.4;
+}
+.checkout-pay-reassure {
+  width: 100%;
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--green2);
+  font-weight: 600;
+}
+.order-trust--payment .order-trust__lead {
+  font-weight: 500;
+}
+@media (max-width: 640px) {
+  .order-trust {
+    padding: 16px;
+  }
+  .order-trust__grid {
+    grid-template-columns: 1fr;
+  }
+  .order-trust__item--contact {
+    grid-column: auto;
+  }
+}
 .has-cart-sticky {
   padding-bottom: 88px;
 }

@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
-{% from "macros/catalog_price.html" import catalog_price_badge %}
 {% block title %}Yombal Marché — Accueil{% endblock %}
 {% block main_class %}site-main--home site-main--xd{% endblock %}
 {% block content %}
 
-{# ═══ HERO (design original avant catalogue PDF) ═══ #}
-<section class="xd-hero xd-hero--no-photo" aria-label="Accueil Yombal Marché">
+{# Hero allégé : marque, titre, phrase, CTA — sans stats ni cartes flottantes #}
+<section class="xd-hero xd-hero--no-photo xd-hero--simple" aria-label="Accueil Yombal Marché">
   <div class="xd-hero__scene" aria-hidden="true">
     <canvas id="home-hero-canvas" class="xd-hero__canvas"></canvas>
     <div class="xd-hero__aurora">
@@ -43,46 +42,8 @@
         </a>
         <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost xd-magnetic">Paniers recettes</a>
       </div>
-      <dl class="xd-stats">
-        <div class="xd-stat">
-          <dt><strong data-count="{{ product_count }}">{{ product_count }}</strong></dt>
-          <dd>produits</dd>
-        </div>
-        <div class="xd-stat">
-          <dt><strong data-count="{{ rayon_count }}">{{ rayon_count }}</strong></dt>
-          <dd>rayons</dd>
-        </div>
-        <div class="xd-stat">
-          <dt><strong data-count="{{ recipe_count }}">{{ recipe_count }}</strong></dt>
-          <dd>recettes</dd>
-        </div>
-      </dl>
-    </div>
-
-    <div class="xd-hero__visual" aria-label="Aperçu catalogue">
-      <a href="{{ url_for('boutique', categorie='cereales') }}" class="xd-float-card xd-float-card--hero">
-        <span class="xd-float-card__label">Rayon phare</span>
-        <strong>Riz &amp; céréales</strong>
-        <p>11 formats · fiches détaillées</p>
-        <span class="xd-float-card__link">Découvrir →</span>
-      </a>
-      <div class="xd-float-card xd-float-card--stat">
-        <span aria-hidden="true">🌾</span>
-        <strong>Traçable</strong>
-        <p>Origine connue</p>
-      </div>
-      <div class="xd-float-card xd-float-card--gold">
-        <span aria-hidden="true">🎁</span>
-        <strong>Coffrets</strong>
-        <p>Prêts à offrir</p>
-      </div>
     </div>
   </div>
-
-  <a href="#rayons" class="xd-scroll-hint" aria-label="Défiler pour explorer">
-    <span class="xd-scroll-hint__text">Explorer</span>
-    <span class="xd-scroll-hint__wheel" aria-hidden="true"></span>
-  </a>
 </section>
 
 <section class="xd-categories" id="rayons" aria-label="Rayons boutique">
@@ -186,41 +147,6 @@
     {% endfor %}
   </div>
 </div>
-
-{% if featured_products %}
-<section class="ud-selection" aria-label="Sélection boutique">
-  <header class="ud-selection__head">
-    <p class="section-eyebrow">Sélection</p>
-    <h2 class="section-title">Coups de <em>cœur</em></h2>
-    <a href="{{ url_for('boutique') }}" class="ud-btn ud-btn--outline ud-btn--sm">Toute la boutique</a>
-  </header>
-  <div class="ud-selection__grid">
-    {% for p in featured_products %}
-    <article class="boutique-card">
-      <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
-        {{ product_image(p, 'card') }}
-        {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
-        <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>
-      </a>
-      <div class="boutique-card__body">
-        <h3 class="boutique-card__title">
-          <a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a>
-        </h3>
-        <p class="boutique-card__summary">{{ p.summary }}</p>
-        <div class="boutique-card__footer">
-          {{ catalog_price_badge(p.price_euros()) }}
-          <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
-            <input type="hidden" name="product_id" value="{{ p.id }}">
-            <input type="hidden" name="quantity" value="1">
-            <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ p.name }} au panier">+</button>
-          </form>
-        </div>
-      </div>
-    </article>
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
 
 {% if featured_recipes %}
 <section class="ud-panel ud-panel--green" aria-label="Recettes">

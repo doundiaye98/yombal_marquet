@@ -33,37 +33,21 @@ body {
   overflow-x: hidden;
 }
 
-@media (pointer: fine) {
-  body {
-    cursor: none;
-  }
+body {
+  cursor: auto;
 }
 
-#cursor-dot {
-  position: fixed; top: 0; left: 0;
-  width: 8px; height: 8px;
-  background: var(--terra);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
-  mix-blend-mode: multiply;
+a, button, [role="button"], .nav-logo, .nav-links a, .btn-nav,
+.btn-primary, .btn-outline, .btn-gold, .float-card, .svc-card,
+.c-email, .footer-links a {
+  cursor: pointer;
 }
+
+/* Ancien curseur custom désactivé — pointeur système */
+#cursor-dot,
 #cursor-ring {
-  position: fixed; top: 0; left: 0;
-  width: 36px; height: 36px;
-  border: 1.5px solid rgba(200, 80, 58, 0.4);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99998;
-  transform: translate(-50%, -50%);
-  transition: transform 0.18s ease, width 0.3s, height 0.3s, border-color 0.3s;
-}
-
-@media (pointer: coarse), (prefers-reduced-motion: reduce) {
-  body { cursor: auto !important; }
-  #cursor-dot, #cursor-ring { display: none !important; visibility: hidden; }
+  display: none !important;
+  visibility: hidden;
 }
 
 #grain {
@@ -152,7 +136,7 @@ body {
   transform: scale(1.02);
 }
 @media (pointer: fine) {
-  .nav-logo { cursor: none; }
+  .nav-logo { cursor: pointer; }
 }
 @media (max-width: 900px) {
   .nav-logo-img {
@@ -229,7 +213,7 @@ body {
   transition: color 0.3s; position: relative;
 }
 @media (pointer: fine) {
-  .nav-links a { cursor: none; }
+  .nav-links a { cursor: pointer; }
 }
 .nav-links a::after {
   content: ''; position: absolute;
@@ -255,7 +239,7 @@ body {
   position: relative; overflow: hidden;
 }
 @media (pointer: fine) {
-  .btn-nav { cursor: none; }
+  .btn-nav { cursor: pointer; }
 }
 .btn-nav::before {
   content: ''; position: absolute; inset: 0;
@@ -406,7 +390,7 @@ body {
   position: relative; overflow: hidden;
 }
 @media (pointer: fine) {
-  .btn-primary { cursor: none; }
+  .btn-primary { cursor: pointer; }
 }
 .btn-primary .btn-arrow {
   display: inline-block;
@@ -437,7 +421,7 @@ body {
   transition: all 0.35s cubic-bezier(.23,1,.32,1);
 }
 @media (pointer: fine) {
-  .btn-outline { cursor: none; }
+  .btn-outline { cursor: pointer; }
 }
 .btn-outline:hover { border-color: var(--green); background: rgba(26,61,43,0.04); transform: translateY(-3px); }
 
@@ -463,7 +447,7 @@ body {
   border: 1px solid rgba(26,61,43,0.06);
 }
 @media (pointer: fine) {
-  .float-card { cursor: none; }
+  .float-card { cursor: pointer; }
 }
 .float-card:hover { transform: translateY(-10px) scale(1.03) rotate(-1deg); box-shadow: 0 40px 100px rgba(26,61,43,0.2); }
 
@@ -639,7 +623,7 @@ body {
   display: block;
 }
 @media (pointer: fine) {
-  .svc-card { cursor: none; }
+  .svc-card { cursor: pointer; }
 }
 .svc-card::before {
   content: '';
@@ -745,7 +729,7 @@ body {
   display: inline-flex; align-items: center; justify-content: center;
 }
 @media (pointer: fine) {
-  .btn-gold { cursor: none; }
+  .btn-gold { cursor: pointer; }
 }
 .btn-gold:hover { background: var(--gold2); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(200,151,58,0.5); }
 
@@ -874,7 +858,7 @@ body {
   transition: gap 0.3s;
 }
 @media (pointer: fine) {
-  .c-email { cursor: none; }
+  .c-email { cursor: pointer; }
 }
 .c-email:hover { gap: 14px; }
 .c-msg {
@@ -1034,7 +1018,7 @@ body {
   transition: color 0.3s;
 }
 @media (pointer: fine) {
-  .footer-links a { cursor: none; }
+  .footer-links a { cursor: pointer; }
 }
 .footer-links a:hover { color: rgba(255,255,255,0.9); }
 .footer-bottom {
