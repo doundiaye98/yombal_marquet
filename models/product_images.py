@@ -172,6 +172,8 @@ IMAGE_SOURCES = {
     "Ailes de poulet Tex-Mex halal — 2.jpg": "ailes-poulet-texmex-halal",
     "Chinchard entier— carton 10 kg.jpg": "chinchard-600-900-10kg",
     "Dorade 1000 g+ — carton 5 kg.jpg": "dorade-1000-plus-5kg",
+    "Sauce graine de palme Trofai — 350 g.jpg": "sauce-trofai-palmier-350",
+    "Sauce graine de palme Trofai — 410 g.jpg": "sauce-trofai-palmier-410",
     # Épicerie — photos produits réelles
     "Dakhar — 150 g.jpg": "dakhar-sachet-150g",
     "Dakhar — 375 g.webp": "dakhar-sachet-375g",
