@@ -72,6 +72,15 @@ _RAW_PRODUCT_IMAGES = {
     "sardinelle-yaboye": "img/products/sardinelle-yaboye.jpg",
     "tilapia-gros-xxl-10kg": "img/products/tilapia-gros-xxl-10kg.jpg",
     "ailes-poulet-texmex-halal": "img/products/ailes-poulet-texmex-halal.jpg",
+    "chinchard-600-900-10kg": "img/products/chinchard-600-900-10kg.jpg",
+    "dorade-1000-plus-5kg": "img/products/dorade-1000-plus-5kg.jpg",
+    # Photos produits réelles (épicerie)
+    "dakhar-sachet-150g": "img/products/dakhar-sachet-150g.jpg",
+    "dakhar-sachet-375g": "img/products/dakhar-sachet-375g.webp",
+    "miel-fleurs-500g": "img/products/miel-fleurs-500g.jpg",
+    "pate-arachide-labelafrik": "img/products/pate-arachide-labelafrik.jpg",
+    "pate-arachide-dakatine": "img/products/pate-arachide-dakatine.jpg",
+    "pate-arachide-pcd-500g": "img/products/pate-arachide-pcd-500g.jpg",
 }
 
 PRODUCT_IMAGES = dict(_RAW_PRODUCT_IMAGES)
@@ -87,7 +96,6 @@ CATALOG_SCREENSHOT_IMAGES = {
     "poudre-lait-nido-900g": "img/products/poudre-lait-nido-900g.jpg",
     "poudre-lait-nido-1800g": "img/products/poudre-lait-nido-1800g.jpg",
     "poudre-lait-nido-2500g": "img/products/poudre-lait-nido-2500g.jpg",
-    "lait-concentre-bonnet-rouge": "img/products/lait-concentre-bonnet-rouge.jpg",
     "sauce-trofai-palmier-350": "img/products/sauce-trofai-palmier-350.jpg",
     "sauce-trofai-palmier-410": "img/products/sauce-trofai-palmier-410.jpg",
     "concentre-tomates-rolli": "img/products/concentre-tomates-rolli.jpg",
@@ -162,6 +170,17 @@ IMAGE_SOURCES = {
     "Sardinelle Yaboye — sachet.jpg": "sardinelle-yaboye",
     "Tilapia gros XXL — carton 10 kg.jpg": "tilapia-gros-xxl-10kg",
     "Ailes de poulet Tex-Mex halal — 2.jpg": "ailes-poulet-texmex-halal",
+    "Chinchard entier— carton 10 kg.jpg": "chinchard-600-900-10kg",
+    "Dorade 1000 g+ — carton 5 kg.jpg": "dorade-1000-plus-5kg",
+    # Épicerie — photos produits réelles
+    "Dakhar — 150 g.jpg": "dakhar-sachet-150g",
+    "Dakhar — 375 g.webp": "dakhar-sachet-375g",
+    "Miel de fleurs — 500 g.jpg": "miel-fleurs-500g",
+    "Sirop de bissap — 50 cl.jpg": "sirop-bissap-ud",
+    "Sirop de gingembre — 50 cl.jpg": "sirop-gingembre-ud",
+    "Pâte d'arachide — 500 g.jpg": "pate-arachide-labelafrik",
+    "Pâte d'arachide PCD — 500 g.jpg": "pate-arachide-pcd-500g",
+    "âte d'arachide Dakatine.jpg": "pate-arachide-dakatine",
 }
 
 

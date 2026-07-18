@@ -369,7 +369,6 @@ LABELAFRIK_ALIMENTS = [
 ]
 
 LABELAFRIK_CONSERVES = [
-    _lf("UD-LAIT-CR", "lait-concentre-bonnet-rouge", "Lait concentré Bonnet Rouge", "Onctueux et sucré.", CATEGORY_CONSERVES, "🥛", 2.9, "397 g"),
     _lf("UD-TROFAI-35", "sauce-trofai-palmier-350", "Sauce Trofai", "Graine de palmier — pot 350 g.", CATEGORY_CONDIMENTS, "🫙", 3.5, "350 g"),
     _lf("UD-TROFAI-41", "sauce-trofai-palmier-410", "Sauce Trofai", "Graine de palmier — pot 410 g.", CATEGORY_CONDIMENTS, "🫙", 4.1, "410 g"),
     _lf("UD-TOM-ROLLI", "concentre-tomates-rolli", "Concentré de tomates Rolli", "Tube 880 g.", CATEGORY_CONDIMENTS, "🍅", 4.25, "880 g"),

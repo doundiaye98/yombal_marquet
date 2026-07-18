@@ -131,7 +131,6 @@ PRODUCT_DISPLAY_NAMES = {
     "maad-400g": "Maad en boîte — 400 g",
     "poisson-fume-ud": "Poisson fumé — 500 g",
     "rouge-barbet-ud": "Poisson rouge barbet — 1 kg",
-    "lait-concentre-bonnet-rouge": "Lait concentré Bonnet Rouge — 397 g",
     "pate-sardinelle-pinton": "Pâte de sardinelle Pinton",
     "sardinelle-pilchards-tomate": "Sardinelles à la tomate",
 }

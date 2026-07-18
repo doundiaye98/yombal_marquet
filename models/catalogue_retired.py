@@ -20,6 +20,8 @@ RETIRED_PRODUCT_SLUGS = frozenset(
         "huile-arachide-1l",
         # Doublon Maad (captures catalogue : maad-230g / maad-400g)
         "maad-labelafrik",
+        # Retiré à la demande (conserves)
+        "lait-concentre-bonnet-rouge",
     }
 )
 
