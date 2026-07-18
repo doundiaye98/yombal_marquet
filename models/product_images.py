@@ -74,6 +74,7 @@ _RAW_PRODUCT_IMAGES = {
     "ailes-poulet-texmex-halal": "img/products/ailes-poulet-texmex-halal.jpg",
     "chinchard-600-900-10kg": "img/products/chinchard-600-900-10kg.jpg",
     "dorade-1000-plus-5kg": "img/products/dorade-1000-plus-5kg.jpg",
+    "biscuits-gem": "img/products/biscuits-gem.jpg",
     # Photos produits réelles (épicerie)
     "dakhar-sachet-150g": "img/products/dakhar-sachet-150g.jpg",
     "dakhar-sachet-375g": "img/products/dakhar-sachet-375g.webp",
@@ -174,6 +175,7 @@ IMAGE_SOURCES = {
     "Dorade 1000 g+ — carton 5 kg.jpg": "dorade-1000-plus-5kg",
     "Sauce graine de palme Trofai — 350 g.jpg": "sauce-trofai-palmier-350",
     "Sauce graine de palme Trofai — 410 g.jpg": "sauce-trofai-palmier-410",
+    "Biscuits Gem.jpg": "biscuits-gem",
     # Épicerie — photos produits réelles
     "Dakhar — 150 g.jpg": "dakhar-sachet-150g",
     "Dakhar — 375 g.webp": "dakhar-sachet-375g",
