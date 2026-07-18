@@ -177,7 +177,6 @@
   line-height: 0.85;
   color: transparent;
   -webkit-text-stroke: 1px rgba(255, 252, 247, 0.04);
-  text-stroke: 1px rgba(255, 252, 247, 0.04);
   z-index: 1;
   pointer-events: none;
   user-select: none;
@@ -285,7 +284,6 @@
 .xd-line--stroke .xd-char {
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(212, 168, 75, 0.8);
-  text-stroke: 1.5px rgba(212, 168, 75, 0.8);
 }
 .xd-line--shimmer .xd-char.is-in {
   animation: xdCharShimmer 4s ease-in-out infinite;
