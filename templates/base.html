@@ -73,21 +73,34 @@
             <li role="none"><a href="{{ url_for('coffrets') }}" role="menuitem" class="nav-dropdown-link{{ ' active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}"><span class="nav-dropdown-icon" aria-hidden="true">🎁</span> Coffrets cadeaux</a></li>
           </ul>
         </li>
-        <li><a href="{{ url_for('panier') }}" class="{{ 'active' if ep in ['panier', 'checkout'] else '' }}">Panier{% if cart_count %}<span class="nav-cart-badge">{{ cart_count }}</span>{% endif %}</a></li>
-        <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail', 'commande_recommander'] else '' }}">Commandes</a></li>
         {% if not (ep and ep.startswith('admin.')) %}
-        <li class="nav-links__sep" role="presentation" aria-hidden="true"></li>
-        {% for item in ecosystem_nav %}
-        <li>
-          <a
-            href="{{ item.external_url if item.external_url else url_for('ecosysteme_detail', slug=item.slug) }}"
-            class="{{ 'active' if not item.external_url and ep == 'ecosysteme_detail' and request.view_args.get('slug') == item.slug else '' }}"
-            {% if item.external_url %}target="_blank" rel="noopener noreferrer"{% endif %}
-            title="{{ item.title }}{% if item.external_url %} (nouvel onglet){% endif %}"
-          >{{ item.short_label }}</a>
+        <li class="nav-item nav-item--dropdown nav-item--ecosystem">
+          <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_ecosystem else '' }}" aria-expanded="false" aria-controls="nav-ecosystem-menu" aria-haspopup="true">
+            Univers YOMBAL <span class="nav-chevron" aria-hidden="true">▾</span>
+          </button>
+          <ul id="nav-ecosystem-menu" class="nav-dropdown nav-dropdown--ecosystem" role="menu">
+            {% for item in ecosystem_nav %}
+            <li role="none">
+              <a
+                href="{{ item.external_url if item.external_url else url_for('ecosysteme_detail', slug=item.slug) }}"
+                role="menuitem"
+                class="nav-dropdown-link{{ ' active' if not item.external_url and ep == 'ecosysteme_detail' and request.view_args.get('slug') == item.slug else '' }}"
+                {% if item.external_url %}target="_blank" rel="noopener noreferrer"{% endif %}
+                title="{{ item.title }}{% if item.external_url %} (nouvel onglet){% endif %}"
+              >
+                <span class="nav-dropdown-icon" aria-hidden="true">{{ item.icon }}</span>
+                <span class="nav-dropdown-copy">
+                  <strong>{{ item.short_label }}</strong>
+                  <small>{{ item.tagline }}</small>
+                </span>
+                {% if item.external_url %}<span class="nav-dropdown-ext" aria-hidden="true">↗</span>{% endif %}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
         </li>
-        {% endfor %}
         {% endif %}
+        <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail', 'commande_recommander'] else '' }}">Commandes</a></li>
         <li><a href="{{ url_for('contact') }}" class="{{ 'active' if ep == 'contact' else '' }}">Contact</a></li>
         {% if current_user.is_authenticated %}
         {% if is_shop_admin %}
@@ -97,14 +110,26 @@
         {% endif %}
       </ul>
 
+      <div class="nav-actions">
+        <a
+          href="{{ url_for('panier') }}"
+          class="nav-cart{{ ' is-active' if ep in ['panier', 'checkout'] else '' }}"
+          aria-label="Panier{% if cart_count %} — {{ cart_count }} article{{ 's' if cart_count != 1 else '' }}{% endif %}"
+        >
+          <svg class="nav-cart__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6.5 7h14l-1.4 8.4a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.7L5.4 3.5H3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10" cy="20" r="1.4" fill="currentColor"/>
+            <circle cx="17.5" cy="20" r="1.4" fill="currentColor"/>
+          </svg>
+          {% if cart_count %}<span class="nav-cart__badge">{{ cart_count }}</span>{% endif %}
+        </a>
+        <a href="{{ url_for('boutique') }}" class="btn-nav">Commander</a>
+      </div>
+
       <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="cine-nav" aria-label="Ouvrir le menu">
         <span class="nav-toggle__icon" aria-hidden="true"></span>
         <span class="nav-toggle__label">Menu</span>
       </button>
-
-      <div class="nav-actions">
-        <a href="{{ url_for('boutique') }}" class="btn-nav">Commander</a>
-      </div>
     </div>
 
     {% include 'macros/ecosystem_catbar.html' %}
@@ -125,11 +150,12 @@
         <li><a href="{{ url_for('recettes') }}" class="cine-nav__link{{ ' is-active' if ep in ['recettes', 'recette_detail', 'recette_panier'] else '' }}"><span class="cine-nav__num">06</span><span class="cine-nav__text">Recettes</span></a></li>
         <li><a href="{{ url_for('coffrets') }}" class="cine-nav__link{{ ' is-active' if ep in ['coffrets', 'coffret_detail', 'coffret_panier'] else '' }}"><span class="cine-nav__num">07</span><span class="cine-nav__text">Coffrets</span></a></li>
         <li><a href="{{ url_for('panier') }}" class="cine-nav__link{{ ' is-active' if ep in ['panier', 'checkout'] else '' }}"><span class="cine-nav__num">08</span><span class="cine-nav__text">Panier{% if cart_count %} <em class="cine-nav__badge">{{ cart_count }}</em>{% endif %}</span></a></li>
+        <li><a href="{{ url_for('suivi_commande') }}" class="cine-nav__link{{ ' is-active' if ep in ['suivi_commande', 'suivi_commande_detail', 'commande_recommander'] else '' }}"><span class="cine-nav__num">09</span><span class="cine-nav__text">Commandes</span></a></li>
         <li class="cine-nav__divider" role="separator"><span>Univers YOMBAL</span></li>
         {% for item in ecosystem_nav %}
-        <li><a href="{{ item.external_url if item.external_url else url_for('ecosysteme_detail', slug=item.slug) }}" class="cine-nav__link{{ ' is-active' if not item.external_url and nav_ecosystem and request.view_args.get('slug') == item.slug else '' }}"{% if item.external_url %} target="_blank" rel="noopener noreferrer"{% endif %}><span class="cine-nav__num">{{ '%02d'|format(loop.index + 8) }}</span><span class="cine-nav__text">{{ item.icon }} {{ item.short_label }}{% if item.external_url %} ↗{% endif %}</span></a></li>
+        <li><a href="{{ item.external_url if item.external_url else url_for('ecosysteme_detail', slug=item.slug) }}" class="cine-nav__link{{ ' is-active' if not item.external_url and nav_ecosystem and request.view_args.get('slug') == item.slug else '' }}"{% if item.external_url %} target="_blank" rel="noopener noreferrer"{% endif %}><span class="cine-nav__num">{{ '%02d'|format(loop.index + 9) }}</span><span class="cine-nav__text">{{ item.icon }} {{ item.short_label }}{% if item.external_url %} ↗{% endif %}</span></a></li>
         {% endfor %}
-        <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">15</span><span class="cine-nav__text">Contact</span></a></li>
+        <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">{{ '%02d'|format(ecosystem_nav|length + 10) }}</span><span class="cine-nav__text">Contact</span></a></li>
       </ul>
       <div class="cine-nav__foot">
         <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">Commander maintenant</a>

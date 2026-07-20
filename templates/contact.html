@@ -55,13 +55,20 @@
       <form method="post" action="{{ url_for('contact') }}">
         <div class="field-row-2">
           <div class="field-group">
-            <label class="field-label" for="contact_name">Nom</label>
-            <input id="contact_name" class="field-input" name="name" required>
+            <label class="field-label" for="contact_first_name">Prénom</label>
+            <input id="contact_first_name" class="field-input" name="first_name" required autocomplete="given-name"
+              value="{{ request.form.get('first_name', '') }}">
           </div>
           <div class="field-group">
-            <label class="field-label" for="contact_email">E-mail</label>
-            <input id="contact_email" class="field-input" type="email" name="email" required>
+            <label class="field-label" for="contact_last_name">Nom</label>
+            <input id="contact_last_name" class="field-input" name="last_name" required autocomplete="family-name"
+              value="{{ request.form.get('last_name', '') }}">
           </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="contact_email">E-mail</label>
+          <input id="contact_email" class="field-input" type="email" name="email" required autocomplete="email"
+            value="{{ request.form.get('email', '') }}">
         </div>
         <div class="field-group">
           <label class="field-label" for="contact_subject">Sujet</label>

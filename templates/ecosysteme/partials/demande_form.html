@@ -17,7 +17,7 @@
       <form method="post" action="{{ form_action }}" novalidate>
         {% if show_topic_select %}
         <div class="field-group">
-          <label class="field-label" for="eco_topic">Service concerné <span aria-hidden="true">*</span></label>
+          <label class="field-label" for="eco_topic">{{ topic_select_label or 'Service concerné' }} <span aria-hidden="true">*</span></label>
           <select id="eco_topic" class="field-input" name="topic_slug" required>
             <option value="">— Choisir —</option>
             {% for key, label in topic_choices %}
@@ -28,15 +28,20 @@
         {% endif %}
         <div class="field-row-2">
           <div class="field-group">
-            <label class="field-label" for="eco_name">Nom complet <span aria-hidden="true">*</span></label>
-            <input id="eco_name" class="field-input" name="name" required autocomplete="name"
-              value="{{ form_data.name }}">
+            <label class="field-label" for="eco_first_name">Prénom <span aria-hidden="true">*</span></label>
+            <input id="eco_first_name" class="field-input" name="first_name" required autocomplete="given-name"
+              value="{{ form_data.first_name }}">
           </div>
           <div class="field-group">
-            <label class="field-label" for="eco_email">E-mail <span aria-hidden="true">*</span></label>
-            <input id="eco_email" class="field-input" type="email" name="email" required autocomplete="email"
-              value="{{ form_data.email }}">
+            <label class="field-label" for="eco_last_name">Nom <span aria-hidden="true">*</span></label>
+            <input id="eco_last_name" class="field-input" name="last_name" required autocomplete="family-name"
+              value="{{ form_data.last_name }}">
           </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="eco_email">E-mail <span aria-hidden="true">*</span></label>
+          <input id="eco_email" class="field-input" type="email" name="email" required autocomplete="email"
+            value="{{ form_data.email }}">
         </div>
         <div class="field-group">
           <label class="field-label" for="eco_phone">Téléphone <span aria-hidden="true">*</span></label>

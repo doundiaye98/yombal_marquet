@@ -110,21 +110,23 @@ ECOSYSTEM_SERVICES = {
         "custom_template": "ecosysteme/immobilier_btp.html",
     },
     "transport": {
-        "title": "Yombal Transport",
-        "short_label": "Transport",
-        "icon": "🚚",
-        "tagline": "Logistique, colis et livraisons",
+        "title": "Yombal Transports",
+        "short_label": "Transports",
+        "icon": "🚗",
+        "tagline": "Véhicules, location, déménagement et envoi de colis",
         "lead": (
-            "Transport de marchandises, colis et livraisons locales. "
-            "Complément idéal de la boutique en ligne Yombal Marché."
+            "Achat et vente de véhicules, location de voiture, déménagement professionnel "
+            "et envoi de colis — une offre complète du Groupe YOMBAL pour vos déplacements "
+            "et vos livraisons."
         ),
         "bullets": [
-            "Livraison courses et colis alimentaires",
-            "Envoi France et international (sur devis)",
-            "Suivi et créneaux de livraison",
-            "Partenariats professionnels",
+            "Achats véhicules",
+            "Vente véhicules",
+            "Location voiture",
+            "Déménagement pro",
+            "Envoi de colis",
         ],
-        "cta_label": "Demander un transport",
+        "cta_label": "Faire une demande",
     },
     "restaurant": {
         "title": "Yombal Restaurant",

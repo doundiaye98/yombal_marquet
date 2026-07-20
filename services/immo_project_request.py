@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from services import immobilier_programmes as immo_svc
+from services.contact_form import parse_person_name
 
 PROJECT_TYPES = {
     "achat_terrain": "Achat de terrain (YOMBAL KEUR)",
@@ -23,7 +24,7 @@ def terrain_by_slug(slug: str | None) -> dict | None:
 
 def validate_form(form: dict) -> tuple[dict | None, list[str]]:
     errors: list[str] = []
-    name = (form.get("name") or "").strip()
+    first_name, last_name, name, name_errors = parse_person_name(form)
     email = (form.get("email") or "").strip().lower()
     phone = (form.get("phone") or "").strip()
     country = (form.get("country") or "").strip()
@@ -32,8 +33,8 @@ def validate_form(form: dict) -> tuple[dict | None, list[str]]:
     message = (form.get("message") or "").strip()
     consent = form.get("consent") == "1"
 
-    if len(name) < 2:
-        errors.append("Indiquez votre nom complet.")
+    if name_errors:
+        errors.extend(name_errors)
     if not email or "@" not in email:
         errors.append("Indiquez une adresse e-mail valide.")
     if len(phone) < 8:
@@ -54,6 +55,8 @@ def validate_form(form: dict) -> tuple[dict | None, list[str]]:
 
     terrain = terrain_by_slug(terrain_slug)
     return {
+        "first_name": first_name,
+        "last_name": last_name,
         "name": name,
         "email": email,
         "phone": phone,
@@ -75,7 +78,8 @@ def build_message_body(data: dict) -> str:
     lines = [
         "=== Demande de projet — YOMBAL KEUR ===",
         "",
-        f"Nom : {data['name']}",
+        f"Prénom : {data['first_name']}",
+        f"Nom : {data['last_name']}",
         f"E-mail : {data['email']}",
         f"Téléphone : {data['phone']}",
         f"Pays de résidence : {data['country']}",

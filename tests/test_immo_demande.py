@@ -21,7 +21,8 @@ def test_immo_demande_post_creates_message(client, app):
     r = client.post(
         "/ecosysteme/immobilier-btp/demande",
         data={
-            "name": "Amadou Diop",
+            "first_name": "Amadou",
+            "last_name": "Diop",
             "email": "amadou@example.com",
             "phone": "0612345678",
             "country": "France",
@@ -46,7 +47,7 @@ def test_immo_demande_post_creates_message(client, app):
 def test_immo_demande_post_validation(client):
     r = client.post(
         "/ecosysteme/immobilier-btp/demande",
-        data={"name": "A", "email": "bad", "consent": "0"},
+        data={"first_name": "A", "last_name": "", "email": "bad", "consent": "0"},
     )
     assert r.status_code == 200
     assert b"field-input" in r.data

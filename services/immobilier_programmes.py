@@ -91,12 +91,20 @@ YOMBAL_KEUR_TERRAINS = (
 
 BTP_GALLERY = (
     {
+        "src": "img/immobilier/gemini-chantier-btp.png",
+        "alt": "Chantier BTP — construction en cours",
+    },
+    {
+        "src": "img/immobilier/site-chantier-btp.png",
+        "alt": "Chantier et gros œuvre — Groupe YOMBAL",
+    },
+    {
         "src": "img/immobilier/gemini-terrain.png",
         "alt": "Terrain — programme YOMBAL KEUR",
     },
     {
-        "src": "img/immobilier/gemini-chantier-btp.png",
-        "alt": "Chantier BTP — construction en cours",
+        "src": "img/immobilier/site-terrain-1.png",
+        "alt": "Parcelle et projet immobilier au Sénégal",
     },
 )
 

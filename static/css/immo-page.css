@@ -161,7 +161,7 @@
 }
 
 .immo-sites-nav__inner {
-  max-width: 1180px;
+  max-width: min(1480px, 100%);
   margin: 0 auto;
   padding: 10px clamp(16px, 3vw, 24px);
   display: grid;
@@ -211,7 +211,7 @@
 }
 
 .immo-terrains {
-  max-width: 1140px;
+  max-width: min(1480px, 100%);
   margin: 0 auto;
   padding: clamp(40px, 6vw, 72px) clamp(20px, 4vw, 32px) clamp(56px, 8vw, 96px);
   background:
@@ -221,18 +221,23 @@
 
 .immo-sites-list {
   display: flex;
-  flex-direction: column;
-  gap: clamp(32px, 5vw, 48px);
+  flex-direction: row;
+  align-items: stretch;
+  gap: clamp(16px, 2vw, 24px);
 }
 
 /* ─── Terrain card ─── */
 .immo-site {
+  flex: 1 1 0;
+  min-width: 0;
   scroll-margin-top: calc(var(--nav-h, 72px) + 88px);
+  display: flex;
 }
 
 .immo-site__card {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   gap: 0;
   background: #fff;
   border-radius: 24px;
@@ -248,16 +253,14 @@
 }
 
 .immo-site__media {
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--immo-line);
+  min-height: 260px;
+  border-bottom: 1px solid var(--immo-line);
 }
 
 .immo-site__cover {
   position: relative;
   margin: 0;
-  flex: 1;
-  min-height: 280px;
+  min-height: 220px;
   background: var(--immo-sand);
 }
 
@@ -265,7 +268,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 280px;
+  min-height: 220px;
   object-fit: cover;
   object-position: center;
 }
@@ -285,86 +288,20 @@
   backdrop-filter: blur(6px);
 }
 
-.immo-site__affiche {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 14px 18px;
-  border: none;
-  border-top: 1px solid var(--immo-line);
-  background: var(--immo-cream);
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.2s ease;
-}
-
-.immo-site__affiche:hover {
-  background: #f0e9da;
-}
-
-.immo-site__affiche-thumb {
-  flex-shrink: 0;
-  width: 44px;
-  height: 60px;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(15, 51, 34, 0.12);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.immo-site__affiche-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-  display: block;
-}
-
-.immo-site__affiche-text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.immo-site__affiche-text strong {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--immo-ink);
-}
-
-.immo-site__affiche-text span {
-  font-size: 12px;
-  color: rgba(12, 40, 25, 0.55);
-}
-
-.immo-site__affiche-arrow {
-  flex-shrink: 0;
-  font-size: 1.1rem;
-  color: var(--immo-gold);
-  font-weight: 700;
-  transition: transform 0.2s ease;
-}
-
-.immo-site__affiche:hover .immo-site__affiche-arrow {
-  transform: translateX(3px);
-}
-
 /* ─── Info panel ─── */
 .immo-site__panel {
   display: flex;
   flex-direction: column;
-  padding: clamp(24px, 3.5vw, 36px) clamp(24px, 3.5vw, 40px);
+  flex: 1 1 auto;
+  padding: clamp(18px, 2.5vw, 24px) clamp(16px, 2vw, 22px);
 }
 
 .immo-site__header {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 24px;
-  padding-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--immo-line);
 }
 
@@ -372,11 +309,11 @@
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   font-family: "Fraunces", serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: var(--immo-gold);
   background: rgba(201, 162, 39, 0.12);
@@ -395,10 +332,10 @@
 
 .immo-site__title {
   font-family: "Fraunces", serif;
-  font-size: clamp(1.45rem, 2.8vw, 1.85rem);
+  font-size: clamp(1.05rem, 1.35vw, 1.35rem);
   color: var(--immo-ink);
   margin: 0;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 .immo-site__loc {
@@ -417,7 +354,7 @@
 }
 
 .immo-site__price-main {
-  padding: 20px 22px 16px;
+  padding: 16px 16px 12px;
   background: linear-gradient(135deg, var(--immo-green-deep) 0%, #1e5638 100%);
   color: #fff;
 }
@@ -435,7 +372,7 @@
 .immo-site__price-value {
   display: block;
   font-family: "Fraunces", serif;
-  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
   font-weight: 800;
   line-height: 1;
   color: #fff;
@@ -451,19 +388,24 @@
 
 .immo-site__price-meta {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   margin: 0;
   background: #fff;
 }
 
 .immo-site__price-meta > div {
-  padding: 14px 12px;
-  text-align: center;
-  border-right: 1px solid var(--immo-line);
+  padding: 10px 14px;
+  text-align: left;
+  border-right: none;
+  border-bottom: 1px solid var(--immo-line);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .immo-site__price-meta > div:last-child {
-  border-right: none;
+  border-bottom: none;
 }
 
 .immo-site__price-meta dt {
@@ -472,13 +414,13 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(12, 40, 25, 0.45);
-  margin: 0 0 4px;
+  margin: 0;
 }
 
 .immo-site__price-meta dd {
   margin: 0;
   font-family: "Fraunces", serif;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--immo-ink);
 }
@@ -486,16 +428,20 @@
 /* Facts row */
 .immo-site__facts {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0 0 18px;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 0 0 14px;
 }
 
 .immo-site__fact {
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-radius: 10px;
   background: var(--immo-cream);
   border: 1px solid rgba(15, 51, 34, 0.06);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .immo-site__fact dt {
@@ -504,15 +450,16 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(12, 40, 25, 0.45);
-  margin: 0 0 4px;
+  margin: 0;
 }
 
 .immo-site__fact dd {
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--immo-ink);
   line-height: 1.35;
+  text-align: right;
 }
 
 .immo-site__tags {
@@ -535,7 +482,7 @@
 }
 
 .immo-site__includes {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   flex: 1;
 }
 
@@ -560,7 +507,7 @@
 .immo-site__checklist li {
   position: relative;
   padding-left: 22px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.45;
   color: rgba(12, 40, 25, 0.82);
 }
@@ -583,26 +530,31 @@
 
 .immo-site__actions {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding-top: 20px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: nowrap;
+  padding-top: 16px;
   border-top: 1px solid var(--immo-line);
   margin-top: auto;
 }
 
 .immo-site__cta {
-  flex: 1;
-  min-width: 180px;
+  flex: none;
+  width: 100%;
+  min-width: 0;
   text-align: center;
+  padding: 12px 16px;
+  font-size: 13px;
 }
 
 .immo-site__phone {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--immo-green);
   text-decoration: none;
   white-space: nowrap;
+  text-align: center;
 }
 
 .immo-site__phone:hover {
@@ -665,6 +617,30 @@
 .immo-btp-band__media {
   position: relative;
   min-height: 280px;
+  overflow: hidden;
+}
+
+.immo-btp-band__gallery {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+}
+
+.immo-btp-band__photo {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+}
+
+.immo-btp-band__photo img {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  display: block;
 }
 
 .immo-btp-band__media img {
@@ -1025,6 +1001,25 @@
 }
 
 /* ─── Responsive ─── */
+@media (max-width: 1200px) {
+  .immo-sites-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding-bottom: 8px;
+    margin: 0 calc(-1 * clamp(20px, 4vw, 32px));
+    padding-left: clamp(20px, 4vw, 32px);
+    padding-right: clamp(20px, 4vw, 32px);
+  }
+
+  .immo-site {
+    flex: 0 0 min(360px, 88vw);
+    scroll-snap-align: start;
+  }
+}
+
 @media (max-width: 960px) {
   .immo-hero__inner {
     grid-template-columns: 1fr;
@@ -1034,41 +1029,16 @@
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .immo-site__card {
-    grid-template-columns: 1fr;
-  }
-
-  .immo-site__media {
-    border-right: none;
-    border-bottom: 1px solid var(--immo-line);
-  }
-
-  .immo-site__cover {
-    min-height: 240px;
-  }
-
-  .immo-site__cover img {
-    min-height: 240px;
-  }
-
-  .immo-site__facts,
-  .immo-site__price-meta {
-    grid-template-columns: 1fr;
-  }
-
-  .immo-site__price-meta > div {
-    border-right: none;
-    border-bottom: 1px solid var(--immo-line);
-    text-align: left;
-    padding-left: 18px;
-  }
-
-  .immo-site__price-meta > div:last-child {
-    border-bottom: none;
-  }
-
   .immo-btp-band {
     grid-template-columns: 1fr;
+  }
+
+  .immo-btp-band__gallery {
+    flex-wrap: wrap;
+  }
+
+  .immo-btp-band__photo {
+    flex: 1 1 calc(50% - 1px);
   }
 
   .immo-btp-band__media::after {
@@ -1111,17 +1081,8 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .immo-site__facts {
-    grid-template-columns: 1fr;
-  }
-
-  .immo-site__actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .immo-site__phone {
-    text-align: center;
+  .immo-site {
+    flex-basis: min(320px, 92vw);
   }
 }
 

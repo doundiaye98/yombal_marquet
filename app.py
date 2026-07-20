@@ -74,6 +74,7 @@ from services import ecosystem_nav as ecosystem_nav_svc
 from services import immobilier_programmes as immobilier_programmes_svc
 from services import immo_project_request as immo_request_svc
 from services import ecosystem_service_request as eco_request_svc
+from services.contact_form import parse_person_name
 from shop_auth import admin_required, is_shop_admin
 from models.contact_message import ContactMessage
 
@@ -680,7 +681,8 @@ def services():
 
 def _ecosystem_service_form_state(slug: str) -> tuple[dict, bool, dict | None]:
     form_data = {
-        "name": "",
+        "first_name": "",
+        "last_name": "",
         "email": "",
         "phone": "",
         "message": "",
@@ -694,7 +696,8 @@ def _ecosystem_service_form_state(slug: str) -> tuple[dict, bool, dict | None]:
         return form_data, submitted, submission
 
     form_data = {
-        "name": request.form.get("name", ""),
+        "first_name": request.form.get("first_name", ""),
+        "last_name": request.form.get("last_name", ""),
         "email": request.form.get("email", ""),
         "phone": request.form.get("phone", ""),
         "message": request.form.get("message", ""),
@@ -741,7 +744,8 @@ def immo_demande_projet():
         preselect_terrain = None
 
     form_data = {
-        "name": "",
+        "first_name": "",
+        "last_name": "",
         "email": "",
         "phone": "",
         "country": "",
@@ -752,7 +756,8 @@ def immo_demande_projet():
 
     if request.method == "POST":
         form_data = {
-            "name": request.form.get("name", ""),
+            "first_name": request.form.get("first_name", ""),
+            "last_name": request.form.get("last_name", ""),
             "email": request.form.get("email", ""),
             "phone": request.form.get("phone", ""),
             "country": request.form.get("country", ""),
@@ -845,6 +850,7 @@ def ecosysteme_detail(slug):
         )
 
     form_data, submitted, submission = _ecosystem_service_form_state(slug)
+    show_transport_topics = slug == "transport"
     return render_template(
         "ecosysteme/detail.html",
         service=service,
@@ -852,8 +858,13 @@ def ecosysteme_detail(slug):
         form_data=form_data,
         submitted=submitted,
         submission=submission,
-        topic_choices=eco_request_svc.topic_choices(),
-        show_topic_select=slug == "autres-services",
+        topic_choices=(
+            eco_request_svc.transport_topic_choices()
+            if show_transport_topics
+            else eco_request_svc.topic_choices()
+        ),
+        show_topic_select=slug in ("autres-services", "transport"),
+        topic_select_label="Type de demande" if show_transport_topics else "Service concerné",
         form_action=url_for("ecosysteme_detail", slug=slug),
     )
 
@@ -1827,11 +1838,14 @@ def commande_recommander(order_id):
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
-        name = (request.form.get("name") or "").strip()
+        first_name, last_name, name, name_errors = parse_person_name(request.form)
         email = (request.form.get("email") or "").strip().lower()
         subject = (request.form.get("subject") or "").strip()
         message = (request.form.get("message") or "").strip()
-        if len(name) < 2 or not email or "@" not in email or len(subject) < 3 or len(message) < 10:
+        if name_errors:
+            for err in name_errors:
+                flash(err, "danger")
+        elif not email or "@" not in email or len(subject) < 3 or len(message) < 10:
             flash("Veuillez remplir tous les champs du formulaire.", "danger")
         else:
             msg = ContactMessage(name=name, email=email, subject=subject, message=message)

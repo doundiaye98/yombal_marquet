@@ -9,6 +9,10 @@ def test_ecosystem_page_has_inline_form_transport(client):
     assert r.status_code == 200
     assert b"id=\"demande-form\"" in r.data
     assert b"Votre demande" in r.data
+    assert b"Achats" in r.data
+    assert b"Location voiture" in r.data
+    assert b"Envoi de colis" in r.data
+    assert b"Type de demande" in r.data
 
 
 def test_ecosystem_demande_redirects_to_page(client):
@@ -34,7 +38,8 @@ def test_ecosystem_post_on_service_page_creates_message(client, app):
     r = client.post(
         "/ecosysteme/restaurant",
         data={
-            "name": "Fatou Ndiaye",
+            "first_name": "Fatou",
+            "last_name": "Ndiaye",
             "email": "fatou@example.com",
             "phone": "0611223344",
             "message": "Reservation traiteur pour 50 personnes en septembre.",
@@ -51,10 +56,49 @@ def test_ecosystem_post_on_service_page_creates_message(client, app):
         assert "Restaurant" in msg.subject
 
 
+def test_ecosystem_post_transport_requires_topic(client):
+    r = client.post(
+        "/ecosysteme/transport",
+        data={
+            "first_name": "Fatou",
+            "last_name": "Ndiaye",
+            "email": "fatou@example.com",
+            "phone": "0611223344",
+            "message": "Besoin d une location pour une semaine en aout.",
+            "consent": "1",
+        },
+    )
+    assert r.status_code == 200
+    assert b"Type de demande" in r.data
+
+
+def test_ecosystem_post_transport_creates_message(client, app):
+    r = client.post(
+        "/ecosysteme/transport",
+        data={
+            "topic_slug": "location_voiture",
+            "first_name": "Fatou",
+            "last_name": "Ndiaye",
+            "email": "fatou@example.com",
+            "phone": "0611223344",
+            "message": "Besoin d une location pour une semaine en aout.",
+            "consent": "1",
+        },
+    )
+    assert r.status_code == 200
+    assert b"Demande envoy" in r.data
+
+    with app.app_context():
+        msg = ContactMessage.query.order_by(ContactMessage.id.desc()).first()
+        assert msg is not None
+        assert msg.email == "fatou@example.com"
+        assert "Location voiture" in msg.subject or "Location voiture" in msg.message
+
+
 def test_ecosystem_post_validation(client):
     r = client.post(
         "/ecosysteme/coiffure",
-        data={"name": "A", "email": "bad", "message": "court"},
+        data={"first_name": "A", "last_name": "", "email": "bad", "message": "court"},
     )
     assert r.status_code == 200
     assert b"field-input" in r.data

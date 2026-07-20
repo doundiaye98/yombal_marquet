@@ -60,27 +60,32 @@
           <legend>Vos coordonnées</legend>
           <div class="field-row-2">
             <div class="field-group">
-              <label class="field-label" for="immo_name">Nom complet <span aria-hidden="true">*</span></label>
-              <input id="immo_name" class="field-input" name="name" required autocomplete="name"
-                value="{{ form_data.name }}">
+              <label class="field-label" for="immo_first_name">Prénom <span aria-hidden="true">*</span></label>
+              <input id="immo_first_name" class="field-input" name="first_name" required autocomplete="given-name"
+                value="{{ form_data.first_name }}">
             </div>
+            <div class="field-group">
+              <label class="field-label" for="immo_last_name">Nom <span aria-hidden="true">*</span></label>
+              <input id="immo_last_name" class="field-input" name="last_name" required autocomplete="family-name"
+                value="{{ form_data.last_name }}">
+            </div>
+          </div>
+          <div class="field-row-2">
             <div class="field-group">
               <label class="field-label" for="immo_email">E-mail <span aria-hidden="true">*</span></label>
               <input id="immo_email" class="field-input" type="email" name="email" required autocomplete="email"
                 value="{{ form_data.email }}">
             </div>
-          </div>
-          <div class="field-row-2">
             <div class="field-group">
               <label class="field-label" for="immo_phone">Téléphone <span aria-hidden="true">*</span></label>
               <input id="immo_phone" class="field-input" type="tel" name="phone" required autocomplete="tel"
                 placeholder="06 12 34 56 78" value="{{ form_data.phone }}">
             </div>
-            <div class="field-group">
-              <label class="field-label" for="immo_country">Pays de résidence <span aria-hidden="true">*</span></label>
-              <input id="immo_country" class="field-input" name="country" required autocomplete="country-name"
-                placeholder="France, Sénégal…" value="{{ form_data.country }}">
-            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="immo_country">Pays de résidence <span aria-hidden="true">*</span></label>
+            <input id="immo_country" class="field-input" name="country" required autocomplete="country-name"
+              placeholder="France, Sénégal…" value="{{ form_data.country }}">
           </div>
         </fieldset>
 

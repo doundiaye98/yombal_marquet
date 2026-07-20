@@ -71,32 +71,6 @@
               >
               <span class="immo-site__surface">{{ terrain.surface_m2 }}&nbsp;m²</span>
             </figure>
-            <button
-              type="button"
-              class="immo-site__affiche"
-              data-immo-dialog="dialog-{{ terrain.slug }}"
-              aria-haspopup="dialog"
-            >
-              <span class="immo-site__affiche-thumb" aria-hidden="true">
-                <img src="{{ url_for('static', filename=terrain.poster) }}" alt="" width="36" height="54" loading="lazy">
-              </span>
-              <span class="immo-site__affiche-text">
-                <strong>Affiche officielle</strong>
-                <span>Voir le détail de l'offre</span>
-              </span>
-              <span class="immo-site__affiche-arrow" aria-hidden="true">→</span>
-            </button>
-            <dialog class="immo-dialog" id="dialog-{{ terrain.slug }}" aria-label="Affiche {{ terrain.location }}">
-              <div class="immo-dialog__panel">
-                <button type="button" class="immo-dialog__close" data-immo-close aria-label="Fermer">×</button>
-                <img
-                  src="{{ url_for('static', filename=terrain.poster) }}"
-                  alt="Affiche {{ program.name }} — {{ terrain.location }}"
-                  width="600"
-                  height="900"
-                >
-              </div>
-            </dialog>
           </div>
 
           <div class="immo-site__panel">
@@ -183,7 +157,13 @@
 
   <section class="immo-btp-band" aria-labelledby="immo-btp-title">
     <div class="immo-btp-band__media" aria-hidden="true">
-      <img src="{{ url_for('static', filename='img/immobilier/gemini-chantier-btp.png') }}" alt="">
+      <div class="immo-btp-band__gallery">
+        {% for photo in btp_gallery %}
+        <figure class="immo-btp-band__photo">
+          <img src="{{ url_for('static', filename=photo.src) }}" alt="{{ photo.alt }}">
+        </figure>
+        {% endfor %}
+      </div>
     </div>
     <div class="immo-btp-band__content">
       <p class="immo-btp-band__eyebrow">BTP · Groupe YOMBAL</p>

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from services import ecosystem_nav as nav_svc
+from services.contact_form import parse_person_name
 
 FORM_PAGE_SLUGS = frozenset({
     "investissement",
@@ -16,12 +17,20 @@ FORM_PAGE_SLUGS = frozenset({
 
 TOPIC_CHOICES = {
     "investissement": "Investissement",
-    "transport": "Transport & livraison",
+    "transport": "Yombal Transports",
     "restaurant": "Restaurant & traiteur",
     "coiffure": "Coiffure & beauté",
     "electronique": "Électronique",
     "boutique": "Boutique en ligne",
     "autre": "Autre demande",
+}
+
+TRANSPORT_TOPIC_CHOICES = {
+    "achat_vehicule": "Achats véhicules",
+    "vente_vehicule": "Vente véhicules",
+    "location_voiture": "Location voiture",
+    "demenagement": "Déménagement pro",
+    "envoi_colis": "Envoi de colis",
 }
 
 
@@ -36,12 +45,16 @@ def topic_choices() -> list[tuple[str, str]]:
     return list(TOPIC_CHOICES.items())
 
 
+def transport_topic_choices() -> list[tuple[str, str]]:
+    return list(TRANSPORT_TOPIC_CHOICES.items())
+
+
 def validate_form(form: dict, page_slug: str) -> tuple[dict | None, list[str]]:
     errors: list[str] = []
     if page_slug not in FORM_PAGE_SLUGS:
         return None, ["Service invalide."]
 
-    name = (form.get("name") or "").strip()
+    first_name, last_name, name, name_errors = parse_person_name(form)
     email = (form.get("email") or "").strip().lower()
     phone = (form.get("phone") or "").strip()
     message = (form.get("message") or "").strip()
@@ -53,13 +66,22 @@ def validate_form(form: dict, page_slug: str) -> tuple[dict | None, list[str]]:
             errors.append("Choisissez le service concerné.")
         service_slug = topic_slug if topic_slug != "autre" else "autres-services"
         topic_label = TOPIC_CHOICES[topic_slug]
+    elif page_slug == "transport":
+        if topic_slug not in TRANSPORT_TOPIC_CHOICES:
+            errors.append("Choisissez le type de demande.")
+        service_slug = page_slug
+        topic_label = (
+            f"{service_label(page_slug)} — {TRANSPORT_TOPIC_CHOICES[topic_slug]}"
+            if topic_slug in TRANSPORT_TOPIC_CHOICES
+            else service_label(page_slug) or page_slug
+        )
     else:
         service_slug = page_slug
         topic_slug = page_slug
         topic_label = service_label(page_slug) or page_slug
 
-    if len(name) < 2:
-        errors.append("Indiquez votre nom complet.")
+    if name_errors:
+        errors.extend(name_errors)
     if not email or "@" not in email:
         errors.append("Indiquez une adresse e-mail valide.")
     if len(phone) < 8:
@@ -73,6 +95,8 @@ def validate_form(form: dict, page_slug: str) -> tuple[dict | None, list[str]]:
         return None, errors
 
     return {
+        "first_name": first_name,
+        "last_name": last_name,
         "name": name,
         "email": email,
         "phone": phone,
@@ -93,7 +117,8 @@ def build_message_body(data: dict) -> str:
     lines = [
         f"=== Demande — {data['topic_label']} ===",
         "",
-        f"Nom : {data['name']}",
+        f"Prénom : {data['first_name']}",
+        f"Nom : {data['last_name']}",
         f"E-mail : {data['email']}",
         f"Téléphone : {data['phone']}",
         f"Service : {data['topic_label']}",
