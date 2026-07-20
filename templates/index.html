@@ -4,42 +4,40 @@
 {% block main_class %}site-main--home site-main--xd{% endblock %}
 {% block content %}
 
-{# Hero allégé : photo shopping en fond, sans effets 3D #}
-<section class="xd-hero xd-hero--simple xd-hero--photo-only" aria-label="Accueil Yombal Marché">
+{# Hero : marque, titre, phrase, CTA — fond photo courses #}
+<section class="xd-hero xd-hero--simple" aria-label="Accueil Yombal Marché">
   <div class="xd-hero__scene" aria-hidden="true">
     <div class="xd-hero__photo">
       <img
         src="{{ url_for('static', filename='img/products/background-person-shopping-realistic.png') }}"
         alt=""
-        width="1344"
-        height="896"
+        width="1920"
+        height="1080"
         decoding="async"
         fetchpriority="high"
       >
-      <div class="xd-hero__photo-overlay" hidden></div>
     </div>
   </div>
 
   <div class="xd-hero__body">
     <div class="xd-hero__copy">
-      <p class="xd-eyebrow">
+      <p class="xd-eyebrow xd-eyebrow--brand">
         <span class="xd-eyebrow__dot"></span>
-        Yombal Marché · Boutique en ligne
+        Yombal Marché
       </p>
       <h1 class="xd-hero__title">
-        <span class="xd-line">Le goût du vrai</span>
-        <span class="xd-line xd-line--stroke">chez vous</span>
+        <span class="xd-line" data-split>Le goût</span>
+        <span class="xd-line xd-line--accent" data-split>du vrai.</span>
       </h1>
       <p class="xd-hero__lead">
-        Commandez en ligne vos produits africains, soins et essentiels du quotidien —
-        livraison suivie, paiement sécurisé, catalogue officiel Groupe YOMBAL.
+        La fierté du local — sélection diaspora authentique, livrée chez vous.
       </p>
       <div class="xd-hero__cta">
-        <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">
-          <span>Explorer la boutique</span>
+        <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light xd-magnetic">
+          <span>Commander maintenant</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost">Paniers recettes</a>
+        <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost xd-magnetic">Découvrir les saveurs</a>
       </div>
     </div>
   </div>
