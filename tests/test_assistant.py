@@ -70,16 +70,142 @@ def test_assistant_order_hint(client, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "question",
+    ("question", "lang", "needle"),
     [
-        "merci",
-        "Merci beaucoup !",
-        "Je vous remercie",
-        "Ok merci",
-        "Parfait, merci pour tout",
+        ("bonjour", "fr", "Bienvenue"),
+        ("Bonjour !", "fr", "Bienvenue"),
+        ("bonsoir", "fr", "Bienvenue"),
+        ("Salut", "fr", "Bienvenue"),
+        ("Hello", "en", "welcome"),
+        ("nanga def", "wo", "Yombal Market"),
+        ("Asalaa maalekum", "wo", "dalal"),
+        ("Hola", "es", "bienvenido"),
+        ("Ciao", "it", "benvenuto"),
+        ("Olá", "pt", "bem-vindo"),
+        ("Hallo", "de", "willkommen"),
     ],
 )
-def test_assistant_thanks_reply(client, monkeypatch, question):
+def test_assistant_greeting(client, monkeypatch, question, lang, needle):
+    monkeypatch.setenv("ASSISTANT_ENABLED", "1")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    rv = client.post("/api/assistant", json={"question": question})
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert data["hint"] == "greeting"
+    assert data.get("lang") == lang
+    assert needle.lower() in data["answer"].lower()
+    assert "Yombal Market" in data["answer"]
+
+
+def test_detect_language_multilingual():
+    assert assistant_svc._detect_language("nanga def") == "wo"
+    assert assistant_svc._detect_language("jërëjëf") == "wo"
+    assert assistant_svc._detect_language("Where is my order?") == "en"
+    assert assistant_svc._detect_language("Bonjour, avez-vous du fonio ?") == "fr"
+    assert assistant_svc._detect_language("¿Tienen fonio en la tienda?") == "es"
+    assert assistant_svc._detect_language("Haben Sie Fonio?") == "de"
+    assert assistant_svc._detect_language("Vorrei un prodotto") == "it"
+    assert assistant_svc._detect_language("شكرا") == "ar"
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "je voudrais voyager ?",
+        "Je veux un vol pour le Sénégal",
+        "Avez-vous des séjours ?",
+    ],
+)
+def test_assistant_voyages_intent(client, monkeypatch, question):
+    monkeypatch.setenv("ASSISTANT_ENABLED", "1")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    rv = client.post("/api/assistant", json={"question": question})
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert data["hint"] == "ecosystem"
+    assert data["ecosystem_slug"] == "voyages"
+    assert "Yombal Voyages" in data["answer"]
+    assert any(s.get("url", "").startswith("/ecosysteme/voyages") or "teranga" in s.get("url", "") for s in data["sources"])
+
+
+def test_assistant_immobilier_intent(client, monkeypatch):
+    monkeypatch.setenv("ASSISTANT_ENABLED", "1")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    rv = client.post("/api/assistant", json={"question": "Je cherche un terrain au Sénégal"})
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert data["hint"] == "ecosystem"
+    assert data["ecosystem_slug"] == "immobilier-btp"
+    assert "Immobilier" in data["answer"]
+
+
+@pytest.mark.parametrize(
+    ("question", "slug"),
+    [
+        ("Je veux investir en Afrique", "investissement"),
+        ("Besoin d'un déménagement", "transport"),
+        ("Je cherche un traiteur", "restaurant"),
+        ("Prendre rendez-vous coiffure", "coiffure"),
+        ("Avez-vous des smartphones ?", "electronique"),
+    ],
+)
+def test_assistant_all_group_services(client, monkeypatch, question, slug):
+    monkeypatch.setenv("ASSISTANT_ENABLED", "1")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    rv = client.post("/api/assistant", json={"question": question})
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert data["hint"] == "ecosystem"
+    assert data["ecosystem_slug"] == slug
+
+
+def test_assistant_group_overview(client, monkeypatch):
+    monkeypatch.setenv("ASSISTANT_ENABLED", "1")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    rv = client.post(
+        "/api/assistant",
+        json={"question": "Quels sont les services du Groupe YOMBAL ?"},
+    )
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert data["hint"] == "ecosystem"
+    assert "Yombal Voyages" in data["answer"]
+    assert "Yombal Immobilier" in data["answer"]
+    assert "Yombal Transports" in data["answer"]
+    assert "Yombal Restaurant" in data["answer"]
+    assert "Yombal Coiffure" in data["answer"]
+    assert len(data["sources"]) >= 7
+
+
+def test_rag_includes_ecosystem_chunks(app):
+    with app.app_context():
+        defs = rag_index.collect_chunk_defs()
+        eco_ids = {d["source_id"] for d in defs if d["source_type"] == "ecosystem"}
+        assert "voyages" in eco_ids
+        assert "immobilier-btp" in eco_ids
+        assert "transport" in eco_ids
+        assert "investissement" in eco_ids
+        assert "restaurant" in eco_ids
+        assert "coiffure" in eco_ids
+        assert "electronique" in eco_ids
+        assert "autres-services" in eco_ids
+
+@pytest.mark.parametrize(
+    ("question", "lang", "needle"),
+    [
+        ("merci", "fr", "Je vous en prie"),
+        ("Merci beaucoup !", "fr", "excellente journée"),
+        ("Je vous remercie", "fr", "Je vous en prie"),
+        ("Ok merci", "fr", "Je vous en prie"),
+        ("Parfait, merci pour tout", "fr", "Je vous en prie"),
+        ("thank you", "en", "You're welcome"),
+        ("jërëjëf", "wo", "Amul solo"),
+        ("gracias", "es", "De nada"),
+        ("grazie", "it", "Prego"),
+        ("danke", "de", "Gern geschehen"),
+    ],
+)
+def test_assistant_thanks_reply(client, monkeypatch, question, lang, needle):
     monkeypatch.setenv("ASSISTANT_ENABLED", "1")
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
     rv = client.post("/api/assistant", json={"question": question})
@@ -87,8 +213,8 @@ def test_assistant_thanks_reply(client, monkeypatch, question):
     data = rv.get_json()
     assert data["hint"] == "thanks"
     assert data["mode"] == "courtesy"
-    assert "Je vous en prie" in data["answer"]
-    assert "excellente journée" in data["answer"].lower()
+    assert data.get("lang") == lang
+    assert needle.lower() in data["answer"].lower()
 
 
 def test_assistant_merci_de_not_treated_as_thanks(client, monkeypatch):

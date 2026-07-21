@@ -1,7 +1,24 @@
 # -*- coding: utf-8 -*-
-"""FAQ boutique Yombal Marché."""
+"""FAQ boutique Yombal Market."""
 
 FAQ_ITEMS = [
+    {
+        "q": "Qu'est-ce que Yombal Market ?",
+        "a": (
+            "Yombal Market, c'est votre marché en poche : boutique en ligne du Groupe YOMBAL "
+            "pour l'épicerie diaspora, les cosmétiques, l'électronique, les recettes et les coffrets, "
+            "avec livraison suivie."
+        ),
+    },
+    {
+        "q": "Quels sont les services du Groupe YOMBAL ?",
+        "a": (
+            "Outre Yombal Market (boutique), le Groupe propose : Yombal Voyages, "
+            "Yombal Investissement Opportunités, Yombal Immobilier & BTP, Yombal Transports, "
+            "Yombal Restaurant, Yombal Électronique et Yombal Coiffure. "
+            "Accédez à chaque fiche via le menu Univers YOMBAL."
+        ),
+    },
     {
         "q": "Puis-je commander sans créer de compte ?",
         "a": "Oui. Ajoutez des produits au panier, indiquez vos coordonnées à l'étape commande et payez — aucune inscription obligatoire.",
@@ -33,5 +50,17 @@ FAQ_ITEMS = [
     {
         "q": "Les fiches produits sont-elles détaillées ?",
         "a": "Chaque référence indique origine, ingrédients, allergènes, conservation et conseils d'utilisation lorsque ces informations sont disponibles.",
+    },
+    {
+        "q": "Comment contacter Yombal Voyages ?",
+        "a": "Via la fiche Yombal Voyages (Univers YOMBAL), le site terangavoyages.com, ou au 01 42 29 41 44 (agence TourCom, Paris).",
+    },
+    {
+        "q": "Proposez-vous de l'immobilier au Sénégal ?",
+        "a": "Oui, via Yombal Immobilier & BTP (programme YOMBAL KEUR) : terrains à céder avec paiement échelonné, construction et suivi de chantier. Demande via la fiche dédiée.",
+    },
+    {
+        "q": "Que couvre Yombal Transports ?",
+        "a": "Achats et vente de véhicules, location de voiture, déménagement professionnel et envoi de colis. Formulaire de demande sur la page Yombal Transports.",
     },
 ]

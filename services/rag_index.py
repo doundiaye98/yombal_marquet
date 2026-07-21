@@ -14,6 +14,7 @@ from models.producer import Producer
 from models.product import Product
 from models.recipe_model import Recipe
 from services import content as content_svc
+from services import ecosystem_nav as eco_nav
 from services import embeddings as embed_svc
 
 logger = logging.getLogger(__name__)
@@ -159,6 +160,27 @@ def _producer_chunk(producer: Producer) -> dict:
     }
 
 
+def _ecosystem_chunk(slug: str, service: dict) -> dict:
+    bullets = service.get("bullets") or []
+    content = _join(
+        "Type: service Groupe YOMBAL",
+        f"Nom: {service.get('title') or slug}",
+        f"Libellé court: {service.get('short_label') or ''}",
+        f"Accroche: {service.get('tagline') or ''}",
+        f"Description: {service.get('lead') or ''}",
+        "Offre:\n- " + "\n- ".join(bullets) if bullets else "",
+        f"CTA: {service.get('cta_label') or ''}",
+        f"Site externe: {service.get('external_url')}" if service.get("external_url") else "",
+    )
+    return {
+        "source_type": "ecosystem",
+        "source_id": slug,
+        "title": service.get("title") or slug,
+        "content": content,
+        "url_path": f"/ecosysteme/{slug}",
+    }
+
+
 def collect_chunk_defs() -> list[dict]:
     """Rassemble tous les documents à indexer depuis la base."""
     defs: list[dict] = []
@@ -177,6 +199,10 @@ def collect_chunk_defs() -> list[dict]:
 
     producers = Producer.query.filter_by(is_active=True).order_by(Producer.name).all()
     defs.extend(_producer_chunk(p) for p in producers)
+
+    for item in eco_nav.ecosystem_nav_items():
+        slug = item["slug"]
+        defs.append(_ecosystem_chunk(slug, item))
 
     return defs
 

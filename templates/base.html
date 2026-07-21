@@ -265,9 +265,14 @@
       class="assistant-fab"
       aria-expanded="false"
       aria-controls="assistant-panel"
-      aria-label="Ouvrir l'assistant Yombal Marché"
+      aria-label="Ouvrir le conseiller Yombal Market"
     >
-      <span class="assistant-fab-icon" aria-hidden="true">💬</span>
+      <span class="assistant-fab-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 12a8 8 0 0 1 8-8h0a8 8 0 0 1 8 8v5.2A2.8 2.8 0 0 1 17.2 20H12a8 8 0 0 1-8-8Z" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M9 11.5h6M9 14.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </span>
     </button>
     <section
       id="assistant-panel"
@@ -277,13 +282,25 @@
       aria-hidden="true"
     >
       <header class="assistant-header">
-        <div class="assistant-header-text">
-          <h2 id="assistant-title">Assistant Yombal</h2>
-          <p>{% if assistant_ai_mode %}Produits, recettes &amp; FAQ (IA){% else %}Recherche catalogue &amp; FAQ{% endif %}</p>
+        <div class="assistant-header-brand">
+          <img
+            class="assistant-header-logo"
+            src="{{ url_for('static', filename='img/yombal-logo.png') }}"
+            alt=""
+            width="40"
+            height="40"
+            decoding="async"
+          >
+          <div class="assistant-header-text">
+            <h2 id="assistant-title">Conseiller Yombal Market</h2>
+            <p>Service client</p>
+            <span class="assistant-status">Disponible</span>
+          </div>
         </div>
-        <button type="button" id="assistant-close" class="assistant-close" aria-label="Fermer l'assistant">×</button>
+        <button type="button" id="assistant-close" class="assistant-close" aria-label="Fermer le conseiller">×</button>
       </header>
       <div id="assistant-messages" class="assistant-messages" aria-live="polite" aria-relevant="additions"></div>
+      <div id="assistant-chips" class="assistant-chips" aria-label="Questions fréquentes" hidden></div>
       <form id="assistant-form" class="assistant-form">
         <label for="assistant-input" class="sr-only">Votre question</label>
         <input
@@ -292,7 +309,7 @@
           type="text"
           name="question"
           maxlength="500"
-          placeholder="Ex. : avez-vous du fonio ?"
+          placeholder="Votre langue : FR, EN, wolof…"
           autocomplete="off"
           required
         >
