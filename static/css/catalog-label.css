@@ -4,19 +4,20 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --ud-green: #1a4d32;
-  --ud-green-deep: #0f3322;
-  --ud-green-soft: #2d6a4f;
-  --ud-gold: #c9a84c;
-  --ud-gold-light: #e8d49a;
-  --ud-ochre: #b85c38;
-  --ud-cream: #f8f4eb;
-  --ud-cream-dark: #efe6d4;
+  /* Aligné charte logo Yombal Market */
+  --ud-green: #001858;
+  --ud-green-deep: #001040;
+  --ud-green-soft: #0a2a72;
+  --ud-gold: #f8c000;
+  --ud-gold-light: #ffd43a;
+  --ud-ochre: #f8c000;
+  --ud-cream: #f7f4ec;
+  --ud-cream-dark: #efe8d8;
   --ud-paper: #fffdf8;
-  --ud-ink: #1c1b18;
-  --ud-muted: #5c574f;
-  --ud-line: rgba(26, 77, 50, 0.12);
-  --ud-shadow: 0 18px 48px rgba(15, 51, 34, 0.1);
+  --ud-ink: #001858;
+  --ud-muted: #4a5568;
+  --ud-line: rgba(0, 24, 88, 0.12);
+  --ud-shadow: 0 18px 48px rgba(0, 24, 88, 0.12);
   --ud-radius: 14px;
 }
 
@@ -25,7 +26,7 @@
   content: "";
   display: block;
   height: 4px;
-  background: linear-gradient(90deg, var(--ud-green-deep), var(--ud-gold), var(--ud-green-deep));
+  background: linear-gradient(90deg, #001858, #f8c000, #001858);
   position: fixed;
   top: 0;
   left: 0;
@@ -36,7 +37,7 @@
 .site-catalog-ud .site-header-unified .header-shell {
   background: rgba(248, 244, 235, 0.96) !important;
   border-bottom: 1px solid var(--ud-line) !important;
-  box-shadow: 0 8px 32px rgba(15, 51, 34, 0.06) !important;
+  box-shadow: 0 8px 32px rgba(0, 24, 88, 0.06) !important;
 }
 
 .site-catalog-ud .header-shell.is-solid,
@@ -56,11 +57,12 @@
 }
 
 .site-catalog-ud .btn-nav {
-  background: var(--ud-green) !important;
+  background: #001858 !important;
   color: #fff !important;
+  border: none !important;
   border-radius: 999px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-size: 11px;
 }
@@ -187,7 +189,7 @@
   background: var(--ud-paper) !important;
   border: 1px solid var(--ud-line) !important;
   border-radius: var(--ud-radius) !important;
-  box-shadow: 0 10px 28px rgba(15, 51, 34, 0.06) !important;
+  box-shadow: 0 10px 28px rgba(0, 24, 88, 0.06) !important;
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -237,10 +239,10 @@
   justify-content: center;
   min-width: 72px;
   padding: 10px 14px;
-  background: linear-gradient(145deg, var(--ud-gold), #a88732);
-  color: var(--ud-green-deep);
+  background: var(--ud-gold);
+  color: var(--ud-ink);
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(201, 168, 76, 0.35);
+  box-shadow: 0 4px 14px rgba(248, 192, 0, 0.25);
   line-height: 1.1;
 }
 
@@ -270,15 +272,17 @@
 .site-catalog-ud .boutique-card__cta,
 .site-catalog-ud .btn-primary {
   background: var(--ud-green) !important;
-  border-color: var(--ud-green) !important;
+  color: #fff !important;
+  border: none !important;
   font-weight: 700;
   letter-spacing: 0.04em;
-  border-radius: 10px;
+  border-radius: 999px;
 }
 
 .site-catalog-ud .boutique-card__cart {
-  background: var(--ud-ochre) !important;
-  border-color: var(--ud-ochre) !important;
+  background: var(--ud-gold) !important;
+  border: none !important;
+  color: var(--ud-ink) !important;
 }
 
 /* Fiche produit */
@@ -331,7 +335,7 @@
   border-radius: var(--ud-radius);
   padding: 22px 20px;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(15, 51, 34, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 24, 88, 0.05);
   transition: transform 0.2s ease;
 }
 
@@ -435,7 +439,7 @@
   color: var(--ud-green-deep);
   background: #fff;
   border-color: var(--ud-line);
-  box-shadow: 0 4px 16px rgba(15, 51, 34, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 24, 88, 0.06);
 }
 
 .site-catalog-ud .apropos-pillar h3 {
@@ -641,7 +645,7 @@
   background: rgba(255, 253, 248, 0.88);
   border: 1px solid var(--ud-line);
   border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(15, 51, 34, 0.04);
+  box-shadow: 0 4px 16px rgba(0, 24, 88, 0.04);
 }
 
 .home-hero__grid {
@@ -800,7 +804,7 @@
   border: 1px solid rgba(201, 168, 76, 0.35);
   border-radius: 24px;
   box-shadow:
-    0 24px 64px rgba(15, 51, 34, 0.12),
+    0 24px 64px rgba(0, 24, 88, 0.12),
     0 0 0 1px rgba(255, 255, 255, 0.8) inset;
   text-decoration: none;
   color: inherit;
@@ -810,7 +814,7 @@
 
 .home-hero__spotlight:hover {
   transform: rotate(0deg) translateY(-6px);
-  box-shadow: 0 32px 72px rgba(15, 51, 34, 0.16);
+  box-shadow: 0 32px 72px rgba(0, 24, 88, 0.16);
 }
 
 .home-hero__spotlight-badge {
@@ -908,7 +912,7 @@
   overflow: hidden;
   background: #fff;
   border: 2px solid #fff;
-  box-shadow: 0 12px 32px rgba(15, 51, 34, 0.14);
+  box-shadow: 0 12px 32px rgba(0, 24, 88, 0.14);
   text-decoration: none;
   font-size: 1.8rem;
   pointer-events: auto;
@@ -924,7 +928,7 @@
 
 .home-hero__orbit-item:hover {
   transform: scale(1.08) translateY(-4px);
-  box-shadow: 0 16px 40px rgba(15, 51, 34, 0.18);
+  box-shadow: 0 16px 40px rgba(0, 24, 88, 0.18);
   z-index: 3;
 }
 

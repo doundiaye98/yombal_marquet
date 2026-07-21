@@ -504,7 +504,7 @@ def _database_unavailable_html():
         "<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width,initial-scale=1'>"
         "<title>Yombal Marché — base indisponible</title>"
-        "<style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;color:#1a3d2b}"
+        "<style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;color:#001858}"
         "h1{font-size:1.4rem}p{line-height:1.5}</style></head><body>"
         "<h1>Boutique temporairement indisponible</h1>"
         "<p>La base de données PostgreSQL n'est pas accessible. "

@@ -1,21 +1,26 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
 {% from "macros/catalog_price.html" import catalog_price_badge %}
-{% block title %}Boutique — Yombal Marché{% endblock %}
+{% block title %}Boutique — Yombal Market{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/boutique-market.css') }}">
+{% endblock %}
 {% block content %}
 <div class="page-wrapper boutique-page">
   <header class="boutique-hero boutique-hero--catalog">
     <div class="boutique-hero__inner">
-      <p class="ud-cover__eyebrow">Univers Diaspora · LabelAfrik</p>
-      <h1 class="boutique-hero__title">Catalogue <em>officiel</em></h1>
+      <p class="boutique-hero__eyebrow">Yombal Market · Catalogue</p>
+      <h1 class="boutique-hero__title">Le goût <em>du vrai</em></h1>
       <p class="boutique-hero__lead">
-        Épicerie africaine complète — riz, farines, huiles, snacks, boissons, produits de la mer et épices.
-        Prix du catalogue PDF, livraison à domicile.
+        Riz, farines, huiles, snacks, boissons, produits de la mer, cosmétiques et électronique —
+        une sélection diaspora authentique, livrée chez vous.
       </p>
       <div class="boutique-hero__stats">
         <span><strong>{{ total_products }}</strong> références</span>
         <span class="boutique-hero__dot" aria-hidden="true"></span>
-        <span>Livraison France &amp; international</span>
+        <span>Livraison suivie</span>
+        <span class="boutique-hero__dot" aria-hidden="true"></span>
+        <span>Prix TTC catalogue</span>
       </div>
     </div>
   </header>

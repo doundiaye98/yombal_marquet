@@ -13,7 +13,7 @@
   position: relative;
   height: clamp(220px, 32vw, 380px);
   overflow: hidden;
-  background: #0f3322;
+  background: #001040;
 }
 
 .mp-banner__slide {
@@ -40,7 +40,7 @@
 .mp-banner__shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(15, 51, 34, 0.55) 0%, rgba(15, 51, 34, 0.15) 55%, transparent 100%);
+  background: linear-gradient(90deg, rgba(0, 24, 88, 0.55) 0%, rgba(0, 24, 88, 0.15) 55%, transparent 100%);
 }
 
 .mp-banner__copy {
@@ -162,7 +162,7 @@
 }
 
 .mp-cat-tile:hover .mp-cat-tile__img {
-  box-shadow: 0 4px 14px rgba(15, 51, 34, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 24, 88, 0.12);
 }
 
 .mp-cat-tile span {

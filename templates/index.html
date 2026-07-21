@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% from "macros/product_image.html" import product_image %}
-{% block title %}Yombal Marché — Accueil{% endblock %}
+{% block title %}Yombal Market — Votre marché en poche{% endblock %}
 {% block main_class %}site-main--home site-main--xd{% endblock %}
 {% block content %}
 
 {# Hero : marque, titre, phrase, CTA — fond photo courses #}
-<section class="xd-hero xd-hero--simple" aria-label="Accueil Yombal Marché">
+<section class="xd-hero xd-hero--simple" aria-label="Accueil Yombal Market">
   <div class="xd-hero__scene" aria-hidden="true">
     <div class="xd-hero__photo">
       <img
@@ -23,18 +23,18 @@
     <div class="xd-hero__copy">
       <p class="xd-eyebrow xd-eyebrow--brand">
         <span class="xd-eyebrow__dot"></span>
-        Yombal Marché
+        Yombal Market
       </p>
       <h1 class="xd-hero__title">
-        <span class="xd-line" data-split>Le goût</span>
-        <span class="xd-line xd-line--accent" data-split>du vrai.</span>
+        <span class="xd-line" data-split>Votre marché</span>
+        <span class="xd-line xd-line--accent" data-split>en poche.</span>
       </h1>
       <p class="xd-hero__lead">
-        La fierté du local — sélection diaspora authentique, livrée chez vous.
+        Le vrai local, là où vous êtes. Commandez. Recevez.
       </p>
       <div class="xd-hero__cta">
         <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light xd-magnetic">
-          <span>Commander maintenant</span>
+          <span>Ouvrir la boutique</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
         <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost xd-magnetic">Découvrir les saveurs</a>
