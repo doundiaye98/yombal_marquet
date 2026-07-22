@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ service.title }} — Groupe YOMBAL{% endblock %}
 {% block content %}
-<div class="page-wrapper ecosystem-page{% if service.slug in ecosystem_form_slugs %} ecosystem-page--with-form{% endif %}">
+<div class="page-wrapper ecosystem-page{% if service.slug in ecosystem_form_slugs %} ecosystem-page--with-form{% endif %}{% if service.slug == 'investissement' %} ecosystem-page--investissement{% endif %}">
   <header class="ecosystem-hero ecosystem-hero--{{ service.slug }}">
     <div class="ecosystem-hero__inner">
       <span class="ecosystem-hero__icon" aria-hidden="true">{{ service.icon }}</span>
@@ -31,6 +31,16 @@
       {% endif %}
     </div>
   </header>
+
+  <div class="ecosystem-body{% if service.slug == 'investissement' %} ecosystem-body--photo{% endif %}">
+    {% if service.slug == 'investissement' %}
+    <div
+      class="ecosystem-body__bg"
+      aria-hidden="true"
+      style="background-image: url('{{ url_for('static', filename='img/opportunite.jpg') }}')"
+    ></div>
+    {% endif %}
+    <div class="ecosystem-body__content">
 
   {% if service.slug == 'autres-services' and hub_services %}
   <section class="section ecosystem-hub">
@@ -93,5 +103,8 @@
   {% if service.slug in ecosystem_form_slugs %}
   {% include "ecosysteme/partials/demande_form.html" %}
   {% endif %}
+
+    </div>
+  </div>
 </div>
 {% endblock %}
