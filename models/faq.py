@@ -53,7 +53,7 @@ FAQ_ITEMS = [
     },
     {
         "q": "Comment contacter Yombal Voyages ?",
-        "a": "Via la fiche Yombal Voyages (Univers YOMBAL), le site terangavoyages.com, ou au 01 42 29 41 44 (agence TourCom, Paris).",
+        "a": "Via la fiche Yombal Voyages (Univers YOMBAL) ou le site terangavoyages.com (agence TourCom, Paris).",
     },
     {
         "q": "Proposez-vous de l'immobilier au Sénégal ?",

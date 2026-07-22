@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/boutique-market.css') }}">
 {% endblock %}
 {% block content %}
-<div class="page-wrapper boutique-page">
+<div class="page-wrapper boutique-page boutique-page--home">
   <header class="boutique-hero boutique-hero--catalog">
     <div class="boutique-hero__inner">
       <p class="boutique-hero__eyebrow">Yombal Market · Catalogue</p>
@@ -25,6 +25,12 @@
     </div>
   </header>
 
+  <section class="boutique-catalog" aria-label="Catalogue">
+    <div
+      class="boutique-catalog__bg"
+      aria-hidden="true"
+      style="background-image: url('{{ url_for('static', filename='img/alimentaire.png') }}?v=4')"
+    ></div>
   <div class="boutique-shell">
     <aside class="boutique-sidebar" aria-label="Filtrer le catalogue">
       <div class="boutique-sidebar__panel">
@@ -171,5 +177,6 @@
       {% endif %}
     </main>
   </div>
+  </section>
 </div>
 {% endblock %}

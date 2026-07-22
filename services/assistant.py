@@ -684,8 +684,7 @@ def _answer_ecosystem(slug: str) -> dict:
         if slug == "voyages":
             lines.append(
                 f"Pour poursuivre, consultez la fiche {title} ou le site officiel "
-                "via les liens ci-dessous. Un conseiller Voyages est joignable "
-                "au 01 42 29 41 44."
+                "via les liens ci-dessous."
             )
         else:
             lines.append(f"Pour poursuivre, utilisez les liens ci-dessous ({cta}).")

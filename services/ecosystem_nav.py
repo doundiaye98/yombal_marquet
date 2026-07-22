@@ -67,7 +67,6 @@ ECOSYSTEM_SERVICES = {
             "Réservation en ligne sur terangavoyages.com",
             "Séjours, circuits et vols vers le Sénégal et l'Afrique",
             "Agence à Paris — 75 rue des Moines, 75017",
-            "Devis et conseil au 01 42 29 41 44",
         ],
         "cta_label": "Voir les offres voyage",
     },

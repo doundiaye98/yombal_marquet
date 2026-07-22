@@ -14,15 +14,57 @@
   --bm-radius: 18px;
   --bm-ease: cubic-bezier(0.22, 1, 0.36, 1);
   background: var(--bm-cream);
-  padding-bottom: clamp(56px, 8vw, 96px);
+  padding-bottom: 0;
+  /* Sans transform / overflow : sinon sticky/fixed du fond photo est cassé */
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  overflow: visible !important;
 }
 
-/* Hero sobre */
+/*
+ * Zone catalogue UNIQUEMENT (sous le hero marine).
+ * Fond sticky plein écran : visible sur toutes les vues filtrées,
+ * même quand le catalogue est très long (évite le zoom « mur beige »).
+ */
+.boutique-page .boutique-catalog,
+.site-catalog-ud .boutique-page .boutique-catalog {
+  position: relative;
+  z-index: 0;
+  padding: 0;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.boutique-page .boutique-catalog__bg,
+.site-catalog-ud .boutique-page .boutique-catalog__bg {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 0;
+  pointer-events: none;
+  background-color: #1a1510;
+  background-image: url("../img/alimentaire.png");
+  background-size: cover !important;
+  background-position: center 62% !important;
+  background-repeat: no-repeat !important;
+}
+
+.boutique-page .boutique-catalog .boutique-shell {
+  position: relative;
+  z-index: 1;
+  padding: clamp(28px, 4vw, 40px) 0 clamp(56px, 8vw, 96px);
+}
+
+/* Hero catalogue — fond marine uni (SANS la photo) */
 .site-catalog-ud .boutique-hero--catalog,
 .boutique-page .boutique-hero--catalog {
   position: relative;
   overflow: hidden;
-  margin: 0 0 28px;
+  margin: 0;
   padding: calc(var(--nav-h, 72px) + 40px) clamp(20px, 4vw, 40px) 44px;
   background: linear-gradient(145deg, #001040 0%, #001858 60%, #0a2a72 100%) !important;
   color: #fff !important;
@@ -284,6 +326,7 @@
   color: var(--bm-navy) !important;
   text-transform: none !important;
   letter-spacing: -0.01em !important;
+  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.85);
 }
 
 /* Grille */
