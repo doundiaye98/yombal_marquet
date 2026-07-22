@@ -665,6 +665,7 @@ body.site-premium::before { display: none !important; }
 }
 
 .site-premium .site-main--xd { background: var(--y-cream); }
+.site-premium .site-main--xd.site-main--home { background: transparent !important; }
 .site-premium .xd-marquee { background: var(--y-green); border: none; }
 .site-premium .xd-panel--dark,
 .site-premium .xd-manifesto { background: var(--y-green) !important; }

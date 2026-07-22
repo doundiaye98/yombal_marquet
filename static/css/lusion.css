@@ -26,6 +26,408 @@
   max-width: none !important;
   margin: 0 !important;
 }
+.site-main--xd.site-main--home {
+  background: transparent !important;
+}
+
+/* ═══ ACCUEIL — fond sticky (même principe que boutique-catalog__bg) ═══ */
+.home-page {
+  position: relative;
+  z-index: 0;
+  background: transparent !important;
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  overflow: visible !important;
+}
+.home-page__bg {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 0;
+  pointer-events: none;
+  background-color: #0a1628;
+  background-image: url("../img/products/background-person-shopping-realistic.png");
+  background-size: cover !important;
+  background-position: center 42% !important;
+  background-repeat: no-repeat !important;
+}
+.home-page__content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sections transparentes : la photo se voit comme derrière les cartes boutique */
+.home-page .xd-hero--home {
+  background: transparent !important;
+}
+.home-page .xd-hero--home .xd-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.home-page .ud-cta {
+  background: transparent !important;
+}
+.home-page .xd-marquee {
+  background: rgba(0, 16, 40, 0.45) !important;
+}
+.home-page .ud-panel--green {
+  background: rgba(0, 24, 88, 0.55) !important;
+}
+
+/* ─── Section 01 Rayons : même design, photo visible sans filtre ─── */
+.home-rayons {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  color: #fffcf7;
+  padding: clamp(56px, 8vw, 96px) clamp(20px, 4vw, 40px);
+}
+.home-rayons__inner {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+}
+.home-rayons__head {
+  max-width: 36rem;
+  margin-bottom: 36px;
+}
+.home-rayons__kicker {
+  margin: 0 0 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f8c000;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+.home-rayons__title {
+  margin: 0 0 12px;
+  font-family: "Nunito", "Outfit", sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #fffcf7;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+.home-rayons__title em {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 600;
+  color: #f8c000;
+}
+.home-rayons__lead {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(255, 252, 247, 0.92);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+}
+.home-rayons__featured {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 20px 24px;
+  background: #f8c000;
+  color: #001858;
+  text-decoration: none;
+  border-radius: 14px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.home-rayons__featured:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(248, 192, 0, 0.28);
+}
+.home-rayons__featured-label {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.home-rayons__featured-meta {
+  font-size: 0.85rem;
+  font-weight: 700;
+  opacity: 0.75;
+}
+.home-rayons__featured-go {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.home-rayons__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+.home-rayons__link {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: #001858;
+  color: #fffcf7;
+  text-decoration: none;
+  min-height: 64px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 252, 247, 0.12);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.home-rayons__link:hover {
+  background: #0a2a72;
+  color: #f8c000;
+  border-color: rgba(248, 192, 0, 0.45);
+}
+.home-rayons__emoji {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.home-rayons__name {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.home-rayons__arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  color: #f8c000;
+}
+.home-rayons__link:hover .home-rayons__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 900px) {
+  .home-rayons__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .home-rayons__list {
+    grid-template-columns: 1fr;
+  }
+  .home-rayons__featured {
+    grid-template-columns: 1fr auto;
+  }
+  .home-rayons__featured-meta {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .home-rayons__featured-go {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+}
+
+/* ─── Section 02 Incontournables : bandeau crème contrasté ─── */
+.home-page .xd-highlights--home {
+  background: #f7f4ec !important;
+  padding: clamp(56px, 8vw, 96px) 0;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -24px 60px rgba(0, 16, 40, 0.18);
+  position: relative;
+}
+.home-page .xd-highlights--home::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 4px;
+  border-radius: 999px;
+  background: #f8c000;
+}
+.home-page .xd-highlights--home .xd-section-title {
+  color: #001858 !important;
+  text-shadow: none !important;
+}
+.home-page .xd-highlights--home .xd-section-title em {
+  color: #d9a800 !important;
+  font-family: "Fraunces", serif;
+  font-style: italic;
+}
+.home-page .xd-highlights--home .xd-section-sub {
+  color: rgba(0, 24, 88, 0.65) !important;
+  text-shadow: none !important;
+}
+.home-page .xd-highlights--home .xd-section-num {
+  color: rgba(0, 24, 88, 0.12) !important;
+}
+.home-page .xd-highlights--home .xd-eyebrow {
+  color: #001858 !important;
+  letter-spacing: 0.2em;
+}
+.home-page .xd-highlights--home .xd-btn--outline {
+  border-color: #001858 !important;
+  color: #001858 !important;
+  background: transparent !important;
+}
+.home-page .xd-highlights--home .xd-btn--outline:hover {
+  background: #001858 !important;
+  color: #f8c000 !important;
+}
+.home-page .xd-highlights--home .xd-highlights__card {
+  background: #fff;
+  border: 1px solid rgba(0, 24, 88, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(0, 24, 88, 0.06);
+}
+.home-page .xd-highlights--home .xd-product__body h3 a {
+  color: #001858;
+}
+.home-page .xd-highlights--home .xd-product__price {
+  color: #001858;
+  font-weight: 800;
+}
+.home-page .xd-highlights--home .xd-product__add {
+  background: #f8c000;
+  color: #001858;
+}
+
+.home-page .ud-cta h2,
+.home-page .ud-cta p {
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+}
+.home-page .ud-cta h2 {
+  color: #fff !important;
+}
+.home-page .ud-cta h2 em {
+  color: #f8c000 !important;
+}
+.home-page .ud-cta p {
+  color: rgba(255, 252, 247, 0.88) !important;
+}
+
+/* ═══ HERO ACCUEIL — texte centré ═══ */
+.xd-hero--home {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--nav-h, 72px) + 40px) clamp(24px, 6vw, 80px) 56px;
+  overflow: hidden;
+  text-align: center;
+}
+.xd-hero--home .xd-hero__scene,
+.xd-hero--home .xd-hero__photo {
+  display: none;
+}
+.xd-hero--home .xd-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0, 16, 40, 0.35), transparent 70%),
+    linear-gradient(180deg, rgba(0, 16, 40, 0.45) 0%, rgba(0, 16, 40, 0.55) 45%, rgba(0, 16, 40, 0.72) 100%);
+}
+.xd-hero--home .xd-hero__body {
+  position: relative;
+  z-index: 2;
+  width: min(720px, 100%);
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+.xd-hero--home .xd-hero__copy {
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 0;
+  background: none;
+  border: none;
+  text-align: center;
+}
+.xd-hero--home .xd-hero__brand {
+  margin: 0 0 18px;
+  font-family: "Nunito", "Outfit", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #f8c000;
+}
+.xd-hero--home .xd-hero__title {
+  margin: 0 0 18px;
+  font-family: "Nunito", "Outfit", sans-serif;
+  font-size: clamp(2.6rem, 6.5vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fffcf7;
+}
+.xd-hero--home .xd-hero__title em {
+  display: inline;
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 600;
+  color: #f8c000;
+}
+.xd-hero--home .xd-hero__lead {
+  margin: 0 auto 28px;
+  max-width: 26rem;
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(255, 252, 247, 0.9);
+}
+.xd-hero--home .xd-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.xd-hero--home .xd-btn {
+  width: auto;
+  justify-content: center;
+  padding: 15px 26px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+.xd-hero--home .xd-btn--light {
+  background: #f8c000;
+  color: #001858;
+  border: none;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+}
+.xd-hero--home .xd-btn--ghost {
+  border: 1px solid rgba(255, 252, 247, 0.45);
+  color: #fffcf7;
+  background: transparent;
+}
+.xd-hero--home .xd-btn--ghost:hover {
+  border-color: #f8c000;
+  color: #f8c000;
+}
+
+@media (max-width: 720px) {
+  .xd-hero--home {
+    padding-bottom: 48px;
+  }
+  .xd-hero--home .xd-hero__copy {
+    max-width: 100%;
+  }
+  .xd-hero--home .xd-hero__cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .xd-hero--home .xd-btn {
+    width: 100%;
+  }
+}
 .site-main--xd > .flash-stack {
   position: fixed;
   top: calc(var(--nav-h) + 12px);

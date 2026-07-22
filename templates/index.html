@@ -4,97 +4,93 @@
 {% block main_class %}site-main--home site-main--xd{% endblock %}
 {% block content %}
 
-{# Hero : marque, titre, phrase, CTA — fond photo courses #}
-<section class="xd-hero xd-hero--simple" aria-label="Accueil Yombal Market">
-  <div class="xd-hero__scene" aria-hidden="true">
-    <div class="xd-hero__photo">
-      <img
-        src="{{ url_for('static', filename='img/products/background-person-shopping-realistic.png') }}"
-        alt=""
-        width="1920"
-        height="1080"
-        decoding="async"
-        fetchpriority="high"
-      >
-    </div>
-  </div>
+{# Même principe que boutique : fond sticky derrière le contenu #}
+<div class="home-page">
+  <div
+    class="home-page__bg"
+    aria-hidden="true"
+    style="background-image: url('{{ url_for('static', filename='img/products/background-person-shopping-realistic.png') }}')"
+  ></div>
+
+  <div class="home-page__content">
+{# Hero — texte centré ; la photo vient uniquement du fond sticky .home-page__bg #}
+<section class="xd-hero xd-hero--home" aria-label="Accueil Yombal Market">
+  <div class="xd-hero__scrim" aria-hidden="true"></div>
 
   <div class="xd-hero__body">
     <div class="xd-hero__copy">
-      <p class="xd-eyebrow xd-eyebrow--brand">
-        <span class="xd-eyebrow__dot"></span>
-        Yombal Market
-      </p>
+      <p class="xd-hero__brand">Yombal Market</p>
       <h1 class="xd-hero__title">
-        <span class="xd-line" data-split>Votre marché</span>
-        <span class="xd-line xd-line--accent" data-split>en poche.</span>
+        Votre marché<br>
+        <em>en poche.</em>
       </h1>
       <p class="xd-hero__lead">
-        Le vrai local, là où vous êtes. Commandez. Recevez.
+        Le vrai local, là où vous êtes.<br>
+        Commandez. Recevez.
       </p>
       <div class="xd-hero__cta">
-        <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light xd-magnetic">
-          <span>Ouvrir la boutique</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost xd-magnetic">Découvrir les saveurs</a>
+        <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">Ouvrir la boutique</a>
+        <a href="{{ url_for('recettes') }}" class="xd-btn xd-btn--ghost">Découvrir les saveurs</a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="xd-categories" id="rayons" aria-label="Rayons boutique">
-  <header class="xd-section-head xd-reveal">
-    <span class="xd-section-num">01</span>
-    <div>
-      <p class="xd-eyebrow">Boutique</p>
-      <h2 class="xd-section-title">Nos <em>rayons</em></h2>
-      <p class="xd-section-sub">Riz, huiles, épices, électronique… choisissez votre univers en un clic.</p>
-    </div>
-    <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--dark xd-magnetic">Catalogue complet</a>
-  </header>
-  <div class="xd-cat-grid xd-reveal">
-    <a href="{{ url_for('boutique') }}" class="xd-cat-cell xd-cat-cell--featured">
-      <span class="xd-cat-cell__icon" aria-hidden="true">✦</span>
-      <strong>Tout le catalogue</strong>
-      <span class="xd-cat-cell__hint">{{ product_count }} références</span>
-      <span class="xd-cat-cell__arrow" aria-hidden="true">→</span>
+<section class="home-rayons" id="rayons" aria-label="Rayons boutique">
+  <div class="home-rayons__inner">
+    <header class="home-rayons__head">
+      <p class="home-rayons__kicker">01 — Boutique</p>
+      <h2 class="home-rayons__title">Nos <em>rayons</em></h2>
+      <p class="home-rayons__lead">
+        Riz, huiles, épices, électronique… choisissez votre univers en un clic.
+      </p>
+    </header>
+
+    <a href="{{ url_for('boutique') }}" class="home-rayons__featured">
+      <span class="home-rayons__featured-label">Tout le catalogue</span>
+      <span class="home-rayons__featured-meta">{{ product_count }} références</span>
+      <span class="home-rayons__featured-go" aria-hidden="true">→</span>
     </a>
-    {% set rays = [
-      ('cereales', 'Riz & céréales', '🌾'),
-      ('huiles', 'Huiles & graisses', '🫒'),
-      ('snacks', 'Snacks & pâtisseries', '🍮'),
-      ('boissons', 'Boissons & sirops', '🥤'),
-      ('legumineuses', 'Légumineuses', '🫘'),
-      ('condiments', 'Condiments', '🧂'),
-      ('fruits_secs', 'Fruits séchés', '🥭'),
-      ('conserves', 'Conserves', '🫙'),
-      ('poisson', 'Produits de la mer', '🐟'),
-      ('viandes', 'Viandes & volailles', '🍗'),
-      ('cosmetique', 'Cosmétique', '✨'),
-      ('electronique', 'Électronique', '📱'),
-    ] %}
-    {% for key, label, emoji in rays %}
-    <a href="{{ url_for('boutique', categorie=key) }}" class="xd-cat-cell">
-      <span class="xd-cat-cell__icon" aria-hidden="true">{{ emoji }}</span>
-      <strong>{{ label }}</strong>
-      <span class="xd-cat-cell__arrow" aria-hidden="true">→</span>
-    </a>
-    {% endfor %}
+
+    <ul class="home-rayons__list">
+      {% set rays = [
+        ('cereales', 'Riz & céréales', '🌾'),
+        ('huiles', 'Huiles & graisses', '🫒'),
+        ('snacks', 'Snacks & pâtisseries', '🍮'),
+        ('boissons', 'Boissons & sirops', '🥤'),
+        ('legumineuses', 'Légumineuses', '🫘'),
+        ('condiments', 'Condiments', '🧂'),
+        ('fruits_secs', 'Fruits séchés', '🥭'),
+        ('conserves', 'Conserves', '🫙'),
+        ('poisson', 'Produits de la mer', '🐟'),
+        ('viandes', 'Viandes & volailles', '🍗'),
+        ('cosmetique', 'Cosmétique', '✨'),
+        ('electronique', 'Électronique', '📱'),
+      ] %}
+      {% for key, label, emoji in rays %}
+      <li>
+        <a href="{{ url_for('boutique', categorie=key) }}" class="home-rayons__link">
+          <span class="home-rayons__emoji" aria-hidden="true">{{ emoji }}</span>
+          <span class="home-rayons__name">{{ label }}</span>
+          <span class="home-rayons__arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
 </section>
 
 {% if catalogue_phares %}
-<section class="xd-highlights" aria-label="Produits incontournables">
+<section class="xd-highlights xd-highlights--home" aria-label="Produits incontournables">
   <div class="xd-highlights__inner">
-    <header class="xd-section-head xd-section-head--light xd-reveal">
+    <header class="xd-section-head xd-reveal">
       <span class="xd-section-num">02</span>
       <div>
-        <p class="xd-eyebrow">LabelAfrik</p>
+        <p class="xd-eyebrow">Sélection</p>
         <h2 class="xd-section-title">Les <em>incontournables</em></h2>
         <p class="xd-section-sub">Thiakry, Fonio, Arraw, Baobab… le meilleur du terroir, sélectionné pour vous.</p>
       </div>
-      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--outline xd-magnetic">Toute la boutique</a>
+      <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--outline">Toute la boutique</a>
     </header>
 
     <div class="xd-highlights__grid">
@@ -179,6 +175,8 @@
     </div>
   </div>
 </section>
+  </div>
+</div>
 
 {% endblock %}
 
