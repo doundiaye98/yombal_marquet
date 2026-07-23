@@ -115,11 +115,72 @@ ECOSYSTEM_INTENTS: list[tuple[str, tuple[str, ...]]] = [
         (
             r"\b[eé]lectronique",
             r"\bsmartphone",
+            r"\biphone",
+            r"\bsamsung",
+            r"\bxiaomi",
+            r"\btecno",
             r"\bt[eé]l[eé]phone",
+            r"\btablette",
             r"\baccessoires?\s+(high[-\s]?tech|tech)",
-            r"\b[eé]lectrom[eé]nager",
             r"\bcasque\b",
             r"\benceinte\b",
+            r"\b[eé]couteurs?",
+            r"\bbatterie\s+externe",
+            r"\bpower\s*bank",
+            r"\bmontre\s+connect[eé]e",
+        ),
+    ),
+    (
+        "electromenager",
+        (
+            r"\b[eé]lectrom[eé]nager",
+            r"\bmixeur",
+            r"\bbouilloire",
+            r"\bmicro[- ]?ondes?",
+            r"\baspirateur",
+            r"\bfriteuse",
+            r"\bfer\s+[aà]\s+repasser",
+            r"\bmachine\s+[aà]\s+caf[eé]",
+            r"\bventilateur\s+colonne",
+        ),
+    ),
+    (
+        "mode",
+        (
+            r"\bhabillement",
+            r"\bv[eê]tements?",
+            r"\bmode\b",
+            r"\bt[- ]?shirt",
+            r"\brobe\b",
+            r"\bjean\b",
+            r"\bboubou",
+            r"\bpagne\b",
+            r"\bhoodie",
+            r"\bchemise\b",
+            r"\blegging",
+        ),
+    ),
+    (
+        "chaussures",
+        (
+            r"\bchaussures?",
+            r"\bbaskets?",
+            r"\bsandales?",
+            r"\bbottes?",
+            r"\brunning\b",
+            r"\bpointure",
+        ),
+    ),
+    (
+        "bagagerie",
+        (
+            r"\bsacs?\s+[aà]\s+dos",
+            r"\bbagagerie",
+            r"\bvalise",
+            r"\bcartable",
+            r"\bbandouli[eè]re",
+            r"\bpochette\s+voyage",
+            r"\bsac\s+week[- ]?end",
         ),
     ),
     (
@@ -203,9 +264,10 @@ GREETING_REPLY = {
     "fr": (
         "Bonjour, bienvenue chez Yombal Market.\n\n"
         "Je suis le conseiller du Groupe YOMBAL. "
-        "Je peux vous aider pour la boutique (produits, commandes, livraisons) "
+        "Je peux vous aider pour la boutique (épicerie, électronique, "
+        "électroménager, habillement, chaussures, sacs, commandes, livraisons) "
         "ou vous orienter vers Voyages, Immobilier & BTP, Transports, "
-        "Restaurant, Électronique et Coiffure.\n\n"
+        "Restaurant, Électronique, Électroménager, Mode et Coiffure.\n\n"
         "Vous pouvez m'écrire dans votre langue "
         "(français, anglais, wolof, espagnol, etc.).\n\n"
         "Comment puis-je vous accompagner ?"
@@ -213,9 +275,10 @@ GREETING_REPLY = {
     "en": (
         "Hello, welcome to Yombal Market.\n\n"
         "I am the Groupe YOMBAL advisor. "
-        "I can help with the shop (products, orders, delivery) "
+        "I can help with the shop (grocery, electronics, home appliances, "
+        "clothing, shoes, bags, orders, delivery) "
         "or guide you to Travel, Real Estate & Construction, Transport, "
-        "Restaurant, Electronics and Haircare.\n\n"
+        "Restaurant, Electronics, Home appliances, Fashion and Haircare.\n\n"
         "You can write in your language "
         "(French, English, Wolof, Spanish, and more).\n\n"
         "How can I help you?"
@@ -223,9 +286,10 @@ GREETING_REPLY = {
     "wo": (
         "Asalaa maalekum, dalal ak jàmm ci Yombal Market.\n\n"
         "Man maay conseiller bu Groupe YOMBAL. "
-        "Maa la mën a dimbali ci boutique (produits, commande, livraison) "
+        "Maa la mën a dimbali ci boutique (épicerie, électronique, "
+        "électroménager, habillement, chaussures, sacs, commande, livraison) "
         "walla yóbbu la ci Voyages, Immobilier & BTP, Transports, "
-        "Restaurant, Électronique ak Coiffure.\n\n"
+        "Restaurant, Électronique, Mode ak Coiffure.\n\n"
         "Mën nga wax ci sa làkk (wolof, français, anglais, ak yeneen).\n\n"
         "Lan laa la mën a dimbali?"
     ),
@@ -321,7 +385,12 @@ Langues :
 Ton : professionnel, précis, courtois. Réponses structurées, 2 à 5 phrases max (sauf listes).
 
 Périmètre Yombal Market (boutique) :
-- Catalogue alimentaire, cosmétiques, électronique, recettes, coffrets, livraison, paiement.
+- Catalogue alimentaire et diaspora
+- Cosmétiques
+- Électronique (smartphones iPhone, Samsung, Xiaomi, Tecno, accessoires)
+- Électroménager (cuisine, entretien maison)
+- Habillement, chaussures, sacs & bagagerie
+- Recettes, coffrets, livraison, paiement
 
 Périmètre Groupe YOMBAL (Univers YOMBAL) — oriente vers la fiche dédiée :
 - Yombal Voyages (vols, séjours, circuits)
@@ -329,7 +398,9 @@ Périmètre Groupe YOMBAL (Univers YOMBAL) — oriente vers la fiche dédiée :
 - Yombal Immobilier & BTP (terrains, construction)
 - Yombal Transports (véhicules, location, déménagement, colis)
 - Yombal Restaurant (restauration, traiteur)
-- Yombal Électronique (aussi disponible en boutique)
+- Yombal Électronique (smartphones & high-tech, aussi en boutique)
+- Yombal Électroménager (aussi en boutique)
+- Yombal Habillement, Chaussures, Sacs & bagagerie (aussi en boutique)
 - Yombal Coiffure (salon, soins)
 - Autres services / contact transversal
 
@@ -609,7 +680,8 @@ def _answer_group_overview() -> dict:
     """Présente l'ensemble des services du Groupe YOMBAL."""
     lines = [
         "Le Groupe YOMBAL regroupe plusieurs activités complémentaires. "
-        "Yombal Market est la boutique en ligne (épicerie, cosmétiques, électronique, recettes, coffrets).",
+        "Yombal Market est la boutique en ligne (épicerie, cosmétiques, "
+        "électronique, électroménager, habillement, chaussures, sacs, recettes, coffrets).",
         "",
         "Services Univers YOMBAL :",
     ]
@@ -689,9 +761,19 @@ def _answer_ecosystem(slug: str) -> dict:
         else:
             lines.append(f"Pour poursuivre, utilisez les liens ci-dessous ({cta}).")
     elif boutique_category:
+        samples = (
+            Product.query.filter_by(category=boutique_category, is_active=True)
+            .order_by(Product.name)
+            .limit(5)
+            .all()
+        )
+        if samples:
+            lines.append("Exemples de produits disponibles :")
+            for product in samples:
+                lines.append(f"• {product.name} — {product.price_euros():.2f} €")
         lines.append(
-            f"Une partie de l'offre est aussi disponible dans la boutique en ligne. "
-            f"Utilisez les liens ci-dessous ({cta})."
+            f"Consultez le catalogue complet en boutique ou sur la fiche {title} "
+            f"({cta})."
         )
     else:
         lines.append(
@@ -716,6 +798,20 @@ def _answer_ecosystem(slug: str) -> dict:
                 "url": f"/boutique?categorie={boutique_category}",
             }
         )
+        for product in (
+            Product.query.filter_by(category=boutique_category, is_active=True)
+            .order_by(Product.name)
+            .limit(3)
+            .all()
+        ):
+            sources.append(
+                {
+                    "type": "product",
+                    "id": product.slug,
+                    "title": product.name,
+                    "url": f"/produit/{product.slug}",
+                }
+            )
     if external:
         sources.append(
             {

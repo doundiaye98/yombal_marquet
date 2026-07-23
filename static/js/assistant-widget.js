@@ -14,18 +14,20 @@
 
   var WELCOME =
     "Bonjour, je suis le conseiller Yombal Market.\n\n" +
-    "Je peux vous renseigner sur la boutique (catalogue, commandes, livraisons) " +
+    "Je peux vous renseigner sur la boutique (épicerie, smartphones, " +
+    "électroménager, habillement, chaussures, sacs, commandes, livraisons) " +
     "et sur l'ensemble des services du Groupe YOMBAL : Voyages, Investissement, " +
-    "Immobilier & BTP, Transports, Restaurant, Électronique et Coiffure.\n\n" +
+    "Immobilier & BTP, Transports, Restaurant, Électronique, Électroménager, " +
+    "Habillement, Chaussures, Sacs & bagagerie et Coiffure.\n\n" +
     "Écrivez-moi dans votre langue : français, anglais, wolof, espagnol, " +
     "portugais, allemand, italien, arabe…";
 
   var SUGGESTIONS = [
     { label: "Services du Groupe", q: "Quels sont les services du Groupe YOMBAL ?" },
-    { label: "Voyages", q: "Je souhaite voyager" },
+    { label: "Smartphones", q: "Avez-vous des iPhone ou Samsung ?" },
+    { label: "Électroménager", q: "Je cherche un mixeur ou une friteuse" },
+    { label: "Habillement", q: "Avez-vous des vêtements ou un boubou ?" },
     { label: "Immobilier & BTP", q: "Je cherche un terrain au Sénégal" },
-    { label: "Transports", q: "Je voudrais une location de voiture" },
-    { label: "Boutique", q: "Avez-vous du fonio ?" },
     { label: "Suivi commande", q: "Comment suivre ma commande ?" },
   ];
 

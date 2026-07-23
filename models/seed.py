@@ -2,6 +2,7 @@
 from extensions import db
 from models.catalogue_extended import EXTENDED_CATALOGUE
 from models.catalogue_electronique import ELECTRONIQUE_CATALOGUE
+from models.catalogue_marketplace import MARKETPLACE_CATALOGUE
 from models.catalogue_labelafrik import (
     LABELAFRIK_CATALOGUE,
     LABELAFRIK_SLUGS,
@@ -145,7 +146,7 @@ FULL_CATALOGUE = [
     if row["slug"] in CATALOGUE_SLUGS and row["slug"] not in RETIRED_PRODUCT_SLUGS
 ] + [apply_display_name(row) for row in LABELAFRIK_CATALOGUE] + [
     apply_display_name(row) for row in ELECTRONIQUE_CATALOGUE
-]
+] + [apply_display_name(row) for row in MARKETPLACE_CATALOGUE]
 
 
 def _sync_row_to_product(product, row):

@@ -6,8 +6,9 @@ FAQ_ITEMS = [
         "q": "Qu'est-ce que Yombal Market ?",
         "a": (
             "Yombal Market, c'est votre marché en poche : boutique en ligne du Groupe YOMBAL "
-            "pour l'épicerie diaspora, les cosmétiques, l'électronique, les recettes et les coffrets, "
-            "avec livraison suivie."
+            "pour l'épicerie diaspora, les cosmétiques, l'électronique (smartphones), "
+            "l'électroménager, l'habillement, les chaussures, les sacs, "
+            "les recettes et les coffrets, avec livraison suivie."
         ),
     },
     {
@@ -15,7 +16,8 @@ FAQ_ITEMS = [
         "a": (
             "Outre Yombal Market (boutique), le Groupe propose : Yombal Voyages, "
             "Yombal Investissement Opportunités, Yombal Immobilier & BTP, Yombal Transports, "
-            "Yombal Restaurant, Yombal Électronique et Yombal Coiffure. "
+            "Yombal Restaurant, Yombal Électronique, Yombal Électroménager, "
+            "Yombal Habillement, Yombal Chaussures, Yombal Sacs & bagagerie et Yombal Coiffure. "
             "Accédez à chaque fiche via le menu Univers YOMBAL."
         ),
     },

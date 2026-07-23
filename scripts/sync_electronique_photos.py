@@ -33,6 +33,13 @@ MAPPINGS: list[tuple[str, tuple[str, ...]]] = [
     ("ventilateur-usb-portable", ("ventilateur usb", "ventilateur")),
     ("radio-fm-rechargeable", ("radio fm",)),
     ("anneau-lumineux-led", ("anneau lumineux",)),
+    # Smartphones
+    ("iphone-13-128go", ("iphone 13",)),
+    ("iphone-14-128go", ("iphone 14",)),
+    ("samsung-galaxy-a54", ("galaxy a54", "samsung galaxy a54")),
+    ("samsung-galaxy-s23", ("galaxy s23", "samsung galaxy s23")),
+    ("xiaomi-13t", ("xiaomi 13t",)),
+    ("tecno-camon-20", ("tecno camon", "camon 20")),
 ]
 
 

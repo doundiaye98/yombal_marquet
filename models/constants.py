@@ -101,6 +101,10 @@ PAYMENT_DEMO = "demo"
 CATEGORY_ALIMENTAIRE = "alimentaire"
 CATEGORY_COSMETIQUE = "cosmetique"
 CATEGORY_ELECTRONIQUE = "electronique"
+CATEGORY_ELECTROMENAGER = "electromenager"
+CATEGORY_MODE = "mode"
+CATEGORY_CHAUSSURES = "chaussures"
+CATEGORY_BAGAGERIE = "bagagerie"
 CATEGORY_BOISSONS = "boissons"
 CATEGORY_CEREALES = "cereales"
 CATEGORY_CONDIMENTS = "condiments"
@@ -116,6 +120,10 @@ PRODUCT_CATEGORIES = {
     CATEGORY_ALIMENTAIRE: {"label": "Alimentaire", "emoji": "🛒"},
     CATEGORY_COSMETIQUE: {"label": "Cosmétique", "emoji": "✨"},
     CATEGORY_ELECTRONIQUE: {"label": "Électronique", "emoji": "📱"},
+    CATEGORY_ELECTROMENAGER: {"label": "Électroménager", "emoji": "🏠"},
+    CATEGORY_MODE: {"label": "Habillement", "emoji": "👕"},
+    CATEGORY_CHAUSSURES: {"label": "Chaussures", "emoji": "👟"},
+    CATEGORY_BAGAGERIE: {"label": "Sacs & bagagerie", "emoji": "🎒"},
     CATEGORY_BOISSONS: {"label": "Boissons", "emoji": "🥤"},
     CATEGORY_CEREALES: {"label": "Céréales", "emoji": "🌾"},
     CATEGORY_CONDIMENTS: {"label": "Condiments", "emoji": "🧂"},
@@ -142,6 +150,10 @@ SHOP_CATEGORY_ORDER = (
     CATEGORY_VIANDES,
     CATEGORY_COSMETIQUE,
     CATEGORY_ELECTRONIQUE,
+    CATEGORY_ELECTROMENAGER,
+    CATEGORY_MODE,
+    CATEGORY_CHAUSSURES,
+    CATEGORY_BAGAGERIE,
 )
 
 # Pays de livraison (code ISO → libellé)

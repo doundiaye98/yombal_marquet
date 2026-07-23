@@ -8,14 +8,36 @@
 {% endif %}
 {% endblock %}
 {% block content %}
+{% set ecosystem_photo_slideshows = {
+  'electromenager': [
+    'img/yombal-electromenager.jpg',
+    'img/yombal-electronique-hero-v2.jpg',
+    'img/gallery-electronique-accessories.jpg',
+    'img/gallery-electronique-audio.jpg',
+    'img/gallery-electronique-smartphones.jpg',
+    'img/gallery-electronique-smarthome.jpg',
+    'img/gallery-electronique-wearables.jpg'
+  ],
+  'mode': [
+    'img/yombal-habillement-hero.jpg',
+    'img/gallery-habillement-tshirts.jpg',
+    'img/gallery-habillement-chemises.jpg',
+    'img/gallery-habillement-robes.jpg',
+    'img/gallery-habillement-jeans.jpg',
+    'img/gallery-habillement-sport.jpg',
+    'img/gallery-habillement-pagne.jpg'
+  ]
+} %}
 {% set ecosystem_photo_bgs = {
   'investissement': 'img/yombal-investissement-opportunites.jpg',
   'transport': 'img/yombal-transports.jpg',
   'restaurant': 'img/yombal-restaurant.jpg',
   'electronique': 'img/yombal-electronique.jpg'
 } %}
+{% set ecosystem_photo_slides = ecosystem_photo_slideshows.get(service.slug) %}
 {% set ecosystem_photo_bg = ecosystem_photo_bgs.get(service.slug) %}
-<div class="page-wrapper ecosystem-page{% if service.slug in ecosystem_form_slugs %} ecosystem-page--with-form{% endif %}{% if ecosystem_photo_bg %} ecosystem-page--photo ecosystem-page--{{ service.slug }}{% endif %}">
+{% set has_photo_bg = ecosystem_photo_slides or ecosystem_photo_bg %}
+<div class="page-wrapper ecosystem-page{% if service.slug in ecosystem_form_slugs %} ecosystem-page--with-form{% endif %}{% if has_photo_bg %} ecosystem-page--photo ecosystem-page--{{ service.slug }}{% endif %}">
   <header class="ecosystem-hero ecosystem-hero--{{ service.slug }}">
     <div class="ecosystem-hero__inner">
       <span class="ecosystem-hero__icon" aria-hidden="true">{{ service.icon }}</span>
@@ -46,8 +68,24 @@
     </div>
   </header>
 
-  <div class="ecosystem-body{% if ecosystem_photo_bg %} ecosystem-body--photo{% endif %}">
-    {% if ecosystem_photo_bg %}
+  <div class="ecosystem-body{% if has_photo_bg %} ecosystem-body--photo{% endif %}">
+    {% if ecosystem_photo_slides %}
+    <div class="ecosystem-body__bg ecosystem-body__bg--slideshow" aria-hidden="true" data-ecosystem-slideshow data-interval="5000">
+      <div class="ecosystem-body__track" data-ecosystem-track>
+        {% for slide in ecosystem_photo_slides %}
+        <div
+          class="ecosystem-body__slide"
+          style="background-image: url('{{ url_for('static', filename=slide) }}')"
+        ></div>
+        {% endfor %}
+        {# Clone de la 1re image pour boucle fluide droite → gauche #}
+        <div
+          class="ecosystem-body__slide"
+          style="background-image: url('{{ url_for('static', filename=ecosystem_photo_slides[0]) }}')"
+        ></div>
+      </div>
+    </div>
+    {% elif ecosystem_photo_bg %}
     <div
       class="ecosystem-body__bg"
       aria-hidden="true"
@@ -176,4 +214,60 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% if service.slug in ('electromenager', 'mode') %}
+<script>
+(function () {
+  var root = document.querySelector("[data-ecosystem-slideshow]");
+  if (!root) return;
+  var track = root.querySelector("[data-ecosystem-track]");
+  var slides = root.querySelectorAll(".ecosystem-body__slide");
+  if (!track || slides.length < 2) return;
+
+  // Dernière slide = clone de la première (boucle)
+  var realCount = slides.length - 1;
+  var interval = parseInt(root.getAttribute("data-interval") || "5000", 10);
+  var index = 0;
+  var moving = false;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function setX(i, animate) {
+    if (!animate || reduced) {
+      track.style.transition = "none";
+    } else {
+      track.style.transition = "";
+    }
+    track.style.transform = "translate3d(-" + i * 100 + "%, 0, 0)";
+  }
+
+  track.addEventListener("transitionend", function (e) {
+    if (e.target !== track || e.propertyName !== "transform") return;
+    if (index < realCount) {
+      moving = false;
+      return;
+    }
+    // Fin du clone → retour instantané au début
+    setX(0, false);
+    void track.offsetWidth;
+    track.style.transition = "";
+    index = 0;
+    moving = false;
+  });
+
+  setInterval(function () {
+    if (moving && !reduced) return;
+    moving = true;
+    index += 1;
+    setX(index, true);
+    if (reduced && index >= realCount) {
+      index = 0;
+      setX(0, false);
+      moving = false;
+    }
+  }, interval);
+})();
+</script>
+{% endif %}
 {% endblock %}

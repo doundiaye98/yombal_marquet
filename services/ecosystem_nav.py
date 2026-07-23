@@ -5,15 +5,19 @@ from __future__ import annotations
 
 from models.constants import (
     CATEGORY_ALIMENTAIRE,
+    CATEGORY_BAGAGERIE,
     CATEGORY_BOISSONS,
     CATEGORY_CEREALES,
+    CATEGORY_CHAUSSURES,
     CATEGORY_CONDIMENTS,
     CATEGORY_CONSERVES,
     CATEGORY_COSMETIQUE,
+    CATEGORY_ELECTROMENAGER,
     CATEGORY_ELECTRONIQUE,
     CATEGORY_FRUITS_SECS,
     CATEGORY_HUILES,
     CATEGORY_LEGUMINEUSES,
+    CATEGORY_MODE,
     CATEGORY_POISSON,
     CATEGORY_SNACKS,
     CATEGORY_VIANDES,
@@ -37,7 +41,14 @@ SHOP_UNIVERSE_ALIMENTAIRE = (
     CATEGORY_VIANDES,
 )
 
-SHOP_UNIVERSE_NON_ALIMENTAIRE = (CATEGORY_COSMETIQUE, CATEGORY_ELECTRONIQUE)
+SHOP_UNIVERSE_NON_ALIMENTAIRE = (
+    CATEGORY_COSMETIQUE,
+    CATEGORY_ELECTRONIQUE,
+    CATEGORY_ELECTROMENAGER,
+    CATEGORY_MODE,
+    CATEGORY_CHAUSSURES,
+    CATEGORY_BAGAGERIE,
+)
 
 SHOP_UNIVERSE_LABELS = {
     SHOP_TYPE_ALIMENTAIRE: {
@@ -48,7 +59,7 @@ SHOP_UNIVERSE_LABELS = {
     SHOP_TYPE_NON_ALIMENTAIRE: {
         "label": "Non alimentaires",
         "emoji": "✨",
-        "description": "Cosmétiques, électronique et bien-être.",
+        "description": "Électronique, électroménager, mode, chaussures, sacs et cosmétique.",
     },
 }
 
@@ -148,19 +159,91 @@ ECOSYSTEM_SERVICES = {
         "title": "Yombal Électronique",
         "short_label": "Électronique",
         "icon": "📱",
-        "tagline": "High-tech, multimédia et accessoires",
+        "tagline": "Smartphones, high-tech et accessoires",
         "lead": (
-            "Téléphones, accessoires, multimédia et petit électroménager — "
-            "une offre complémentaire du Groupe YOMBAL, disponible en boutique en ligne."
+            "Smartphones (iPhone, Samsung et autres marques), multimédia, accessoires "
+            "et petit high-tech — une offre Yombal Market disponible en boutique en ligne."
         ),
         "bullets": [
-            "Smartphones et accessoires",
-            "Audio, casques et enceintes",
-            "Petit électroménager du quotidien",
+            "Smartphones iPhone, Samsung et Android",
+            "Audio, casques, enceintes et accessoires",
+            "Tablettes, montres connectées et charge",
             "Commande en ligne avec livraison",
         ],
         "cta_label": "Voir l'électronique",
         "boutique_category": CATEGORY_ELECTRONIQUE,
+    },
+    "electromenager": {
+        "title": "Yombal Électroménager",
+        "short_label": "Électroménager",
+        "icon": "🏠",
+        "tagline": "Maison, cuisine et petit électroménager",
+        "lead": (
+            "Équipez votre cuisine et votre intérieur : mixeurs, bouilloires, fers, "
+            "aspirateurs, micro-ondes et plus — sélection Yombal Market livrée chez vous."
+        ),
+        "bullets": [
+            "Petit électroménager cuisine",
+            "Entretien de la maison",
+            "Appareils du quotidien à prix accessibles",
+            "Commande en ligne avec livraison",
+        ],
+        "cta_label": "Voir l'électroménager",
+        "boutique_category": CATEGORY_ELECTROMENAGER,
+    },
+    "mode": {
+        "title": "Yombal Habillement",
+        "short_label": "Habillement",
+        "icon": "👕",
+        "tagline": "Mode, vêtements et style au quotidien",
+        "lead": (
+            "T-shirts, chemises, robes, jeans, sport et ensembles pagne — "
+            "une sélection habillement pour toute la famille sur Yombal Market."
+        ),
+        "bullets": [
+            "Homme, femme et sport",
+            "Basiques et pièces saisonnières",
+            "Sélection diaspora (pagne, boubou)",
+            "Commande en ligne avec livraison",
+        ],
+        "cta_label": "Voir l'habillement",
+        "boutique_category": CATEGORY_MODE,
+    },
+    "chaussures": {
+        "title": "Yombal Chaussures",
+        "short_label": "Chaussures",
+        "icon": "👟",
+        "tagline": "Baskets, ville, sandales et plus",
+        "lead": (
+            "Baskets urbaines, running, sandales, chaussures de ville et bottes — "
+            "trouvez la paire adaptée à chaque occasion sur Yombal Market."
+        ),
+        "bullets": [
+            "Baskets et running",
+            "Chaussures de ville et sandales",
+            "Modèles enfant et adulte",
+            "Commande en ligne avec livraison",
+        ],
+        "cta_label": "Voir les chaussures",
+        "boutique_category": CATEGORY_CHAUSSURES,
+    },
+    "bagagerie": {
+        "title": "Yombal Sacs & bagagerie",
+        "short_label": "Sacs & bagagerie",
+        "icon": "🎒",
+        "tagline": "Sacs à dos, valises et accessoires voyage",
+        "lead": (
+            "Sacs à dos, valises cabine, bandoulières, sacs week-end et pochettes voyage — "
+            "tout pour vos trajets et votre quotidien."
+        ),
+        "bullets": [
+            "Sacs à dos et cartables",
+            "Valises et sacs de voyage",
+            "Bandoulières et pochettes documents",
+            "Commande en ligne avec livraison",
+        ],
+        "cta_label": "Voir les sacs",
+        "boutique_category": CATEGORY_BAGAGERIE,
     },
     "coiffure": {
         "title": "Yombal Coiffure",
@@ -189,7 +272,8 @@ ECOSYSTEM_SERVICES = {
             "livraison, conseil et services sur mesure."
         ),
         "bullets": [
-            "Boutique alimentaire, cosmétique et électronique",
+            "Boutique alimentaire, cosmétique, électronique et mode",
+            "Électroménager, chaussures et bagagerie",
             "Immobilier & BTP et investissement",
             "Livraison à domicile",
             "Contact unique pour toutes vos demandes",
@@ -205,6 +289,10 @@ ECOSYSTEM_NAV_ORDER = (
     "transport",
     "restaurant",
     "electronique",
+    "electromenager",
+    "mode",
+    "chaussures",
+    "bagagerie",
     "coiffure",
     "autres-services",
 )

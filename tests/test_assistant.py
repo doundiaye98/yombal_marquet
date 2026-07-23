@@ -147,6 +147,11 @@ def test_assistant_immobilier_intent(client, monkeypatch):
         ("Je cherche un traiteur", "restaurant"),
         ("Prendre rendez-vous coiffure", "coiffure"),
         ("Avez-vous des smartphones ?", "electronique"),
+        ("Je cherche un iPhone ou un Samsung", "electronique"),
+        ("Avez-vous un mixeur ou une friteuse ?", "electromenager"),
+        ("Je cherche un boubou ou une robe", "mode"),
+        ("Avez-vous des baskets ?", "chaussures"),
+        ("Je cherche une valise ou un sac à dos", "bagagerie"),
     ],
 )
 def test_assistant_all_group_services(client, monkeypatch, question, slug):
@@ -174,7 +179,9 @@ def test_assistant_group_overview(client, monkeypatch):
     assert "Yombal Transports" in data["answer"]
     assert "Yombal Restaurant" in data["answer"]
     assert "Yombal Coiffure" in data["answer"]
-    assert len(data["sources"]) >= 7
+    assert "Électroménager" in data["answer"] or "electromenager" in data["answer"].lower()
+    assert "Habillement" in data["answer"] or "Mode" in data["answer"]
+    assert len(data["sources"]) >= 10
 
 
 def test_rag_includes_ecosystem_chunks(app):
@@ -188,6 +195,10 @@ def test_rag_includes_ecosystem_chunks(app):
         assert "restaurant" in eco_ids
         assert "coiffure" in eco_ids
         assert "electronique" in eco_ids
+        assert "electromenager" in eco_ids
+        assert "mode" in eco_ids
+        assert "chaussures" in eco_ids
+        assert "bagagerie" in eco_ids
         assert "autres-services" in eco_ids
 
 @pytest.mark.parametrize(

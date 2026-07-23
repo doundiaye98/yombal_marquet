@@ -12,6 +12,10 @@ FORM_PAGE_SLUGS = frozenset({
     "restaurant",
     "coiffure",
     "electronique",
+    "electromenager",
+    "mode",
+    "chaussures",
+    "bagagerie",
     "autres-services",
 })
 
@@ -21,6 +25,10 @@ TOPIC_CHOICES = {
     "restaurant": "Restaurant & traiteur",
     "coiffure": "Coiffure & beauté",
     "electronique": "Électronique",
+    "electromenager": "Électroménager",
+    "mode": "Habillement",
+    "chaussures": "Chaussures",
+    "bagagerie": "Sacs & bagagerie",
     "boutique": "Boutique en ligne",
     "autre": "Autre demande",
 }

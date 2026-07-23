@@ -8,6 +8,7 @@ import logging
 
 from extensions import db
 from models.coffret_model import Coffret
+from models.constants import PRODUCT_CATEGORIES
 from models.faq_item import FaqItem
 from models.knowledge_chunk import KnowledgeChunk
 from models.producer import Producer
@@ -35,12 +36,14 @@ def _product_chunk(product: Product) -> dict:
     stock = "en stock" if product.in_stock() else "rupture ou stock limité"
     if product.stock_qty is not None:
         stock = f"stock: {product.stock_qty} unité(s)"
+    cat_meta = PRODUCT_CATEGORIES.get(product.category) or {}
+    cat_label = cat_meta.get("label") or product.category
 
     content = _join(
         f"Type: produit",
         f"Nom: {product.name}",
         f"Prix: {product.price_euros():.2f} €",
-        f"Catégorie: {product.category}",
+        f"Catégorie: {cat_label} ({product.category})",
         f"Référence (slug): {product.slug}",
         f"Disponibilité: {stock}",
         f"Origine: {product.origin}" if product.origin else "",
