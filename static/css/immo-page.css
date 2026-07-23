@@ -13,10 +13,90 @@
   --immo-shadow: 0 20px 50px rgba(0, 24, 88, 0.12);
   background: var(--immo-cream);
   padding-bottom: 0;
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+  overflow: visible !important;
+}
+
+.immo-page:has(.immo-body--photo) {
+  background: transparent;
 }
 
 .site-main--immo {
   padding-top: 0;
+}
+
+/* Fond photo sous le hero (même principe boutique / investissement) */
+.immo-body--photo {
+  position: relative;
+  z-index: 0;
+  background: transparent !important;
+}
+
+.immo-body--photo .immo-body__bg {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  margin-bottom: -100vh;
+  z-index: 0;
+  pointer-events: none;
+  background-color: #1a1510;
+  background-image: url("../img/immobilier-btp.jpg");
+  background-size: cover !important;
+  background-position: center 40% !important;
+  background-repeat: no-repeat !important;
+}
+
+.immo-body--photo .immo-body__content {
+  position: relative;
+  z-index: 1;
+}
+
+.immo-body--photo .immo-terrains,
+.immo-body--photo .immo-btp-band,
+.immo-body--photo .immo-contact-band {
+  background: transparent !important;
+}
+
+.immo-body--photo .immo-sites-nav {
+  background: rgba(255, 253, 248, 0.9) !important;
+  backdrop-filter: blur(12px);
+}
+
+.immo-body--photo .immo-site__card,
+.immo-body--photo .immo-contact-band__inner,
+.immo-body--photo .immo-btp-band__content {
+  background: rgba(255, 253, 248, 0.96);
+}
+
+.immo-body--photo .immo-btp-band__eyebrow {
+  color: var(--immo-navy);
+}
+
+.immo-body--photo .immo-section-head .section-title,
+.immo-body--photo .immo-section-head .section-sub,
+.immo-body--photo .immo-section-head .section-eyebrow {
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+
+.immo-body--photo .immo-section-head .section-title {
+  color: #fff !important;
+}
+
+.immo-body--photo .immo-section-head .section-title em {
+  color: #f8c000 !important;
+}
+
+.immo-body--photo .immo-section-head .section-sub {
+  color: rgba(255, 252, 247, 0.9) !important;
+}
+
+.immo-body--photo .immo-section-head .section-eyebrow {
+  color: #f8c000 !important;
 }
 
 /* ─── Hero ─── */
@@ -603,63 +683,19 @@
 
 /* ─── BTP band ─── */
 .immo-btp-band {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 420px;
-  background: var(--immo-navy);
-  color: #fff;
-  overflow: hidden;
-}
-
-.immo-btp-band__media {
-  position: relative;
-  min-height: 280px;
-  overflow: hidden;
-}
-
-.immo-btp-band__gallery {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
-  min-height: inherit;
-}
-
-.immo-btp-band__photo {
-  flex: 1 1 0;
-  min-width: 0;
-  margin: 0;
-}
-
-.immo-btp-band__photo img {
-  width: 100%;
-  height: 100%;
-  min-height: 280px;
-  object-fit: cover;
-  display: block;
-}
-
-.immo-btp-band__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.immo-btp-band__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, var(--immo-navy) 0%, transparent 55%);
-  pointer-events: none;
+  padding: clamp(48px, 8vw, 88px) clamp(16px, 4vw, 32px);
+  background: transparent;
 }
 
 .immo-btp-band__content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: clamp(40px, 6vw, 72px) clamp(24px, 5vw, 56px);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(32px, 5vw, 48px) clamp(24px, 4vw, 40px);
+  background: #fff;
+  border: 1px solid var(--immo-line);
+  border-radius: 20px;
+  box-shadow: var(--immo-shadow);
+  color: var(--immo-ink);
 }
 
 .immo-btp-band__eyebrow {
@@ -667,7 +703,7 @@
   font-weight: 800;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--immo-gold-soft);
+  color: var(--immo-navy);
   margin: 0 0 12px;
 }
 
@@ -676,26 +712,27 @@
   font-size: clamp(1.6rem, 3vw, 2.4rem);
   margin: 0 0 16px;
   line-height: 1.15;
+  color: var(--immo-ink);
 }
 
 .immo-btp-band__title em {
   font-style: italic;
-  color: var(--immo-gold-soft);
+  color: var(--immo-gold);
 }
 
 .immo-btp-band__lead {
   line-height: 1.7;
-  opacity: 0.9;
   margin: 0 0 24px;
-  max-width: 48ch;
+  max-width: 52ch;
+  color: rgba(0, 24, 88, 0.78);
 }
 
 .immo-btp-band__list {
   margin: 0;
   padding-left: 1.2rem;
   line-height: 1.75;
-  opacity: 0.92;
   font-size: 15px;
+  color: rgba(0, 24, 88, 0.88);
 }
 
 /* ─── Contact band ─── */
@@ -1024,22 +1061,6 @@
 
   .immo-hero__stats {
     grid-template-columns: repeat(4, 1fr);
-  }
-
-  .immo-btp-band {
-    grid-template-columns: 1fr;
-  }
-
-  .immo-btp-band__gallery {
-    flex-wrap: wrap;
-  }
-
-  .immo-btp-band__photo {
-    flex: 1 1 calc(50% - 1px);
-  }
-
-  .immo-btp-band__media::after {
-    background: linear-gradient(0deg, var(--immo-navy) 0%, transparent 60%);
   }
 
   .immo-contact-band__inner {

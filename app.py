@@ -846,11 +846,19 @@ def ecosysteme_detail(slug):
             program=immobilier_programmes_svc.YOMBAL_KEUR_PROGRAM,
             terrains=immobilier_programmes_svc.enriched_terrains(),
             contact=immobilier_programmes_svc.IMMOBILIER_CONTACT,
-            btp_gallery=immobilier_programmes_svc.BTP_GALLERY,
         )
 
     form_data, submitted, submission = _ecosystem_service_form_state(slug)
     show_transport_topics = slug == "transport"
+    boutique_products = []
+    boutique_category = service.get("boutique_category")
+    if boutique_category:
+        boutique_products = (
+            _product_query_active()
+            .filter_by(category=boutique_category)
+            .order_by(Product.name)
+            .all()
+        )
     return render_template(
         "ecosysteme/detail.html",
         service=service,
@@ -866,6 +874,7 @@ def ecosysteme_detail(slug):
         show_topic_select=slug in ("autres-services", "transport"),
         topic_select_label="Type de demande" if show_transport_topics else "Service concerné",
         form_action=url_for("ecosysteme_detail", slug=slug),
+        boutique_products=boutique_products,
     )
 
 

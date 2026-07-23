@@ -1,7 +1,21 @@
 {% extends "base.html" %}
+{% from "macros/product_image.html" import product_image %}
+{% from "macros/catalog_price.html" import catalog_price_badge %}
 {% block title %}{{ service.title }} — Groupe YOMBAL{% endblock %}
+{% block extra_css %}
+{% if boutique_products %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/boutique-market.css') }}">
+{% endif %}
+{% endblock %}
 {% block content %}
-<div class="page-wrapper ecosystem-page{% if service.slug in ecosystem_form_slugs %} ecosystem-page--with-form{% endif %}{% if service.slug == 'investissement' %} ecosystem-page--investissement{% endif %}">
+{% set ecosystem_photo_bgs = {
+  'investissement': 'img/yombal-investissement-opportunites.jpg',
+  'transport': 'img/yombal-transports.jpg',
+  'restaurant': 'img/yombal-restaurant.jpg',
+  'electronique': 'img/yombal-electronique.jpg'
+} %}
+{% set ecosystem_photo_bg = ecosystem_photo_bgs.get(service.slug) %}
+<div class="page-wrapper ecosystem-page{% if service.slug in ecosystem_form_slugs %} ecosystem-page--with-form{% endif %}{% if ecosystem_photo_bg %} ecosystem-page--photo ecosystem-page--{{ service.slug }}{% endif %}">
   <header class="ecosystem-hero ecosystem-hero--{{ service.slug }}">
     <div class="ecosystem-hero__inner">
       <span class="ecosystem-hero__icon" aria-hidden="true">{{ service.icon }}</span>
@@ -11,7 +25,7 @@
       <p class="ecosystem-hero__lead">{{ service.lead }}</p>
       {% if service.boutique_category %}
       <div class="ecosystem-hero__cta-row">
-        <a href="{{ url_for('boutique', type=shop_type_non_alimentaire, categorie=service.boutique_category) }}" class="btn-primary ecosystem-hero__cta">
+        <a href="{% if boutique_products %}#catalogue-boutique{% else %}{{ url_for('boutique', type=shop_type_non_alimentaire, categorie=service.boutique_category) }}{% endif %}" class="btn-primary ecosystem-hero__cta">
           {{ service.cta_label }}
         </a>
         {% if service.slug in ecosystem_form_slugs %}
@@ -32,12 +46,12 @@
     </div>
   </header>
 
-  <div class="ecosystem-body{% if service.slug == 'investissement' %} ecosystem-body--photo{% endif %}">
-    {% if service.slug == 'investissement' %}
+  <div class="ecosystem-body{% if ecosystem_photo_bg %} ecosystem-body--photo{% endif %}">
+    {% if ecosystem_photo_bg %}
     <div
       class="ecosystem-body__bg"
       aria-hidden="true"
-      style="background-image: url('{{ url_for('static', filename='img/opportunite.jpg') }}')"
+      style="background-image: url('{{ url_for('static', filename=ecosystem_photo_bg) }}')"
     ></div>
     {% endif %}
     <div class="ecosystem-body__content">
@@ -95,10 +109,65 @@
         {% if service.slug in ecosystem_form_slugs %}
         <a href="#demande-form" class="btn-primary ecosystem-detail__form">Envoyer une demande</a>
         {% endif %}
+        {% if service.boutique_category %}
+        <a href="{{ url_for('boutique', type=shop_type_non_alimentaire, categorie=service.boutique_category) }}" class="btn-outline ecosystem-detail__shop">
+          Voir toute la boutique
+        </a>
+        {% else %}
         <a href="{{ url_for('boutique') }}" class="btn-outline ecosystem-detail__shop">Voir la boutique</a>
+        {% endif %}
       </aside>
     </div>
   </section>
+
+  {% if boutique_products %}
+  <section class="section ecosystem-shop" id="catalogue-boutique" aria-labelledby="ecosystem-shop-title">
+    <div class="ecosystem-shop__inner">
+      <header class="ecosystem-shop__head">
+        <p class="section-eyebrow">Catalogue</p>
+        <h2 id="ecosystem-shop-title" class="ecosystem-shop__title">Nos produits {{ service.short_label|lower }}</h2>
+        <p class="ecosystem-shop__lead">
+          {{ boutique_products|length }} références disponibles — commande en ligne, livraison suivie.
+        </p>
+      </header>
+      <div class="ecosystem-shop__grid boutique-grid">
+        {% for p in boutique_products %}
+        {% set meta = product_categories.get(p.category, {'label': p.category, 'emoji': '🛒'}) %}
+        <article class="boutique-card">
+          <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__media{% if p.image %} boutique-card__media--photo{% endif %}">
+            {{ product_image(p, 'card') }}
+            <span class="boutique-card__cat">{{ meta.emoji }} {{ meta.label }}</span>
+          </a>
+          <div class="boutique-card__body">
+            <h3 class="boutique-card__title">
+              <a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a>
+            </h3>
+            {% if p.weight_info %}
+            <p class="boutique-card__meta">{{ p.weight_info }}</p>
+            {% endif %}
+            <div class="boutique-card__footer">
+              {{ catalog_price_badge(p.price_euros()) }}
+              <div class="boutique-card__actions">
+                <a href="{{ url_for('product_detail', slug=p.slug) }}" class="boutique-card__link">Fiche</a>
+                <form method="post" action="{{ url_for('panier_ajouter') }}" class="boutique-card__form">
+                  <input type="hidden" name="product_id" value="{{ p.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="boutique-card__cart" title="Ajouter au panier" aria-label="Ajouter {{ p.name }} au panier">+</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      <div class="ecosystem-shop__cta">
+        <a href="{{ url_for('boutique', type=shop_type_non_alimentaire, categorie=service.boutique_category) }}" class="btn-primary">
+          Ouvrir la boutique {{ service.short_label|lower }}
+        </a>
+      </div>
+    </div>
+  </section>
+  {% endif %}
 
   {% if service.slug in ecosystem_form_slugs %}
   {% include "ecosysteme/partials/demande_form.html" %}

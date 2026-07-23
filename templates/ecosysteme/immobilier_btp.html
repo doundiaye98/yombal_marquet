@@ -32,6 +32,14 @@
     </div>
   </header>
 
+  <div class="immo-body immo-body--photo">
+    <div
+      class="immo-body__bg"
+      aria-hidden="true"
+      style="background-image: url('{{ url_for('static', filename='img/immobilier-btp.jpg') }}')"
+    ></div>
+    <div class="immo-body__content">
+
   <nav class="immo-sites-nav" aria-label="Navigation des terrains">
     <div class="immo-sites-nav__inner">
       {% for terrain in terrains %}
@@ -156,15 +164,6 @@
   </section>
 
   <section class="immo-btp-band" aria-labelledby="immo-btp-title">
-    <div class="immo-btp-band__media" aria-hidden="true">
-      <div class="immo-btp-band__gallery">
-        {% for photo in btp_gallery %}
-        <figure class="immo-btp-band__photo">
-          <img src="{{ url_for('static', filename=photo.src) }}" alt="{{ photo.alt }}">
-        </figure>
-        {% endfor %}
-      </div>
-    </div>
     <div class="immo-btp-band__content">
       <p class="immo-btp-band__eyebrow">BTP · Groupe YOMBAL</p>
       <h2 id="immo-btp-title" class="immo-btp-band__title">Construction &amp; <em>rénovation</em></h2>
@@ -206,6 +205,8 @@
     </div>
   </section>
 
+    </div>
+  </div>
 </div>
 {% endblock %}
 
