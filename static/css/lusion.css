@@ -107,7 +107,7 @@
 }
 .home-rayons__title {
   margin: 0 0 12px;
-  font-family: "Nunito", "Outfit", sans-serif;
+  font-family: "Sora", "Sora", sans-serif;
   font-size: clamp(2rem, 4.5vw, 3rem);
   font-weight: 800;
   line-height: 1.1;
@@ -116,7 +116,7 @@
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
 }
 .home-rayons__title em {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-style: italic;
   font-weight: 600;
   color: #f8c000;
@@ -255,7 +255,7 @@
 }
 .home-page .xd-highlights--home .xd-section-title em {
   color: #d9a800 !important;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-style: italic;
 }
 .home-page .xd-highlights--home .xd-section-sub {
@@ -353,7 +353,7 @@
 }
 .xd-hero--home .xd-hero__brand {
   margin: 0 0 18px;
-  font-family: "Nunito", "Outfit", sans-serif;
+  font-family: "Sora", "Sora", sans-serif;
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.22em;
@@ -362,7 +362,7 @@
 }
 .xd-hero--home .xd-hero__title {
   margin: 0 0 18px;
-  font-family: "Nunito", "Outfit", sans-serif;
+  font-family: "Sora", "Sora", sans-serif;
   font-size: clamp(2.6rem, 6.5vw, 4.75rem);
   font-weight: 800;
   line-height: 1.05;
@@ -371,7 +371,7 @@
 }
 .xd-hero--home .xd-hero__title em {
   display: inline;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-style: italic;
   font-weight: 600;
   color: #f8c000;
@@ -565,7 +565,7 @@
   position: absolute;
   bottom: 8%;
   right: -4%;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(8rem, 22vw, 18rem);
   font-weight: 900;
   letter-spacing: -0.06em;
@@ -630,7 +630,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.3em;
@@ -652,7 +652,7 @@
 }
 .xd-hero__title {
   margin: 0 0 28px;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   line-height: 0.92;
   letter-spacing: -0.045em;
 }
@@ -699,7 +699,7 @@
 }
 .xd-line--stroke { margin-top: -0.06em; }
 .xd-hero__lead {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: clamp(1.05rem, 1.6vw, 1.22rem);
   font-weight: 300;
   line-height: 1.75;
@@ -718,7 +718,7 @@
   align-items: center;
   gap: 10px;
   padding: 16px 28px;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -733,7 +733,7 @@
   background: #f8c000;
   color: #001858;
   border: none;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 700;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
 }
@@ -756,7 +756,7 @@
   background: #001858;
   color: #fff;
   border: none;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 700;
 }
 .xd-btn--dark:hover { background: #0a2a72; color: #fff; }
@@ -780,7 +780,7 @@
 .xd-stat { margin: 0; }
 .xd-stat dt {
   margin: 0;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(2.2rem, 4vw, 3.2rem);
   font-weight: 700;
   color: #fffcf7;
@@ -789,7 +789,7 @@
 }
 .xd-stat dd {
   margin: 8px 0 0;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.22em;
@@ -830,7 +830,7 @@
 }
 .xd-float-card--hero strong {
   display: block;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.5rem;
   margin: 8px 0 6px;
 }
@@ -859,7 +859,7 @@
 .xd-float-card--stat span:first-child { font-size: 2rem; display: block; margin-bottom: 6px; }
 .xd-float-card--stat strong {
   display: block;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.2rem;
 }
 .xd-float-card--stat p { font-size: 11px; color: rgba(255,252,247,0.45); text-transform: uppercase; letter-spacing: 0.1em; }
@@ -875,7 +875,7 @@
 .xd-float-card--gold span:first-child { font-size: 2rem; display: block; }
 .xd-float-card--gold strong {
   display: block;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.15rem;
 }
 .xd-float-card--gold p { font-size: 11px; color: rgba(255,252,247,0.5); }
@@ -890,7 +890,7 @@
   gap: 14px;
   text-decoration: none;
   color: rgba(255, 252, 247, 0.45);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.28em;
@@ -935,7 +935,7 @@
   gap: 32px;
   width: max-content;
   animation: xdMarquee 28s linear infinite;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(1.1rem, 2.2vw, 1.6rem);
   font-weight: 400;
   font-style: italic;
@@ -961,7 +961,7 @@
 .xd-section-head--light .xd-section-title { color: var(--green); }
 .xd-section-head--light .xd-section-sub { color: rgba(0, 24, 88, 0.6); }
 .xd-section-num {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(4rem, 8vw, 7rem);
   font-weight: 700;
   line-height: 1;
@@ -971,7 +971,7 @@
 }
 .xd-panel--dark .xd-section-num { color: rgba(255, 252, 247, 0.05); }
 .xd-section-title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(2.2rem, 4.5vw, 3.6rem);
   font-weight: 700;
   line-height: 1.05;
@@ -988,7 +988,7 @@
 .xd-panel--dark .xd-section-title em { color: var(--xd-gold); }
 .xd-section-sub {
   margin-top: 12px;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.05rem;
   font-weight: 300;
   line-height: 1.65;
@@ -1066,7 +1066,7 @@
 }
 .xd-bento__cell--accent p { color: rgba(255,252,247,0.65); }
 .xd-bento__num {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -1075,12 +1075,12 @@
 }
 .xd-bento__icon { font-size: 1.8rem; margin-bottom: 12px; }
 .xd-bento__cell strong {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.35rem;
   margin-bottom: 6px;
 }
 .xd-bento__cell p {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 0.9rem;
   line-height: 1.55;
   color: rgba(0, 24, 88, 0.6);
@@ -1112,7 +1112,7 @@
 }
 
 .xd-ecosystem__title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(1.8rem, 3.5vw, 2.6rem);
   font-weight: 700;
   color: var(--green);
@@ -1253,7 +1253,7 @@
   line-height: 1;
 }
 .xd-cat-cell strong {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.12rem;
   font-weight: 600;
   line-height: 1.25;
@@ -1407,7 +1407,7 @@
   padding: 22px 24px 26px;
 }
 .xd-product__body h3 {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.15rem;
   margin-bottom: 8px;
 }
@@ -1431,7 +1431,7 @@
   justify-content: space-between;
 }
 .xd-product__price {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--terra);
@@ -1487,7 +1487,7 @@
   margin-bottom: 8px;
 }
 .xd-card h3 {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.25rem;
   margin-bottom: 10px;
 }
@@ -1510,7 +1510,7 @@
 }
 .xd-panel:not(.xd-panel--dark) .xd-card__foot { border-color: var(--xd-line-dark); }
 .xd-card__foot span {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--terra);
@@ -1589,7 +1589,7 @@
 }
 .xd-producer strong {
   display: block;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 1.15rem;
 }
 .xd-producer__flag {
@@ -1618,7 +1618,7 @@
   text-align: center;
 }
 .xd-manifesto__quote {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(1.6rem, 3.5vw, 2.8rem);
   font-weight: 400;
   font-style: italic;
@@ -1644,7 +1644,7 @@
   border-radius: 12px;
   text-decoration: none;
   color: rgba(255, 252, 247, 0.75);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1rem;
   font-weight: 500;
   transition: background 0.3s, color 0.3s, transform 0.3s;
@@ -1688,7 +1688,7 @@
   margin: 0 auto;
 }
 .xd-finale__title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(2.4rem, 5.5vw, 4.2rem);
   font-weight: 700;
   line-height: 1.05;
@@ -1702,7 +1702,7 @@
   color: var(--xd-gold);
 }
 .xd-finale__inner > p {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 0.95rem;
   color: rgba(255, 252, 247, 0.45);
   letter-spacing: 0.08em;
@@ -1789,7 +1789,7 @@
 }
 .page-hero .section-eyebrow { color: var(--xd-gold); position: relative; }
 .page-hero .section-title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   color: #fffcf7;
   position: relative;
   font-size: clamp(2.2rem, 5vw, 3.8rem);
@@ -1808,7 +1808,7 @@
   color: rgba(255, 252, 247, 0.6);
 }
 .site-footer h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.28em;
@@ -1872,13 +1872,13 @@
   to { transform: rotate(360deg); }
 }
 .xd-preloader__logo {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 2.4rem;
   font-weight: 700;
   color: #fffcf7;
 }
 .xd-preloader__brand {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.35em;
@@ -1902,7 +1902,7 @@
   transition: width 0.08s linear;
 }
 .xd-preloader__pct {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -1986,7 +1986,7 @@ body.is-preloading .site-main--xd {
   top: 20px;
   right: 24px;
   z-index: 3;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: 3rem;
   font-weight: 700;
   line-height: 1;
@@ -2176,7 +2176,7 @@ body.is-preloading .site-main--xd {
   color: #fff;
 }
 .nav-toggle__label {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -2264,7 +2264,7 @@ body.is-preloading .site-main--xd {
   color: var(--xd-gold);
 }
 .cine-nav__eyebrow {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.3em;
@@ -2300,7 +2300,7 @@ body.is-preloading .site-main--xd {
 }
 .cine-nav__link.is-active .cine-nav__text { color: var(--xd-gold); }
 .cine-nav__num {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -2308,7 +2308,7 @@ body.is-preloading .site-main--xd {
   min-width: 24px;
 }
 .cine-nav__text {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(1.4rem, 3vw, 1.85rem);
   font-weight: 600;
   color: rgba(255, 252, 247, 0.88);
@@ -2324,7 +2324,7 @@ body.is-preloading .site-main--xd {
   border-radius: 100px;
   background: var(--xd-gold);
   color: var(--xd-ink);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 11px;
   font-style: normal;
   font-weight: 700;
@@ -2339,7 +2339,7 @@ body.is-preloading .site-main--xd {
   align-items: flex-start;
 }
 .cine-nav__email {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 12px;
   color: rgba(255, 252, 247, 0.45);
   text-decoration: none;
@@ -2417,7 +2417,7 @@ body.site-premium.page-leave {
   position: absolute;
   bottom: -5%;
   right: -2%;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(5rem, 16vw, 12rem);
   font-weight: 900;
   color: rgba(255, 252, 247, 0.04);
@@ -2430,7 +2430,7 @@ body.site-premium.page-leave {
   max-width: 720px;
 }
 .inner-hero__title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(2.4rem, 5.5vw, 4rem);
   font-weight: 700;
   line-height: 1.05;
@@ -2443,7 +2443,7 @@ body.site-premium.page-leave {
   color: var(--xd-gold);
 }
 .inner-hero__lead {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 1.1rem;
   font-weight: 300;
   line-height: 1.7;
@@ -2474,7 +2474,7 @@ body.site-premium.page-leave {
 }
 .site-premium .boutique-hero--xd .boutique-hero__title,
 .site-premium .boutique-hero--xd .inner-hero__title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-size: clamp(2.8rem, 6vw, 4.5rem);
   color: #fffcf7;
   letter-spacing: -0.04em;

@@ -141,7 +141,7 @@
 
 .yombal-mega__title {
   margin: 0 0 4px;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: #001040;
@@ -325,7 +325,7 @@
 }
 
 .ecosystem-hero__title {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   margin: 0 0 8px;
 }
@@ -522,7 +522,7 @@
 }
 
 .ecosystem-demande-success h2 {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   margin: 0 0 12px;
 }
 
@@ -563,7 +563,7 @@
 }
 
 .ecosystem-hub__title {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: clamp(1.5rem, 3vw, 2rem);
   margin: 0 0 10px;
   color: #001040;
@@ -780,7 +780,7 @@
 }
 
 .ecosystem-shop__title {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   color: #001858;
   margin: 8px 0 12px;

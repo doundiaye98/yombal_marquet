@@ -96,7 +96,7 @@
 }
 .assistant-header-text h2 {
   margin: 0;
-  font-family: "Outfit", "Nunito", sans-serif;
+  font-family: "Sora", "Sora", sans-serif;
   font-size: 15px;
   font-weight: 700;
   line-height: 1.25;
@@ -160,7 +160,7 @@
   max-width: 90%;
   padding: 12px 14px;
   border-radius: 12px;
-  font-family: "Outfit", system-ui, sans-serif;
+  font-family: "Sora", system-ui, sans-serif;
   font-size: 13.5px;
   line-height: 1.55;
   word-break: break-word;

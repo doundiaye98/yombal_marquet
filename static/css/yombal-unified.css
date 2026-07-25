@@ -133,7 +133,7 @@
   border-radius: 999px;
   background: var(--y-yellow);
   color: var(--y-navy);
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 10px;
   font-weight: 700;
   line-height: 18px;
@@ -190,7 +190,7 @@
   .site-premium .header-shell .nav-mega-trigger {
     position: relative;
     color: var(--y-muted) !important;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Sora', sans-serif;
     font-size: 13.5px;
     font-weight: 500;
     letter-spacing: 0.01em;
@@ -358,7 +358,7 @@
   background: var(--y-navy) !important;
   color: #fff !important;
   border: none !important;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.05em;
@@ -574,7 +574,7 @@ body.site-premium::before { display: none !important; }
 }
 .site-premium .xd-hero--simple .xd-line--accent {
   color: #f8c000;
-  font-family: 'Fraunces', serif;
+  font-family: 'Literata', serif;
   font-style: italic;
   font-weight: 700;
   margin-top: -0.04em;
@@ -667,8 +667,8 @@ body.site-premium::before { display: none !important; }
 .site-premium .xd-marquee { background: var(--y-green); border: none; }
 .site-premium .xd-panel--dark,
 .site-premium .xd-manifesto { background: var(--y-green) !important; }
-.site-premium .xd-section-title { font-family: 'Nunito', 'Outfit', sans-serif; font-weight: 800; color: var(--y-navy); }
-.site-premium .xd-section-title em { color: var(--y-navy); font-family: 'Fraunces', serif; font-style: italic; font-weight: 600; opacity: 0.85; }
+.site-premium .xd-section-title { font-family: 'Literata', Georgia, serif; font-weight: 700; color: var(--y-navy); }
+.site-premium .xd-section-title em { color: var(--y-navy); font-family: 'Literata', serif; font-style: italic; font-weight: 600; opacity: 0.85; }
 .site-premium .xd-bento__cell {
   background: #fff;
   border-color: var(--y-border);
@@ -686,7 +686,7 @@ body.site-premium::before { display: none !important; }
   color: #fff !important;
   border: none !important;
   border-radius: 100px;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.05em;
@@ -723,7 +723,7 @@ body.site-premium::before { display: none !important; }
 .site-premium .page-hero:not(.page-hero--editorial) .section-sub { color: var(--y-muted) !important; }
 
 .site-premium .page-hero--editorial .section-title { color: var(--y-navy) !important; }
-.site-premium .page-hero--editorial .section-title em { color: var(--y-terra) !important; font-family: 'Fraunces', serif; font-style: italic; }
+.site-premium .page-hero--editorial .section-title em { color: var(--y-terra) !important; font-family: 'Literata', serif; font-style: italic; }
 .site-premium .page-hero--editorial .section-eyebrow { color: var(--y-navy) !important; opacity: 1 !important; }
 .site-premium .page-hero--editorial .section-sub,
 .site-premium .page-hero--editorial .page-hero-lead { color: var(--y-ink) !important; opacity: 0.82 !important; }
@@ -751,8 +751,8 @@ body.site-premium::before { display: none !important; }
 .site-premium body.is-preloading .site-main--xd { visibility: visible !important; }
 body.site-premium.page-leave { animation: none !important; }
 
-.site-premium .section-title { font-family: 'Nunito', 'Outfit', sans-serif; font-weight: 800; color: var(--y-navy); }
-.site-premium .section-title em { color: var(--y-navy); font-family: 'Fraunces', serif; font-style: italic; font-weight: 600; opacity: 0.85; }
+.site-premium .section-title { font-family: 'Literata', Georgia, serif; font-weight: 700; color: var(--y-navy); }
+.site-premium .section-title em { color: var(--y-navy); font-family: 'Literata', serif; font-style: italic; font-weight: 600; opacity: 0.85; }
 .site-premium .section-eyebrow { color: var(--y-navy); letter-spacing: 0.12em; opacity: 0.7; }
 
 @media (max-width: 900px) {
@@ -785,3 +785,67 @@ body.site-premium.page-leave { animation: none !important; }
   .site-premium #cursor-dot,
   .site-premium #cursor-ring { display: none !important; }
 }
+
+/* —— Typo site + titres de section centrés —— */
+:root {
+  --font-display: "Literata", Georgia, serif;
+  --font-body: "Sora", system-ui, sans-serif;
+}
+
+.site-premium,
+.site-premium body {
+  font-family: var(--font-body) !important;
+}
+
+.site-premium .page-hero--editorial .page-hero-content,
+.site-premium .page-hero--editorial .section-title,
+.site-premium .page-hero--editorial .section-sub,
+.site-premium .page-hero--editorial .section-eyebrow,
+.site-premium .page-hero--editorial .contact-intro {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.site-premium .section-title {
+  font-family: var(--font-display), "Literata", Georgia, serif !important;
+}
+
+.site-premium .section-title em {
+  font-family: var(--font-display), "Literata", Georgia, serif !important;
+  font-style: italic;
+}
+
+/* Espace commandes — hero centré (comme catalogue boutique) */
+.orders-hub .page-hero {
+  text-align: center;
+  padding-left: clamp(20px, 4vw, 40px);
+  padding-right: clamp(20px, 4vw, 40px);
+}
+
+.orders-hub .page-hero .section-eyebrow,
+.orders-hub .page-hero .section-title,
+.orders-hub .page-hero .section-sub {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.orders-hub .page-hero .section-eyebrow {
+  font-family: var(--font-body), "Sora", sans-serif !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.orders-hub .page-hero .section-title {
+  max-width: 18ch;
+}
+
+.orders-hub .page-hero .section-sub {
+  max-width: 46ch;
+  font-family: var(--font-body), "Sora", sans-serif !important;
+  line-height: 1.65;
+}
+

@@ -90,7 +90,7 @@
 
 .catalog-ud-tagline__text {
   margin: 0;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: clamp(1.1rem, 2.5vw, 1.45rem);
   font-style: italic;
   color: var(--ud-ochre);
@@ -103,7 +103,7 @@
 }
 
 .site-catalog-ud .section-title {
-  font-family: "Fraunces", serif !important;
+  font-family: "Literata", serif !important;
   color: var(--ud-green-deep) !important;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -177,7 +177,7 @@
 }
 
 .site-catalog-ud .boutique-toolbar__title {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   color: var(--ud-green-deep);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -216,7 +216,7 @@
 }
 
 .site-catalog-ud .boutique-card__title a {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   color: var(--ud-green-deep) !important;
   font-weight: 700;
   text-transform: uppercase;
@@ -247,7 +247,7 @@
 }
 
 .catalog-price-badge__amount {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 1.35rem;
   font-weight: 900;
 }
@@ -294,7 +294,7 @@
   background: linear-gradient(145deg, var(--ud-gold), #a88732);
   color: var(--ud-green-deep);
   border-radius: 16px;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 2rem !important;
   font-weight: 900;
   box-shadow: var(--ud-shadow);
@@ -303,7 +303,7 @@
 .site-catalog-ud .product-detail-price::after {
   content: "Prix";
   display: block;
-  font-family: "Outfit", sans-serif;
+  font-family: "Sora", sans-serif;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.28em;
@@ -349,7 +349,7 @@
 }
 
 .catalog-phare-card__name {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 1.05rem;
   font-weight: 800;
   color: var(--ud-green-deep);
@@ -487,7 +487,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .site-catalog-ud {
-  font-family: "Outfit", system-ui, sans-serif;
+  font-family: "Sora", system-ui, sans-serif;
   color: var(--ud-ink);
   background: var(--ud-cream);
 }
@@ -684,7 +684,7 @@
 
 .home-hero__title {
   margin: 0;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: clamp(2.5rem, 5.8vw, 4.2rem);
   font-weight: 900;
   line-height: 0.98;
@@ -868,7 +868,7 @@
 }
 
 .home-hero__spotlight-info strong {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 1.15rem;
   font-weight: 800;
   color: var(--ud-green-deep);
@@ -886,7 +886,7 @@
   right: 22px;
   bottom: 22px;
   padding: 12px 16px;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 1.35rem;
   font-weight: 900;
   color: var(--ud-green-deep);
@@ -969,7 +969,7 @@
 
 .home-hero__stat dt {
   margin: 0;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 1.65rem;
   font-weight: 900;
   color: var(--ud-green);
@@ -1093,7 +1093,7 @@
   height: 72px;
   border: 2px solid var(--ud-gold);
   border-radius: 12px;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 1.6rem;
   font-weight: 900;
   color: var(--ud-gold-light);
@@ -1111,7 +1111,7 @@
 
 .ud-cover__title {
   margin: 0;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: clamp(2.4rem, 5.5vw, 4rem);
   font-weight: 900;
   line-height: 0.95;
@@ -1126,7 +1126,7 @@
 
 .ud-cover__slogan {
   margin: 14px 0 0;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-style: italic;
   font-size: 1.15rem;
   color: var(--ud-ochre);
@@ -1146,7 +1146,7 @@
 }
 
 .ud-cover__stats dt {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 2rem;
   font-weight: 900;
   color: var(--ud-gold-light);
@@ -1192,7 +1192,7 @@
 
 .ud-cover__frame strong {
   display: block;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 2.2rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -1249,7 +1249,7 @@
 }
 
 .ud-ray-card strong {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 0.95rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -1373,7 +1373,7 @@
 
 .ud-card h3 a {
   color: var(--ud-cream);
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   text-decoration: none;
 }
 
@@ -1405,7 +1405,7 @@
 }
 
 .ud-cta h2 {
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   color: var(--ud-green-deep);
   margin: 0 0 12px;
@@ -1472,7 +1472,7 @@
 
 .catalog-rayon__title {
   margin: 0;
-  font-family: "Fraunces", serif;
+  font-family: "Literata", serif;
   font-size: 1.25rem;
   font-weight: 800;
   text-transform: uppercase;

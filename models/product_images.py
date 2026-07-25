@@ -129,8 +129,8 @@ CATALOG_SCREENSHOT_IMAGES = {
     "sauce-trofai-palmier-350": "img/products/sauce-trofai-palmier-350.jpg",
     "sauce-trofai-palmier-410": "img/products/sauce-trofai-palmier-410.jpg",
     "concentre-tomates-rolli": "img/products/concentre-tomates-rolli.jpg",
-    "maad-230g": "img/products/maad-230g.jpg",
-    "maad-400g": "img/products/maad-400g.jpg",
+    "maad-230g": "img/products/maad-en-boite.jpg",
+    "maad-400g": "img/products/maad-en-boite.jpg",
     "sirop-bissap-ud": "img/products/sirop-bissap-ud.jpg",
     "sirop-gingembre-ud": "img/products/sirop-gingembre-ud.jpg",
     "concentre-tomates-2kg": "img/products/concentre-tomates-2kg.jpg",
@@ -347,6 +347,7 @@ IMAGE_SOURCES = {
     # Épicerie — photos produits réelles
     "Dakhar — 150 g.jpg": "dakhar-sachet-150g",
     "Dakhar — 375 g.webp": "dakhar-sachet-375g",
+    "Maad en boîte.png": "maad-230g",
     "Miel de fleurs — 500 g.jpg": "miel-fleurs-500g",
     "Sirop de bissap — 50 cl.jpg": "sirop-bissap-ud",
     "Sirop de gingembre — 50 cl.jpg": "sirop-gingembre-ud",
