@@ -111,6 +111,7 @@ CATEGORY_CEREALES = "cereales"
 CATEGORY_CONDIMENTS = "condiments"
 CATEGORY_HUILES = "huiles"
 CATEGORY_SNACKS = "snacks"
+CATEGORY_DESSERTS = "desserts"
 CATEGORY_CONSERVES = "conserves"
 CATEGORY_LEGUMINEUSES = "legumineuses"  # legacy — fusionné dans CATEGORY_CEREALES
 CATEGORY_FRUITS_SECS = "fruits_secs"  # legacy — fusionné dans CATEGORY_FRUITS
@@ -131,7 +132,8 @@ PRODUCT_CATEGORIES = {
     CATEGORY_CEREALES: {"label": "Céréales & légumineuses", "emoji": "🌾"},
     CATEGORY_CONDIMENTS: {"label": "Épices & sauces", "emoji": "🌶️"},
     CATEGORY_HUILES: {"label": "Huiles", "emoji": "🫒"},
-    CATEGORY_SNACKS: {"label": "Snacks & Desserts", "emoji": "🍮"},
+    CATEGORY_SNACKS: {"label": "Snacks", "emoji": "🥨"},
+    CATEGORY_DESSERTS: {"label": "Desserts", "emoji": "🍮"},
     CATEGORY_CONSERVES: {"label": "Conserves", "emoji": "🫙"},
     CATEGORY_FRUITS: {"label": "Fruits", "emoji": "🍊"},
     CATEGORY_LEGUMES: {"label": "Légumes", "emoji": "🥬"},
@@ -148,6 +150,7 @@ SHOP_CATEGORY_ORDER = (
     CATEGORY_FRUITS,
     CATEGORY_LEGUMES,
     CATEGORY_SNACKS,
+    CATEGORY_DESSERTS,
     CATEGORY_CONSERVES,
     CATEGORY_POISSON,
     CATEGORY_VIANDES,

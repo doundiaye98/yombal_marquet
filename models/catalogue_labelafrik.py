@@ -12,6 +12,7 @@ from models.constants import (
     CATEGORY_MIELS,
     CATEGORY_POISSON,
     CATEGORY_SNACKS,
+    CATEGORY_DESSERTS,
     CATEGORY_VIANDES,
 )
 
@@ -35,6 +36,7 @@ def _lf(
     *,
     description_extra="",
     ingredients="",
+    allergens="",
     usage_tips="",
     conservation="À l'abri de la lumière et de l'humidité.",
 ):
@@ -55,6 +57,7 @@ def _lf(
         "origin": _ORIGIN,
         "weight_info": weight_info,
         "ingredients": ingredients,
+        "allergens": allergens,
         "usage_tips": usage_tips,
         "conservation": conservation,
     }
@@ -67,7 +70,7 @@ LABELAFRIK_UPDATES = {
         "thiakry-400g",
         "Thiakhry",
         "Dessert africain onctueux à base d'arraw de mil — sans gluten.",
-        CATEGORY_SNACKS,
+        CATEGORY_DESSERTS,
         "🍮",
         3,
         "400 g",
@@ -357,7 +360,7 @@ LABELAFRIK_ALIMENTS = [
     _lf("UD-FOUFOU", "foufou-farine-manioc", "Foufou", "Farine de manioc prête à cuire.", CATEGORY_CEREALES, "🌾", 2.9, "500 g"),
     _lf("UD-FUFU", "fufu-farine-plantain", "Fufu plantain", "Farine de plantain — texture moelleuse.", CATEGORY_CEREALES, "🍌", 4.95, "600 g"),
     _lf("UD-FIONO", "fiono-guinee", "Fiono Guinée", "Préparation traditionnelle manioc/céréales.", CATEGORY_CEREALES, "🌾", 3.9, "500 g"),
-    _lf("UD-THIACRY", "thiacry-de-mil", "Thiacry de mil", "Dessert traditionnel au mil et lait.", CATEGORY_SNACKS, "🍮", 1.8, "400 g"),
+    _lf("UD-THIACRY", "thiacry-de-mil", "Thiacry de mil", "Dessert traditionnel au mil et lait.", CATEGORY_DESSERTS, "🍮", 1.8, "400 g"),
     _lf("UD-CORNED", "corned-beef-halal", "Corned beef halal", "Prêt à consommer — repas rapides.", CATEGORY_VIANDES, "🥫", 2.5, "340 g"),
     _lf("UD-CITRON", "jus-citron-sicile-1l", "Jus de citron", "Citron jaune de Sicile — 1 L.", CATEGORY_BOISSONS, "🍋", 3.9, "1 L"),
     _lf("UD-GHEE", "butter-ghee", "Beurre ghee", "Beurre clarifié — cuisson et friture.", CATEGORY_HUILES, "🧈", 7.9, "500 g"),
@@ -388,6 +391,60 @@ LABELAFRIK_SNACKS_EXTRA = [
     _lf("UD-NEMS-P", "nems-poulet-halal-50", "Nems poulet halal", "Lot de 50 pièces.", CATEGORY_SNACKS, "🥟", 22.5, "50 pièces"),
     _lf("UD-NEMS-CP", "nems-crevettes-poulet-halal", "Nems crevettes & poulet", "Lot de 50 pièces halal.", CATEGORY_SNACKS, "🥟", 25.9, "50 pièces"),
     _lf("UD-RIZ-C2", "riz-casse-2x-1kg", "Riz cassé 2 fois", "Sac 1 kg — absorption des sauces.", CATEGORY_CEREALES, "🌾", 1.6, "1 kg"),
+    _lf(
+        "UD-SOMBI",
+        "sombi-riz-au-lait",
+        "Riz au lait (sombi)",
+        "Dessert sénégalais crémeux — riz cuit dans le lait sucré.",
+        CATEGORY_DESSERTS,
+        "🍚",
+        3.5,
+        "400 g",
+        description_extra=(
+            "Le sombi (riz au lait) est un classique du goûter et des fêtes : "
+            "onctueux, parfumé à la vanille ou à la cannelle selon la préparation."
+        ),
+        ingredients="Riz, lait, sucre, arômes (selon lot).",
+        allergens="Lait.",
+        usage_tips="Servir frais. Réchauffer doucement si besoin.",
+        conservation="Au frais après ouverture. Consommer rapidement.",
+    ),
+    _lf(
+        "UD-THIAK-LAIT",
+        "thiakhri-au-lait",
+        "Thiakhri au lait",
+        "Arraw de mil au lait — dessert onctueux et nourrissant.",
+        CATEGORY_DESSERTS,
+        "🍮",
+        3.5,
+        "400 g",
+        description_extra=(
+            "Thiakhri (dégué) préparé au lait : texture légère, goût doux du mil. "
+            "Idéal au petit-déjeuner ou en dessert."
+        ),
+        ingredients="Arraw de mil, lait, sucre (selon lot).",
+        allergens="Lait. Peut contenir des traces de gluten selon préparation.",
+        usage_tips="Servir bien frais. Ajouter raisins ou fruits secs selon goût.",
+        conservation="Au frais après ouverture.",
+    ),
+    _lf(
+        "UD-NGALAKH",
+        "thiakhri-ngalakh",
+        "Thiakhri pâte d'arachide (ngalakh)",
+        "Dessert de mil à la pâte d'arachide — ngalakh traditionnel.",
+        CATEGORY_DESSERTS,
+        "🥜",
+        4.5,
+        "400 g",
+        description_extra=(
+            "Le ngalakh marie thiakhri (arraw de mil), pâte d'arachide et souvent baobab : "
+            "riche, sucré-salé subtil, incontournable des tables sénégalaises."
+        ),
+        ingredients="Arraw de mil, pâte d'arachide, sucre, baobab (selon lot).",
+        allergens="Arachides. Lait possible selon préparation.",
+        usage_tips="Servir frais. Remuer avant dégustation si la pâte se dépose.",
+        conservation="Au frais après ouverture.",
+    ),
 ]
 
 LABELAFRIK_MER = [

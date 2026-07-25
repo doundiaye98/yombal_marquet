@@ -164,6 +164,7 @@ def _sync_row_to_product(product, row):
         "category",
         "origin",
         "ingredients",
+        "allergens",
         "usage_tips",
         "conservation",
     ):

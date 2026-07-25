@@ -11,6 +11,7 @@ from models.constants import (
     CATEGORY_LEGUMES,
     CATEGORY_POISSON,
     CATEGORY_SNACKS,
+    CATEGORY_DESSERTS,
 )
 
 
@@ -329,13 +330,13 @@ EXTENDED_CATALOGUE = [
         ingredients="Huile de Moringa oleifera.",
         usage_tips="Assaisonnement fin ou soin capillaire selon usage.",
     ),
-    # —— Snacks & Desserts ——
+    # —— Desserts ——
     _item(
         "SNK-THIAKRY-400",
         "thiakry-400g",
         "Thiakry",
         "Couscous de mil sucré avec yaourt, dessert populaire.",
-        CATEGORY_SNACKS,
+        CATEGORY_DESSERTS,
         "🍮",
         650,
         "400 g — kit (semoule + épices)",
@@ -348,7 +349,7 @@ EXTENDED_CATALOGUE = [
         "ngalakh-350g",
         "Ngalakh",
         "Dessert de mil, beurre de baobab et cacahuètes.",
-        CATEGORY_SNACKS,
+        CATEGORY_DESSERTS,
         "🥣",
         720,
         "350 g — préparation sèche",
@@ -356,6 +357,7 @@ EXTENDED_CATALOGUE = [
         allergens="Arachides.",
         usage_tips="Réhydrater selon notice et laisser reposer au frais.",
     ),
+    # —— Snacks ——
     _item(
         "SNK-AKARA-300",
         "akara-mix-300g",

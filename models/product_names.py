@@ -32,7 +32,11 @@ PRODUCT_DISPLAY_NAMES = {
     "piment-sec-moulu-80g": "Piment moulu — 80 g",
     "sel-kaolack-500g": "Sel de Kaolack — 500 g",
     "beurre-karite-alimentaire-250g": "Beurre de karité alimentaire — 250 g",
+    # —— Desserts ——
     "thiakry-400g": "Thiakhry — 400 g",
+    "sombi-riz-au-lait": "Riz au lait (sombi) — 400 g",
+    "thiakhri-au-lait": "Thiakhri au lait — 400 g",
+    "thiakhri-ngalakh": "Thiakhri pâte d'arachide (ngalakh) — 400 g",
     "legumes-seches-thiebou-200g": "Légumes séchés thiéb — 200 g",
     "crevettes-sechees-100g": "Crevettes séchées — 100 g",
     "graine-sesame-250g": "Graines de sésame — 250 g",
@@ -99,6 +103,7 @@ PRODUCT_DISPLAY_NAMES = {
     "accras-morue": "Accras de morue",
     "nems-poulet-halal-50": "Nems poulet — 50 pièces",
     "nems-crevettes-poulet-halal": "Nems crevettes & poulet — 50 pièces",
+    # —— Desserts ——
     "thiacry-de-mil": "Thiakhry (préparation) — 400 g",
     # —— Légumineuses ——
     "cornilles-haricots-blancs": "Cornilles — 500 g",
