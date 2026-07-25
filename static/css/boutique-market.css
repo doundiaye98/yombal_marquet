@@ -356,11 +356,11 @@
   text-shadow: 0 1px 12px rgba(255, 255, 255, 0.85);
 }
 
-/* Grille */
+/* Grille — même logique que les catalogues Univers (électronique, etc.) */
 .boutique-page .boutique-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }
 
 /* Cartes */
@@ -595,12 +595,6 @@
 }
 
 /* Responsive */
-@media (max-width: 1100px) {
-  .boutique-page .boutique-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 900px) {
   .boutique-page .boutique-shell {
     grid-template-columns: 1fr;
@@ -649,7 +643,7 @@
   }
 }
 
-/* Mobile téléphone : liste horizontale (photo | infos) — plus lisible qu’une grille 2 colonnes */
+/* Mobile — cartes verticales comme les catalogues Univers (électronique, etc.) */
 @media (max-width: 640px) {
   .site-catalog-ud .boutique-hero--catalog,
   .boutique-page .boutique-hero--catalog {
@@ -662,125 +656,58 @@
 
   .boutique-page .boutique-shell {
     max-width: 100%;
-    padding-left: 12px;
-    padding-right: 12px;
-    gap: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+    gap: 14px;
   }
 
-  .boutique-page .boutique-grid,
-  .boutique-page .home-product-grid {
-    grid-template-columns: 1fr !important;
-    gap: 10px;
-  }
-
-  .site-catalog-ud .boutique-page .boutique-card,
-  .boutique-page .boutique-card {
-    display: grid;
-    grid-template-columns: 112px minmax(0, 1fr);
-    align-items: stretch;
-    min-height: 112px;
-  }
-
-  .site-catalog-ud .boutique-page .boutique-card:hover,
-  .boutique-page .boutique-card:hover {
-    transform: none;
+  .boutique-page .boutique-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
   }
 
   .site-catalog-ud .boutique-page .boutique-card__media,
   .boutique-page .boutique-card__media {
-    aspect-ratio: auto;
-    height: 100%;
-    min-height: 112px;
-    padding: 10px;
-    border-bottom: none;
-    border-right: 1px solid var(--bm-line);
-    border-radius: var(--bm-radius) 0 0 var(--bm-radius);
-  }
-
-  .boutique-page .boutique-card__cat {
-    display: none;
-  }
-
-  .boutique-page .boutique-card__ribbon {
-    top: 6px;
-    right: 6px;
-    padding: 3px 7px;
-    font-size: 9px;
+    padding: 14px;
   }
 
   .boutique-page .boutique-card__body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    padding: 10px 12px;
-    min-width: 0;
+    padding: 14px;
   }
 
   .site-catalog-ud .boutique-page .boutique-card__title a,
   .boutique-page .boutique-card__title a {
-    font-size: 0.92rem !important;
-    line-height: 1.25;
-    -webkit-line-clamp: 2;
+    font-size: 0.98rem !important;
   }
 
-  .boutique-page .boutique-card__summary,
-  .boutique-page .boutique-card__meta {
+  .boutique-page .boutique-card__summary {
     display: none;
   }
 
   .boutique-page .boutique-card__footer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-top: 4px;
-    flex-wrap: nowrap;
-  }
-
-  .boutique-page .boutique-card__link {
-    display: none;
-  }
-
-  .site-catalog-ud .boutique-page .boutique-card__cart,
-  .boutique-page .boutique-card__cart {
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-  }
-
-  .site-catalog-ud .boutique-page .catalog-price-badge.boutique-card__price,
-  .boutique-page .catalog-price-badge {
-    font-size: 0.95rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
 
   .site-catalog-ud .boutique-page .boutique-card__cta,
   .boutique-page .boutique-card__cta {
-    flex: 1;
-    min-width: 0;
-    width: auto !important;
-    padding: 8px 10px !important;
-    font-size: 10px !important;
+    width: 100%;
     text-align: center;
-    white-space: normal;
-    line-height: 1.2;
+    justify-content: center;
   }
 
-  .boutique-page .boutique-card--gamme {
-    grid-template-columns: 100px minmax(0, 1fr);
-  }
-
-  .boutique-page .boutique-card--gamme .boutique-card__footer {
-    flex-wrap: wrap;
+  .boutique-page .boutique-card__actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .boutique-page .catalog-rayon__head {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .boutique-page .catalog-rayon__title {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
   }
 }
 
