@@ -27,11 +27,34 @@
   </header>
 
   <section class="boutique-catalog" aria-label="Catalogue">
+    {% set boutique_photo_slides = [
+      'img/yombal-catalogue-hero.jpg',
+      'img/gallery-catalogue-riz-farines.jpg',
+      'img/gallery-catalogue-huiles-condiments.jpg',
+      'img/gallery-catalogue-snacks-boissons.jpg',
+      'img/gallery-catalogue-produits-mer.jpg',
+      'img/gallery-catalogue-cosmetique-beaute.jpg',
+      'img/gallery-catalogue-chaussures-sacs.jpg'
+    ] %}
     <div
-      class="boutique-catalog__bg"
+      class="boutique-catalog__bg boutique-catalog__bg--slideshow"
       aria-hidden="true"
-      style="background-image: url('{{ url_for('static', filename='img/alimentaire.png') }}?v=4')"
-    ></div>
+      data-boutique-slideshow
+      data-interval="5000"
+    >
+      <div class="boutique-catalog__track" data-boutique-track>
+        {% for slide in boutique_photo_slides %}
+        <div
+          class="boutique-catalog__slide"
+          style="background-image: url('{{ url_for('static', filename=slide) }}')"
+        ></div>
+        {% endfor %}
+        <div
+          class="boutique-catalog__slide"
+          style="background-image: url('{{ url_for('static', filename=boutique_photo_slides[0]) }}')"
+        ></div>
+      </div>
+    </div>
   <div class="boutique-shell">
     <aside class="boutique-sidebar" aria-label="Filtrer le catalogue">
       <div class="boutique-sidebar__panel">
@@ -180,4 +203,56 @@
   </div>
   </section>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  var root = document.querySelector("[data-boutique-slideshow]");
+  if (!root) return;
+  var track = root.querySelector("[data-boutique-track]");
+  var slides = root.querySelectorAll(".boutique-catalog__slide");
+  if (!track || slides.length < 2) return;
+
+  var realCount = slides.length - 1;
+  var interval = parseInt(root.getAttribute("data-interval") || "5000", 10);
+  var index = 0;
+  var moving = false;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function setX(i, animate) {
+    if (!animate || reduced) {
+      track.style.transition = "none";
+    } else {
+      track.style.transition = "";
+    }
+    track.style.transform = "translate3d(-" + i * 100 + "%, 0, 0)";
+  }
+
+  track.addEventListener("transitionend", function (e) {
+    if (e.target !== track || e.propertyName !== "transform") return;
+    if (index < realCount) {
+      moving = false;
+      return;
+    }
+    setX(0, false);
+    void track.offsetWidth;
+    track.style.transition = "";
+    index = 0;
+    moving = false;
+  });
+
+  setInterval(function () {
+    if (moving && !reduced) return;
+    moving = true;
+    index += 1;
+    setX(index, true);
+    if (reduced && index >= realCount) {
+      index = 0;
+      setX(0, false);
+      moving = false;
+    }
+  }, interval);
+})();
+</script>
 {% endblock %}

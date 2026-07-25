@@ -26,6 +26,22 @@
     'img/gallery-habillement-jeans.jpg',
     'img/gallery-habillement-sport.jpg',
     'img/gallery-habillement-pagne.jpg'
+  ],
+  'chaussures': [
+    'img/yombal-chaussures-hero.jpg',
+    'img/gallery-chaussures-baskets.jpg',
+    'img/gallery-chaussures-running.jpg',
+    'img/gallery-chaussures-sandales.jpg',
+    'img/gallery-chaussures-ville.jpg',
+    'img/gallery-chaussures-bottes.jpg',
+    'img/gallery-chaussures-enfants.jpg'
+  ],
+  'bagagerie': [
+    'img/bag-backpack.jpg',
+    'img/bag-suitcase.jpg',
+    'img/bag-weekender.jpg',
+    'img/bag-urban.jpg',
+    'img/bag-crossbody.jpg'
   ]
 } %}
 {% set ecosystem_photo_bgs = {
@@ -217,7 +233,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
-{% if service.slug in ('electromenager', 'mode') %}
+{% if service.slug in ('electromenager', 'mode', 'chaussures', 'bagagerie') %}
 <script>
 (function () {
   var root = document.querySelector("[data-ecosystem-slideshow]");

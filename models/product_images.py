@@ -162,6 +162,17 @@ CATALOG_SCREENSHOT_IMAGES = {
     "sac-weekend-50l": "img/products/sac-weekend-50l.jpg",
     "cartable-ecole-renforce": "img/products/cartable-ecole-renforce.jpg",
     "pochette-voyage-documents": "img/products/pochette-voyage-documents.jpg",
+    "sac-a-dos-voyage-40l": "img/products/sac-a-dos-voyage-40l.jpg",
+    "sac-a-dos-laptop-15": "img/products/sac-a-dos-laptop-15.jpg",
+    "valise-moyenne-65cm": "img/products/valise-moyenne-65cm.jpg",
+    "set-valises-3-pieces": "img/products/set-valises-3-pieces.jpg",
+    "sac-trolley-cabine": "img/products/sac-trolley-cabine.jpg",
+    "besace-cuir-urbain": "img/products/besace-cuir-urbain.jpg",
+    "sacoche-ceinture-voyage": "img/products/sacoche-ceinture-voyage.jpg",
+    "organiseur-bagage-cubes": "img/products/organiseur-bagage-cubes.jpg",
+    "trousse-toilette-voyage": "img/products/trousse-toilette-voyage.jpg",
+    "housse-valise-protection": "img/products/housse-valise-protection.jpg",
+    "sac-sport-duffel-35l": "img/products/sac-sport-duffel-35l.jpg",
 }
 PRODUCT_IMAGES.update(CATALOG_SCREENSHOT_IMAGES)
 
@@ -298,6 +309,16 @@ IMAGE_SOURCES = {
     "Sac bandoulière urbain — 1 sac.jpg": "sac-bandouliere-urbain",
     "Sac week-end 50 L.jpg": "sac-weekend-50l",
     "Pochette voyage documents — 1 pochette RFID selon lot.jpg": "pochette-voyage-documents",
+    "Sac à dos voyage 40 L.jpg": "sac-a-dos-voyage-40l",
+    "Sac à dos laptop 15 — Compatible 15.jpg": "sac-a-dos-laptop-15",
+    "Valise moyenne 65 cm — Moyenne ~65 cm.jpg": "valise-moyenne-65cm",
+    "Set de valises 3 pièces — Set 3 valises assorties.jpg": "set-valises-3-pieces",
+    "Sac trolley cabine — Cabine souple ~55 cm.jpg": "sac-trolley-cabine",
+    "Sacoche ceinture voyage — 1 sacoche réglable.jpg": "sacoche-ceinture-voyage",
+    "Organiseurs de bagage — set de 4 — Set de 4 tailles.jpg": "organiseur-bagage-cubes",
+    "Trousse de toilette voyage — 1 trousse.jpg": "trousse-toilette-voyage",
+    "Housse de protection valise — Taille M-L selon modèle.jpg": "housse-valise-protection",
+    "Sac de sport duffel 35 L.jpg": "sac-sport-duffel-35l",
 }
 
 
