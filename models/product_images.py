@@ -338,6 +338,7 @@ IMAGE_SOURCES = {
     "Morceaux d'agneau halal.jpg": "morceaux-agneau-halal-1kg",
     "Morceaux de mouton.jpg": "morceaux-mouton-halal-1kg",
     "Pieds de bœuf halal.jpg": "pieds-boeuf-halal-1kg",
+    "Pintade entière halal — ≈ 1,5 kg.jpg": "pintade-entiere-halal",
     "Pintade entière halal.jpg": "pintade-entiere-halal",
     "Steak haché bœuf halal.jpg": "steak-hache-boeuf-halal-1kg",
     "Tripes de bœuf halal.jpg": "tripes-boeuf-halal-1kg",
