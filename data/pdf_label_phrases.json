@@ -1,0 +1,814 @@
+{
+  "phrases": [
+    {
+      "page": 28,
+      "phrase": "chips de plantain doux,\ncroustillantes et légèrement sucrées, parfaites\npour une collation savoureuse",
+      "price": 0.0
+    },
+    {
+      "page": 28,
+      "phrase": "chips de plantain doux épicé,\ncroustillantes avec une saveur sucrée\nlégèrement relevée",
+      "price": 0.0
+    },
+    {
+      "page": 28,
+      "phrase": "chips de plantain salé,\ncroustillantes et savoureuses, idéales pour\ngrignoter",
+      "price": 0.0
+    },
+    {
+      "page": 31,
+      "phrase": "fruits de grains de baobab en\nsachet, riches en vitamine C et fibres, idéaux\npour boissons et préparations culinaires",
+      "price": 0.0
+    },
+    {
+      "page": 32,
+      "phrase": "fruits en grains de baobab, riches\nen vitamine C et en fibres, parfaits pour\nboissons, sauces et recettes traditionnelles",
+      "price": 0.0
+    },
+    {
+      "page": 32,
+      "phrase": "biscuits sucrés Gem, croustillants\net savoureux, parfaits pour les collations et le\ngoûter",
+      "price": 0.0
+    },
+    {
+      "page": 33,
+      "phrase": "feuilles utilisées pour préparer des\ninfusions traditionnelles aux vertus digestives\net tonifiantes",
+      "price": 0.0
+    },
+    {
+      "page": 36,
+      "phrase": "sardinelles pilchards à la sauce\ntomate, prêtes à consommer, idéales pour les\nrepas rapides ou les plats traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 40,
+      "phrase": "biscuits sucrés Gem, croustillants\net délicieux, parfaits pour le goûter ou en\ncollation",
+      "price": 0.0
+    },
+    {
+      "page": 41,
+      "phrase": "grains de mil, nutritifs et\npolyvalents, idéaux pour les bouillies, pains et\nautres préparations traditionnelles",
+      "price": 0.0
+    },
+    {
+      "page": 42,
+      "phrase": "cornilles haricots blancs, riches en\nprotéines et fibres, idéales pour soupes,\nragoûts et plats traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 42,
+      "phrase": "haricots noirs Tersol, riches en\nprotéines et fibres, parfaits pour les soupes,\nragoûts et plats traditionnels",
+      "price": 9.0
+    },
+    {
+      "page": 42,
+      "phrase": "arachides crues blanches en sac,\nriches en protéines et idéales pour la cuisine,\nla préparation de pâte d’arachide",
+      "price": 5.0
+    },
+    {
+      "page": 43,
+      "phrase": "dattes sèches, sucrées et\nnutritives, idéales pour les collations, desserts\nou préparations culinaires",
+      "price": 0.0
+    },
+    {
+      "page": 43,
+      "phrase": "dattes demi-sèches, naturellement\nsucrées et moelleuses, parfaites pour les\ncollations, desserts ou recettes traditionnelles",
+      "price": 0.0
+    },
+    {
+      "page": 43,
+      "phrase": "dattes branchées, fraîches et\nsavoureuses, parfaites pour les collations ou\nles recettes traditionnelles",
+      "price": 0.0
+    },
+    {
+      "page": 43,
+      "phrase": "raisins secs golden, sucrés et\nmoelleux, parfaits pour les collations,\npâtisseries et recettes sucrées",
+      "price": 0.0
+    },
+    {
+      "page": 44,
+      "phrase": "samoussas aux légumes halal, en\nlot de 20 pièces, croustillants et savoureux,\nparfaits pour l’apéritif ou les en-cas",
+      "price": 0.0
+    },
+    {
+      "page": 44,
+      "phrase": "accras de morue, beignets\nsavoureux à base de morue et d’épices, parfaits\npour l’apéritif ou en accompagnement",
+      "price": 0.0
+    },
+    {
+      "page": 44,
+      "phrase": "samoussas au mouton halal, en\nlot de 20 pièces, savoureux et croustillants,\nparfaits pour l’apéritif ou les repas",
+      "price": 0.0
+    },
+    {
+      "page": 45,
+      "phrase": "samoussas au poulet, en lot de 20\npièces, croustillants et savoureux, parfaits\npour l’apéritif ou les repas",
+      "price": 0.0
+    },
+    {
+      "page": 45,
+      "phrase": "nems aux crevettes et poulet\nhalal, en lot de 50 pièces, croustillants et\nsavoureux, idéaux pour l’apéritif ou les repas",
+      "price": 25.9
+    },
+    {
+      "page": 45,
+      "phrase": "nems au poulet halal, en lot de 50\npièces, croustillants et savoureux, parfaits\npour l’apéritif ou les repas",
+      "price": 0.0
+    },
+    {
+      "page": 45,
+      "phrase": "gambas géantes sauvages,\nfraîches et savoureuses, parfaites pour griller,\nsauter ou préparer des plats de fruits de mer",
+      "price": 0.0
+    },
+    {
+      "page": 46,
+      "phrase": "queues de langoustes blanches\nsauvages, fraîches idéales pour les plats\nraffinés ou les préparations de fruits de mer",
+      "price": 0.0
+    },
+    {
+      "page": 46,
+      "phrase": "ailes de poulet Tex-Mex halal, en\nlot de 2,5 kg, savoureuses et épicées, parfaites\npour griller ou cuire au four",
+      "price": 0.0
+    },
+    {
+      "page": 50,
+      "phrase": "tablettes d’arôme concentré Jumbo,\npratiques et savoureuses, parfaites pour parfumer\nsauces, bouillons et préparations culinaires",
+      "price": 0.0
+    },
+    {
+      "page": 50,
+      "phrase": "cubes Maggi, pratiques et\nsavoureux, idaux pour rehausser sauces,\nsoupes et plats variés",
+      "price": 0.0
+    },
+    {
+      "page": 51,
+      "phrase": "tablettes saveur crevette Maggi,\npratiques et savoureuses, parfaites pour\nrehausser sauces, soupes et plats de fruits de\nmer",
+      "price": 0.0
+    },
+    {
+      "page": 51,
+      "phrase": "tablettes saveur poulet Maggi,\npratiques et savoureuses, idéales pour\nrehausser sauces, soupes et plats variés",
+      "price": 0.0
+    },
+    {
+      "page": 52,
+      "phrase": "plantains, fruits polyvalents et\nnutritifs, idéaux pour frire, cuire à la vapeur\nou préparer des plats traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 52,
+      "phrase": "djakhatou ou aubergines amères,\nlégumes amers et nutritifs, idéaux pour les\nsauces, ragoûts et plats traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 52,
+      "phrase": "gombos, légumes riches et\nnutritifs, parfaits pour les sauces, soupes et\nplats traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 52,
+      "phrase": "aubergines noires, légumes tendres\net savoureux, parfaites pour les sauces, ragoûts,\ngrillades ou plats traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 53,
+      "phrase": "piments, fruits épicés et\naromatiques, parfaits pour relever sauces,\nmarinades et plats variés",
+      "price": 0.0
+    },
+    {
+      "page": 53,
+      "phrase": "patates douces blanches,\ntubercules doux et nutritifs, parfaites pour les\nplats cuits, rôtis ou en purée",
+      "price": 0.0
+    },
+    {
+      "page": 53,
+      "phrase": "patates douces roses, tubercules\nsucrés et nutritifs, idéales pour les plats cuits,\nrôtis ou en purée",
+      "price": 0.0
+    },
+    {
+      "page": 53,
+      "phrase": "ignames, tubercules riches et\nnourrissants, idéaux pour les plats cuits,\nbouillies, frites ou en purée",
+      "price": 0.0
+    },
+    {
+      "page": 54,
+      "phrase": "choux, légumes croquants et\nnutritifs, parfaits pour les salades, soupes,\nsautés ou plats mijotés",
+      "price": 0.0
+    },
+    {
+      "page": 54,
+      "phrase": "bananes, fruits sucrés et nutritifs,\nidéales pour consommer fraîches, en\nsmoothies, desserts ou cuisinées",
+      "price": 0.0
+    },
+    {
+      "page": 55,
+      "phrase": "oranges, fruits juteux et\nvitaminés, parfaits à consommer frais, en jus\nou en desserts",
+      "price": 0.0
+    },
+    {
+      "page": 55,
+      "phrase": "poivrons verts, légumes\ncroquants et savoureux, parfaits pour les\nsalades, sautés, sauces et plats cuisinés",
+      "price": 0.0
+    },
+    {
+      "page": 55,
+      "phrase": "carottes, légumes croquants et\nnutritifs, idéales pour les salades, soupes,\nplats cuits ou jus",
+      "price": 0.0
+    },
+    {
+      "page": 55,
+      "phrase": "poivrons rouges, légumes sucrés\net savoureux, parfaits pour les salades,\nsautés, sauces et plats cuisinés",
+      "price": 0.0
+    },
+    {
+      "page": 56,
+      "phrase": "tomates, fruits juteux et\nsavoureux, parfaits pour les salades, sauces,\nsoupes et plats cuisinés",
+      "price": 0.0
+    },
+    {
+      "page": 56,
+      "phrase": "pommes de terre, tubercules\npolyvalents et nutritifs, parfaits pour cuire,\nrôtir, frire ou préparer en purée",
+      "price": 0.0
+    },
+    {
+      "page": 56,
+      "phrase": "citrons verts, fruits acidulés et\nparfumés, idéaux pour assaisonner plats,\nboissons et desserts",
+      "price": 0.0
+    },
+    {
+      "page": 56,
+      "phrase": "oignons, légumes aromatiques et\nsavoureux, parfaits pour rehausser sauces,\nsoupes, plats sautés et préparations culinaires",
+      "price": 0.0
+    },
+    {
+      "page": 57,
+      "phrase": "mérous Thiof, frais et savoureux,\nvendus en carton de 5 kg, idéaux pour griller, cuire\nou préparer des plats de poisson traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 57,
+      "phrase": "gros mérous Thiof sans tête, frais et\nsavoureux, vendus en carton de 5 kg, parfaits pour griller,\ncuire ou préparer des plats de poisson tra",
+      "price": 0.0
+    },
+    {
+      "page": 57,
+      "phrase": "mérous Thiof, frais et savoureux,\nvendus en carton de 10 kg, idéaux pour griller, cuire\nou préparer des plats de poisson traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 58,
+      "phrase": "petits mérous Thiof, frais et\nsavoureux, parfaits pour griller, frire ou cuisiner\ndans des plats de poisson traditionnels",
+      "price": 0.0
+    },
+    {
+      "page": 58,
+      "phrase": "grosses dorades Diaregne avec tête,\nfraîches et savoureuses, vendues en carton de 10 kg,\nparfaites pour griller, cuire ou préparer des plats",
+      "price": 5.0
+    },
+    {
+      "page": 58,
+      "phrase": "grosses dorades Diaregne avec tête,\nfraîches et savoureuses, vendues en carton de 5\nkg, idéales pour griller, cuire ou préparer des plats\nde",
+      "price": 0.0
+    },
+    {
+      "page": 58,
+      "phrase": "grosses dorades Diaregne sans tête,\nfraîches et savoureuses, vendues en carton de 5 kg,\nidéales pour griller, cuire ou préparer des plats de",
+      "price": 0.0
+    },
+    {
+      "page": 59,
+      "phrase": "grosses dorades plates Vivaneau,\nfraîches et savoureuses, vendues en carton de 10 kg,\nparfaites pour griller, cuire ou préparer des plats de",
+      "price": 0.0
+    },
+    {
+      "page": 59,
+      "phrase": "dorades de 400 à 600 g, vidées et\nécaillées, vendues en carton de 5 kg, parfaites pour\ngriller, cuire ou préparer des plats de poisson",
+      "price": 5.0
+    },
+    {
+      "page": 59,
+      "phrase": "dorades de 500 à 800 g, vidées et\nécaillées, vendues en carton de 5 kg, parfaites pour\ngriller, cuire ou préparer des plats de poisson",
+      "price": null
+    },
+    {
+      "page": 59,
+      "phrase": "dorades de plus de 1000 g, vidées et\nécaillées, vendues en carton de 5 kg, idéales pour\ngriller, cuire ou préparer des plats de poisson",
+      "price": null
+    },
+    {
+      "page": 60,
+      "phrase": "capitaines Bar (Ombrine) de 400 à 600\ng, frais et savoureux, vendus en carton de 5 kg,\nparfaits pour griller, cuire ou préparer des plats de",
+      "price": 5.0
+    },
+    {
+      "page": 60,
+      "phrase": "gros barracudas Seud, frais et\nsavoureux, vendus en carton de 5 kg, idéaux pour\ngriller, cuire ou préparer des plats de poisson",
+      "price": 0.0
+    },
+    {
+      "page": 60,
+      "phrase": "capitaines Bar (Ombrine) de 600 à 800\ng, frais et savoureux, vendus en carton de 10 kg,\nparfaits pour griller, cuire ou préparer des plats\nd",
+      "price": 0.0
+    }
+  ],
+  "missing": [
+    {
+      "page": 31,
+      "phrase": "fruits de grains de baobab en\nsachet, riches en vitamine C et fibres, idéaux\npour boissons et préparations culinaires",
+      "price": 0.0,
+      "match": "Baobab — 250 g",
+      "slug": "bouye-baobab-250g",
+      "score": 1
+    },
+    {
+      "page": 32,
+      "phrase": "fruits en grains de baobab, riches\nen vitamine C et en fibres, parfaits pour\nboissons, sauces et recettes traditionnelles",
+      "price": 0.0,
+      "match": "Baobab — 250 g",
+      "slug": "bouye-baobab-250g",
+      "score": 1
+    },
+    {
+      "page": 33,
+      "phrase": "feuilles utilisées pour préparer des\ninfusions traditionnelles aux vertus digestives\net tonifiantes",
+      "price": 0.0,
+      "match": "Poudre de feuilles de moringa — 100 g",
+      "slug": "moringa-feuilles-poudre-100g",
+      "score": 1
+    },
+    {
+      "page": 50,
+      "phrase": "tablettes d’arôme concentré Jumbo,\npratiques et savoureuses, parfaites pour parfumer\nsauces, bouillons et préparations culinaires",
+      "price": 0.0,
+      "match": "Huile d'argan bio — 100 ml",
+      "slug": "huile-argan-bio-100ml",
+      "score": 1
+    },
+    {
+      "page": 50,
+      "phrase": "cubes Maggi, pratiques et\nsavoureux, idaux pour rehausser sauces,\nsoupes et plats variés",
+      "price": 0.0,
+      "match": "Organiseurs de bagage — set de 4 — Set de 4 tailles",
+      "slug": "organiseur-bagage-cubes",
+      "score": 1
+    },
+    {
+      "page": 51,
+      "phrase": "tablettes saveur crevette Maggi,\npratiques et savoureuses, parfaites pour\nrehausser sauces, soupes et plats de fruits de\nmer",
+      "price": 0.0,
+      "match": null,
+      "slug": null,
+      "score": 0
+    },
+    {
+      "page": 51,
+      "phrase": "tablettes saveur poulet Maggi,\npratiques et savoureuses, idéales pour\nrehausser sauces, soupes et plats variés",
+      "price": 0.0,
+      "match": "Samoussas poulet — 20 pièces",
+      "slug": "samoussas-poulet-20",
+      "score": 1
+    },
+    {
+      "page": 52,
+      "phrase": "djakhatou ou aubergines amères,\nlégumes amers et nutritifs, idéaux pour les\nsauces, ragoûts et plats traditionnels",
+      "price": 0.0,
+      "match": "Légumes séchés thiéb — 200 g",
+      "slug": "legumes-seches-thiebou-200g",
+      "score": 1
+    },
+    {
+      "page": 52,
+      "phrase": "gombos, légumes riches et\nnutritifs, parfaits pour les sauces, soupes et\nplats traditionnels",
+      "price": 0.0,
+      "match": "Légumes séchés thiéb — 200 g",
+      "slug": "legumes-seches-thiebou-200g",
+      "score": 1
+    },
+    {
+      "page": 52,
+      "phrase": "aubergines noires, légumes tendres\net savoureux, parfaites pour les sauces, ragoûts,\ngrillades ou plats traditionnels",
+      "price": 0.0,
+      "match": "Légumes séchés thiéb — 200 g",
+      "slug": "legumes-seches-thiebou-200g",
+      "score": 1
+    },
+    {
+      "page": 53,
+      "phrase": "piments, fruits épicés et\naromatiques, parfaits pour relever sauces,\nmarinades et plats variés",
+      "price": 0.0,
+      "match": null,
+      "slug": null,
+      "score": 0
+    },
+    {
+      "page": 53,
+      "phrase": "patates douces blanches,\ntubercules doux et nutritifs, parfaites pour les\nplats cuits, rôtis ou en purée",
+      "price": 0.0,
+      "match": "Chips de plantain — doux",
+      "slug": "chips-plantain-doux",
+      "score": 1
+    },
+    {
+      "page": 53,
+      "phrase": "patates douces roses, tubercules\nsucrés et nutritifs, idéales pour les plats cuits,\nrôtis ou en purée",
+      "price": 0.0,
+      "match": null,
+      "slug": null,
+      "score": 0
+    },
+    {
+      "page": 53,
+      "phrase": "ignames, tubercules riches et\nnourrissants, idéaux pour les plats cuits,\nbouillies, frites ou en purée",
+      "price": 0.0,
+      "match": null,
+      "slug": null,
+      "score": 0
+    },
+    {
+      "page": 54,
+      "phrase": "choux, légumes croquants et\nnutritifs, parfaits pour les salades, soupes,\nsautés ou plats mijotés",
+      "price": 0.0,
+      "match": "Légumes séchés thiéb — 200 g",
+      "slug": "legumes-seches-thiebou-200g",
+      "score": 1
+    },
+    {
+      "page": 54,
+      "phrase": "bananes, fruits sucrés et nutritifs,\nidéales pour consommer fraîches, en\nsmoothies, desserts ou cuisinées",
+      "price": 0.0,
+      "match": null,
+      "slug": null,
+      "score": 0
+    },
+    {
+      "page": 55,
+      "phrase": "oranges, fruits juteux et\nvitaminés, parfaits à consommer frais, en jus\nou en desserts",
+      "price": 0.0,
+      "match": "Jus de citron — 1 L",
+      "slug": "jus-citron-sicile-1l",
+      "score": 1
+    },
+    {
+      "page": 55,
+      "phrase": "poivrons verts, légumes\ncroquants et savoureux, parfaits pour les\nsalades, sautés, sauces et plats cuisinés",
+      "price": 0.0,
+      "match": "Légumes séchés thiéb — 200 g",
+      "slug": "legumes-seches-thiebou-200g",
+      "score": 1
+    },
+    {
+      "page": 55,
+      "phrase": "carottes, légumes croquants et\nnutritifs, idéales pour les salades, soupes,\nplats cuits ou jus",
+      "price": 0.0,
+      "match": "Légumes séchés thiéb — 200 g",
+      "slug": "legumes-seches-thiebou-200g",
+      "score": 1
+    },
+    {
+      "page": 55,
+      "phrase": "poivrons rouges, légumes sucrés\net savoureux, parfaits pour les salades,\nsautés, sauces et plats cuisinés",
+      "price": 0.0,
+      "match": "Légumes séchés thiéb — 200 g",
+      "slug": "legumes-seches-thiebou-200g",
+      "score": 1
+    },
+    {
+      "page": 56,
+      "phrase": "tomates, fruits juteux et\nsavoureux, parfaits pour les salades, sauces,\nsoupes et plats cuisinés",
+      "price": 0.0,
+      "match": "Concentré de tomates Rolli — 880 g",
+      "slug": "concentre-tomates-rolli",
+      "score": 1
+    },
+    {
+      "page": 56,
+      "phrase": "pommes de terre, tubercules\npolyvalents et nutritifs, parfaits pour cuire,\nrôtir, frire ou préparer en purée",
+      "price": 0.0,
+      "match": "Fécule de pomme de terre — 1 kg",
+      "slug": "fecule-pomme-de-terre-1kg",
+      "score": 1
+    },
+    {
+      "page": 56,
+      "phrase": "citrons verts, fruits acidulés et\nparfumés, idéaux pour assaisonner plats,\nboissons et desserts",
+      "price": 0.0,
+      "match": null,
+      "slug": null,
+      "score": 0
+    },
+    {
+      "page": 56,
+      "phrase": "oignons, légumes aromatiques et\nsavoureux, parfaits pour rehausser sauces,\nsoupes, plats sautés et préparations culinaires",
+      "price": 0.0,
+      "match": "Légumes séchés thiéb — 200 g",
+      "slug": "legumes-seches-thiebou-200g",
+      "score": 1
+    }
+  ],
+  "matched": [
+    {
+      "page": 28,
+      "phrase": "chips de plantain doux,\ncroustillantes et légèrement sucrées, parfaites\npour une collation savoureuse",
+      "price": 0.0,
+      "match": "Chips de plantain — doux",
+      "slug": "chips-plantain-doux",
+      "score": 3
+    },
+    {
+      "page": 28,
+      "phrase": "chips de plantain doux épicé,\ncroustillantes avec une saveur sucrée\nlégèrement relevée",
+      "price": 0.0,
+      "match": "Chips de plantain — doux",
+      "slug": "chips-plantain-doux",
+      "score": 3
+    },
+    {
+      "page": 28,
+      "phrase": "chips de plantain salé,\ncroustillantes et savoureuses, idéales pour\ngrignoter",
+      "price": 0.0,
+      "match": "Chips de plantain — salé",
+      "slug": "chips-plantain-sale",
+      "score": 3
+    },
+    {
+      "page": 32,
+      "phrase": "biscuits sucrés Gem, croustillants\net savoureux, parfaits pour les collations et le\ngoûter",
+      "price": 0.0,
+      "match": "Biscuits Gem",
+      "slug": "biscuits-gem",
+      "score": 2
+    },
+    {
+      "page": 36,
+      "phrase": "sardinelles pilchards à la sauce\ntomate, prêtes à consommer, idéales pour les\nrepas rapides ou les plats traditionnels",
+      "price": 0.0,
+      "match": "Sardinelles à la tomate",
+      "slug": "sardinelle-pilchards-tomate",
+      "score": 4
+    },
+    {
+      "page": 40,
+      "phrase": "biscuits sucrés Gem, croustillants\net délicieux, parfaits pour le goûter ou en\ncollation",
+      "price": 0.0,
+      "match": "Biscuits Gem",
+      "slug": "biscuits-gem",
+      "score": 2
+    },
+    {
+      "page": 41,
+      "phrase": "grains de mil, nutritifs et\npolyvalents, idéaux pour les bouillies, pains et\nautres préparations traditionnelles",
+      "price": 0.0,
+      "match": "Grains de mil — 1 kg",
+      "slug": "grain-de-mil",
+      "score": 2
+    },
+    {
+      "page": 42,
+      "phrase": "cornilles haricots blancs, riches en\nprotéines et fibres, idéales pour soupes,\nragoûts et plats traditionnels",
+      "price": 0.0,
+      "match": "Cornilles — 500 g",
+      "slug": "cornilles-haricots-blancs",
+      "score": 3
+    },
+    {
+      "page": 42,
+      "phrase": "haricots noirs Tersol, riches en\nprotéines et fibres, parfaits pour les soupes,\nragoûts et plats traditionnels",
+      "price": 9.0,
+      "match": "Haricots noirs Tersol — 500 g",
+      "slug": "haricots-noirs-tersol",
+      "score": 3
+    },
+    {
+      "page": 42,
+      "phrase": "arachides crues blanches en sac,\nriches en protéines et idéales pour la cuisine,\nla préparation de pâte d’arachide",
+      "price": 5.0,
+      "match": "Arachides crues — 1 kg",
+      "slug": "arachides-crues-blanches-1kg",
+      "score": 3
+    },
+    {
+      "page": 43,
+      "phrase": "dattes sèches, sucrées et\nnutritives, idéales pour les collations, desserts\nou préparations culinaires",
+      "price": 0.0,
+      "match": "Dattes sèches — 500 g",
+      "slug": "dattes-seches-ud",
+      "score": 2
+    },
+    {
+      "page": 43,
+      "phrase": "dattes demi-sèches, naturellement\nsucrées et moelleuses, parfaites pour les\ncollations, desserts ou recettes traditionnelles",
+      "price": 0.0,
+      "match": "Dattes demi-sèches — 500 g",
+      "slug": "dattes-demi-seches-ud",
+      "score": 3
+    },
+    {
+      "page": 43,
+      "phrase": "dattes branchées, fraîches et\nsavoureuses, parfaites pour les collations ou\nles recettes traditionnelles",
+      "price": 0.0,
+      "match": "Dattes branchées — 500 g",
+      "slug": "dattes-branchees-ud",
+      "score": 2
+    },
+    {
+      "page": 43,
+      "phrase": "raisins secs golden, sucrés et\nmoelleux, parfaits pour les collations,\npâtisseries et recettes sucrées",
+      "price": 0.0,
+      "match": "Raisins secs golden — 500 g",
+      "slug": "raisins-secs-golden",
+      "score": 3
+    },
+    {
+      "page": 44,
+      "phrase": "samoussas aux légumes halal, en\nlot de 20 pièces, croustillants et savoureux,\nparfaits pour l’apéritif ou les en-cas",
+      "price": 0.0,
+      "match": "Samoussas légumes — 20 pièces",
+      "slug": "samoussas-legumes-halal",
+      "score": 5
+    },
+    {
+      "page": 44,
+      "phrase": "accras de morue, beignets\nsavoureux à base de morue et d’épices, parfaits\npour l’apéritif ou en accompagnement",
+      "price": 0.0,
+      "match": "Accras de morue",
+      "slug": "accras-morue",
+      "score": 2
+    },
+    {
+      "page": 44,
+      "phrase": "samoussas au mouton halal, en\nlot de 20 pièces, savoureux et croustillants,\nparfaits pour l’apéritif ou les repas",
+      "price": 0.0,
+      "match": "Samoussas mouton — 20 pièces",
+      "slug": "samoussas-mouton-halal",
+      "score": 5
+    },
+    {
+      "page": 45,
+      "phrase": "samoussas au poulet, en lot de 20\npièces, croustillants et savoureux, parfaits\npour l’apéritif ou les repas",
+      "price": 0.0,
+      "match": "Samoussas poulet — 20 pièces",
+      "slug": "samoussas-poulet-20",
+      "score": 4
+    },
+    {
+      "page": 45,
+      "phrase": "nems aux crevettes et poulet\nhalal, en lot de 50 pièces, croustillants et\nsavoureux, idéaux pour l’apéritif ou les repas",
+      "price": 25.9,
+      "match": "Nems crevettes & poulet — 50 pièces",
+      "slug": "nems-crevettes-poulet-halal",
+      "score": 6
+    },
+    {
+      "page": 45,
+      "phrase": "nems au poulet halal, en lot de 50\npièces, croustillants et savoureux, parfaits\npour l’apéritif ou les repas",
+      "price": 0.0,
+      "match": "Nems poulet — 50 pièces",
+      "slug": "nems-poulet-halal-50",
+      "score": 5
+    },
+    {
+      "page": 45,
+      "phrase": "gambas géantes sauvages,\nfraîches et savoureuses, parfaites pour griller,\nsauter ou préparer des plats de fruits de mer",
+      "price": 0.0,
+      "match": "Gambas géantes sauvages — sachet",
+      "slug": "gambas-geantes-sauvages",
+      "score": 3
+    },
+    {
+      "page": 46,
+      "phrase": "queues de langoustes blanches\nsauvages, fraîches idéales pour les plats\nraffinés ou les préparations de fruits de mer",
+      "price": 0.0,
+      "match": "Queues de langoustes blanches — sachet",
+      "slug": "queues-langoustes-blanches",
+      "score": 3
+    },
+    {
+      "page": 46,
+      "phrase": "ailes de poulet Tex-Mex halal, en\nlot de 2,5 kg, savoureuses et épicées, parfaites\npour griller ou cuire au four",
+      "price": 0.0,
+      "match": "Ailes de poulet Tex-Mex halal — 2",
+      "slug": "ailes-poulet-texmex-halal",
+      "score": 6
+    },
+    {
+      "page": 52,
+      "phrase": "plantains, fruits polyvalents et\nnutritifs, idéaux pour frire, cuire à la vapeur\nou préparer des plats traditionnels",
+      "price": 0.0,
+      "match": "Fer à repasser vapeur — 1 fer + réservoir",
+      "slug": "fer-repasser-vapeur",
+      "score": 2
+    },
+    {
+      "page": 57,
+      "phrase": "mérous Thiof, frais et savoureux,\nvendus en carton de 5 kg, idéaux pour griller, cuire\nou préparer des plats de poisson traditionnels",
+      "price": 0.0,
+      "match": "Mérou Thiof entier — carton 5 kg",
+      "slug": "merou-thiof-entier-5kg",
+      "score": 3
+    },
+    {
+      "page": 57,
+      "phrase": "gros mérous Thiof sans tête, frais et\nsavoureux, vendus en carton de 5 kg, parfaits pour griller,\ncuire ou préparer des plats de poisson tra",
+      "price": 0.0,
+      "match": "Mérou Thiof sans tête — carton 5 kg",
+      "slug": "merou-thiof-sans-tete-5kg",
+      "score": 5
+    },
+    {
+      "page": 57,
+      "phrase": "mérous Thiof, frais et savoureux,\nvendus en carton de 10 kg, idéaux pour griller, cuire\nou préparer des plats de poisson traditionnels",
+      "price": 0.0,
+      "match": "Mérou Thiof entier — carton 10 kg",
+      "slug": "merou-thiof-entier-10kg",
+      "score": 3
+    },
+    {
+      "page": 58,
+      "phrase": "petits mérous Thiof, frais et\nsavoureux, parfaits pour griller, frire ou cuisiner\ndans des plats de poisson traditionnels",
+      "price": 0.0,
+      "match": "Petits mérous Thiof — au kg",
+      "slug": "petits-merous-thiof",
+      "score": 3
+    },
+    {
+      "page": 58,
+      "phrase": "grosses dorades Diaregne avec tête,\nfraîches et savoureuses, vendues en carton de 10 kg,\nparfaites pour griller, cuire ou préparer des plats",
+      "price": 5.0,
+      "match": "Dorade Diaregne avec tête — carton 10 kg",
+      "slug": "dorade-diaregne-tete-10kg",
+      "score": 5
+    },
+    {
+      "page": 58,
+      "phrase": "grosses dorades Diaregne avec tête,\nfraîches et savoureuses, vendues en carton de 5\nkg, idéales pour griller, cuire ou préparer des plats\nde",
+      "price": 0.0,
+      "match": "Dorade Diaregne avec tête — carton 5 kg",
+      "slug": "dorade-diaregne-tete-5kg",
+      "score": 5
+    },
+    {
+      "page": 58,
+      "phrase": "grosses dorades Diaregne sans tête,\nfraîches et savoureuses, vendues en carton de 5 kg,\nidéales pour griller, cuire ou préparer des plats de",
+      "price": 0.0,
+      "match": "Dorade Diaregne sans tête — carton 5 kg",
+      "slug": "dorade-diaregne-sans-tete-5kg",
+      "score": 5
+    },
+    {
+      "page": 59,
+      "phrase": "grosses dorades plates Vivaneau,\nfraîches et savoureuses, vendues en carton de 10 kg,\nparfaites pour griller, cuire ou préparer des plats de",
+      "price": 0.0,
+      "match": "Dorade plate Vivaneau — carton 10 kg",
+      "slug": "dorade-vivaneau-10kg",
+      "score": 3
+    },
+    {
+      "page": 59,
+      "phrase": "dorades de 400 à 600 g, vidées et\nécaillées, vendues en carton de 5 kg, parfaites pour\ngriller, cuire ou préparer des plats de poisson",
+      "price": 5.0,
+      "match": "Dorade 400–600 g — carton 5 kg",
+      "slug": "dorade-400-600-5kg",
+      "score": 4
+    },
+    {
+      "page": 59,
+      "phrase": "dorades de 500 à 800 g, vidées et\nécaillées, vendues en carton de 5 kg, parfaites pour\ngriller, cuire ou préparer des plats de poisson",
+      "price": null,
+      "match": "Dorade 500–800 g — carton 5 kg",
+      "slug": "dorade-500-800-5kg",
+      "score": 4
+    },
+    {
+      "page": 59,
+      "phrase": "dorades de plus de 1000 g, vidées et\nécaillées, vendues en carton de 5 kg, idéales pour\ngriller, cuire ou préparer des plats de poisson",
+      "price": null,
+      "match": "Dorade 1000 g+ — carton 5 kg",
+      "slug": "dorade-1000-plus-5kg",
+      "score": 4
+    },
+    {
+      "page": 60,
+      "phrase": "capitaines Bar (Ombrine) de 400 à 600\ng, frais et savoureux, vendus en carton de 5 kg,\nparfaits pour griller, cuire ou préparer des plats de",
+      "price": 5.0,
+      "match": "Capitaine Bar (Ombrine) — carton 5 kg",
+      "slug": "capitaine-bar-400-600-5kg",
+      "score": 6
+    },
+    {
+      "page": 60,
+      "phrase": "gros barracudas Seud, frais et\nsavoureux, vendus en carton de 5 kg, idéaux pour\ngriller, cuire ou préparer des plats de poisson",
+      "price": 0.0,
+      "match": "Barracuda Seud — carton 5 kg",
+      "slug": "barracuda-seud-5kg",
+      "score": 3
+    },
+    {
+      "page": 60,
+      "phrase": "capitaines Bar (Ombrine) de 600 à 800\ng, frais et savoureux, vendus en carton de 10 kg,\nparfaits pour griller, cuire ou préparer des plats\nd",
+      "price": 0.0,
+      "match": "Capitaine Bar (Ombrine) — carton 10 kg",
+      "slug": "capitaine-bar-600-800-10kg",
+      "score": 6
+    }
+  ]
+}

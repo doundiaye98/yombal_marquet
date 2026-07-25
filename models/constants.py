@@ -98,7 +98,8 @@ PAYMENT_WIRE = "wire"
 PAYMENT_CASH_DELIVERY = "cash_delivery"
 PAYMENT_DEMO = "demo"
 
-CATEGORY_ALIMENTAIRE = "alimentaire"
+CATEGORY_ALIMENTAIRE = "alimentaire"  # legacy — remplacé par CATEGORY_MIELS
+CATEGORY_MIELS = "miels"
 CATEGORY_COSMETIQUE = "cosmetique"
 CATEGORY_ELECTRONIQUE = "electronique"
 CATEGORY_ELECTROMENAGER = "electromenager"
@@ -111,13 +112,15 @@ CATEGORY_CONDIMENTS = "condiments"
 CATEGORY_HUILES = "huiles"
 CATEGORY_SNACKS = "snacks"
 CATEGORY_CONSERVES = "conserves"
-CATEGORY_LEGUMINEUSES = "legumineuses"
-CATEGORY_FRUITS_SECS = "fruits_secs"
+CATEGORY_LEGUMINEUSES = "legumineuses"  # legacy — fusionné dans CATEGORY_CEREALES
+CATEGORY_FRUITS_SECS = "fruits_secs"  # legacy — fusionné dans CATEGORY_FRUITS
+CATEGORY_FRUITS = "fruits"
+CATEGORY_LEGUMES = "legumes"
 CATEGORY_POISSON = "poisson"
 CATEGORY_VIANDES = "viandes"
 
 PRODUCT_CATEGORIES = {
-    CATEGORY_ALIMENTAIRE: {"label": "Alimentaire", "emoji": "🛒"},
+    CATEGORY_MIELS: {"label": "Miels", "emoji": "🍯"},
     CATEGORY_COSMETIQUE: {"label": "Cosmétique", "emoji": "✨"},
     CATEGORY_ELECTRONIQUE: {"label": "Électronique", "emoji": "📱"},
     CATEGORY_ELECTROMENAGER: {"label": "Électroménager", "emoji": "🏠"},
@@ -125,25 +128,25 @@ PRODUCT_CATEGORIES = {
     CATEGORY_CHAUSSURES: {"label": "Chaussures", "emoji": "👟"},
     CATEGORY_BAGAGERIE: {"label": "Sacs & bagagerie", "emoji": "🎒"},
     CATEGORY_BOISSONS: {"label": "Boissons", "emoji": "🥤"},
-    CATEGORY_CEREALES: {"label": "Céréales", "emoji": "🌾"},
-    CATEGORY_CONDIMENTS: {"label": "Condiments", "emoji": "🧂"},
+    CATEGORY_CEREALES: {"label": "Céréales & légumineuses", "emoji": "🌾"},
+    CATEGORY_CONDIMENTS: {"label": "Épices & sauces", "emoji": "🌶️"},
     CATEGORY_HUILES: {"label": "Huiles", "emoji": "🫒"},
     CATEGORY_SNACKS: {"label": "Snacks & Desserts", "emoji": "🍮"},
     CATEGORY_CONSERVES: {"label": "Conserves", "emoji": "🫙"},
-    CATEGORY_LEGUMINEUSES: {"label": "Légumineuses", "emoji": "🫘"},
-    CATEGORY_FRUITS_SECS: {"label": "Fruits séchés", "emoji": "🥭"},
+    CATEGORY_FRUITS: {"label": "Fruits", "emoji": "🍊"},
+    CATEGORY_LEGUMES: {"label": "Légumes", "emoji": "🥬"},
     CATEGORY_POISSON: {"label": "Produits de la mer", "emoji": "🐟"},
     CATEGORY_VIANDES: {"label": "Viandes & volailles", "emoji": "🍗"},
 }
 
 SHOP_CATEGORY_ORDER = (
-    CATEGORY_ALIMENTAIRE,
+    CATEGORY_MIELS,
     CATEGORY_BOISSONS,
     CATEGORY_CEREALES,
     CATEGORY_HUILES,
     CATEGORY_CONDIMENTS,
-    CATEGORY_LEGUMINEUSES,
-    CATEGORY_FRUITS_SECS,
+    CATEGORY_FRUITS,
+    CATEGORY_LEGUMES,
     CATEGORY_SNACKS,
     CATEGORY_CONSERVES,
     CATEGORY_POISSON,

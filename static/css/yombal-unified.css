@@ -261,9 +261,7 @@
   .site-premium .header-shell .nav-item--dropdown.is-open .nav-chevron {
     transform: translateY(1px) rotate(180deg);
   }
-  .site-premium .header-shell .nav-item--mega:hover .nav-mega-chevron,
-  .site-premium .header-shell .nav-item--mega.is-open .nav-mega-chevron,
-  .site-premium .site-header-unified.is-mega-open .nav-mega-chevron {
+  .site-premium .header-shell .nav-item--mega.is-open .nav-mega-chevron {
     transform: translateY(1px) rotate(180deg);
   }
   .site-premium .header-shell .nav-toggle {

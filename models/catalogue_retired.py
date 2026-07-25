@@ -17,7 +17,6 @@ RETIRED_PRODUCT_SLUGS = frozenset(
         "arachides-grillees-300g",
         "tomate-concentree-400g",
         "niebe-haricot-1kg",
-        "huile-arachide-1l",
         # Doublon Maad (captures catalogue : maad-230g / maad-400g)
         "maad-labelafrik",
         # Retiré à la demande (conserves)

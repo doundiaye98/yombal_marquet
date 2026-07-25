@@ -1,106 +1,89 @@
 (function () {
-
   "use strict";
 
-
-
   const header = document.querySelector(".site-header-unified");
+  if (!header) return;
 
-  const trigger = document.querySelector(".nav-mega-trigger");
+  const triggers = Array.from(header.querySelectorAll(".nav-mega-trigger[data-mega]"));
+  if (!triggers.length) return;
 
-  const megaPanel = document.getElementById("mega-boutique");
-
-  if (!header || !trigger || !megaPanel) return;
-
-
-
-  const megaItem = trigger.closest(".nav-item--mega");
-
-
-
-  function open() {
-
-    header.classList.add("is-mega-open");
-
-    if (megaItem) megaItem.classList.add("is-open");
-
-    megaPanel.hidden = false;
-
-    trigger.setAttribute("aria-expanded", "true");
-
-  }
-
-
-
-  function close() {
-
-    header.classList.remove("is-mega-open");
-
-    if (megaItem) megaItem.classList.remove("is-open");
-
-    megaPanel.hidden = true;
-
-    trigger.setAttribute("aria-expanded", "false");
-
-  }
-
-
-
-  function toggle() {
-
-    if (header.classList.contains("is-mega-open")) close();
-
-    else open();
-
-  }
-
-
-
-  trigger.addEventListener("click", (e) => {
-
-    e.stopPropagation();
-
-    toggle();
-
+  const panels = {};
+  triggers.forEach((trigger) => {
+    const key = trigger.getAttribute("data-mega");
+    const panel = document.getElementById(trigger.getAttribute("aria-controls") || "");
+    if (key && panel) {
+      panels[key] = { trigger, panel, item: trigger.closest(".nav-item--mega") };
+    }
   });
 
+  const keys = Object.keys(panels);
+  if (!keys.length) return;
 
+  function canHover() {
+    return window.matchMedia("(hover: hover) and (min-width: 901px)").matches;
+  }
+
+  function closeAll() {
+    header.classList.remove("is-mega-open");
+    header.removeAttribute("data-mega-open");
+    keys.forEach((key) => {
+      const { trigger, panel, item } = panels[key];
+      if (item) item.classList.remove("is-open");
+      panel.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function open(key) {
+    if (!panels[key]) return;
+    keys.forEach((k) => {
+      const { trigger, panel, item } = panels[k];
+      const on = k === key;
+      if (item) item.classList.toggle("is-open", on);
+      panel.hidden = !on;
+      trigger.setAttribute("aria-expanded", on ? "true" : "false");
+    });
+    header.classList.add("is-mega-open");
+    header.setAttribute("data-mega-open", key);
+  }
+
+  function toggle(key) {
+    if (header.getAttribute("data-mega-open") === key) closeAll();
+    else open(key);
+  }
+
+  triggers.forEach((trigger) => {
+    const key = trigger.getAttribute("data-mega");
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggle(key);
+    });
+    trigger.addEventListener("mouseenter", () => {
+      if (canHover()) open(key);
+    });
+  });
+
+  // Garder le panneau ouvert quand la souris est dessus
+  Object.values(panels).forEach(({ panel }) => {
+    panel.addEventListener("mouseenter", () => {
+      if (!canHover()) return;
+      const key = header.getAttribute("data-mega-open");
+      if (key) open(key);
+    });
+  });
 
   document.addEventListener("click", (e) => {
-
-    if (!header.contains(e.target)) close();
-
+    if (!header.contains(e.target)) closeAll();
   });
-
-
 
   document.addEventListener("keydown", (e) => {
-
-    if (e.key === "Escape") close();
-
+    if (e.key === "Escape") closeAll();
   });
-
-
-
-  trigger.addEventListener("mouseenter", () => {
-
-    if (window.matchMedia("(hover: hover) and (min-width: 901px)").matches) open();
-
-  });
-
-
 
   header.addEventListener("mouseleave", (e) => {
-
-    if (!window.matchMedia("(hover: hover) and (min-width: 901px)").matches) return;
-
+    if (!canHover()) return;
     const related = e.relatedTarget;
-
     if (related && header.contains(related)) return;
-
-    close();
-
+    closeAll();
   });
-
 })();
-

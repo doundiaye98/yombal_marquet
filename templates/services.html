@@ -61,7 +61,7 @@
             {{ product_image(p, 'card') }}
           </a>
           <div class="services-product-mini-body">
-            <p class="services-product-mini-meta">{{ 'Alimentaire' if p.category == 'alimentaire' else 'Cosmétique' }}</p>
+            <p class="services-product-mini-meta">{{ (product_categories.get(p.category) or {}).get('label', p.category) }}</p>
             <h3><a href="{{ url_for('product_detail', slug=p.slug) }}">{{ p.name }}</a></h3>
             <p class="services-product-mini-price">{{ '%.2f'|format(p.price_euros()) }} €</p>
             <form method="post" action="{{ url_for('panier_ajouter') }}" class="services-product-mini-form">

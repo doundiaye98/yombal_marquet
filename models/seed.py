@@ -3,6 +3,7 @@ from extensions import db
 from models.catalogue_extended import EXTENDED_CATALOGUE
 from models.catalogue_electronique import ELECTRONIQUE_CATALOGUE
 from models.catalogue_marketplace import MARKETPLACE_CATALOGUE
+from models.catalogue_fruits_legumes import FRUITS_LEGUMES_CATALOGUE
 from models.catalogue_labelafrik import (
     LABELAFRIK_CATALOGUE,
     LABELAFRIK_SLUGS,
@@ -27,7 +28,7 @@ CATALOGUE = [
             "Conditionné sous atmosphère protectrice pour garder fraîcheur et arôme jusqu’à chez vous."
         ),
         "price_cents": 389,
-        "category": "alimentaire",
+        "category": "cereales",
         "origin": "Origine UE / Afrique du Nord (lot indiqué sur emballage)",
         "weight_info": "1 kg — pochette refermable",
         "ingredients": "Semoule de BLÉ dur complet (gluten). Peut contenir des traces de SESAME.",
@@ -69,7 +70,7 @@ CATALOGUE = [
             "Chaque pot porte un numéro de lot traçable."
         ),
         "price_cents": 895,
-        "category": "alimentaire",
+        "category": "miels",
         "origin": "France / Espagne selon récolte",
         "weight_info": "500 g — pot verre",
         "ingredients": "100 % miel.",
@@ -89,7 +90,7 @@ CATALOGUE = [
             "Date de torréfaction imprimée sur le sachet."
         ),
         "price_cents": 799,
-        "category": "alimentaire",
+        "category": "boissons",
         "origin": "Amérique centrale & Afrique — assemblage maison",
         "weight_info": "250 g — sachet avec valve",
         "ingredients": "Café 100 %.",
@@ -146,7 +147,9 @@ FULL_CATALOGUE = [
     if row["slug"] in CATALOGUE_SLUGS and row["slug"] not in RETIRED_PRODUCT_SLUGS
 ] + [apply_display_name(row) for row in LABELAFRIK_CATALOGUE] + [
     apply_display_name(row) for row in ELECTRONIQUE_CATALOGUE
-] + [apply_display_name(row) for row in MARKETPLACE_CATALOGUE]
+] + [apply_display_name(row) for row in MARKETPLACE_CATALOGUE] + [
+    apply_display_name(row) for row in FRUITS_LEGUMES_CATALOGUE
+]
 
 
 def _sync_row_to_product(product, row):

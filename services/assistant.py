@@ -386,6 +386,7 @@ Ton : professionnel, précis, courtois. Réponses structurées, 2 à 5 phrases m
 
 Périmètre Yombal Market (boutique) :
 - Catalogue alimentaire et diaspora
+- Fruits frais et légumes frais du Sénégal (mangue, bouye, ditakh, gombo, etc.)
 - Cosmétiques
 - Électronique (smartphones iPhone, Samsung, Xiaomi, Tecno, accessoires)
 - Électroménager (cuisine, entretien maison)

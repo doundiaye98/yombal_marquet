@@ -1,0 +1,232 @@
+{
+  "missing": [
+    {
+      "page": 4,
+      "name": "P U R E A F R I C A N G O O D N E S S",
+      "price": 3.0,
+      "n": "p u r e a f r i c a n g o o d n e s s",
+      "match": "Beurre de karité — 150 g",
+      "slug": "beurre-karite-brut-150g",
+      "score": 0.15
+    },
+    {
+      "page": 23,
+      "name": "Riz Brisé / Cassé 2 Fois -20 Kg",
+      "price": 8.0,
+      "n": "riz brise casse 2 fois 20 kg",
+      "match": "Riz brisé (2×) — 20 kg",
+      "slug": "riz-brise-2x-20kg",
+      "score": 0.44
+    },
+    {
+      "page": 35,
+      "name": "Double Concentré Tomates Rolli",
+      "price": 5.0,
+      "n": "double concentre tomates rolli",
+      "match": "Concentré de tomates Rolli — 880 g",
+      "slug": "concentre-tomates-rolli",
+      "score": 0.43
+    },
+    {
+      "page": 57,
+      "name": "Carton De 5 Kg",
+      "price": 5.0,
+      "n": "carton de 5 kg",
+      "match": "Huile de tournesol — 5 L",
+      "slug": "huile-tournesol-5l",
+      "score": 0.17
+    },
+    {
+      "page": 58,
+      "name": "Avec Tête - Carton De 10 Kg",
+      "price": 5.0,
+      "n": "avec tete carton de 10 kg",
+      "match": "Dorade Diaregne avec tête — carton 10 kg",
+      "slug": "dorade-diaregne-tete-10kg",
+      "score": 0.38
+    },
+    {
+      "page": 59,
+      "name": "5 Kg- Vidée Écaillée",
+      "price": 5.0,
+      "n": "5 kg videe ecaillee",
+      "match": "Miel d'acacia — 500 g",
+      "slug": "miel-thym-500g",
+      "score": 0.15
+    },
+    {
+      "page": 59,
+      "name": "Vidée Écaillée",
+      "price": 5.0,
+      "n": "videe ecaillee",
+      "match": "Miel d'acacia — 500 g",
+      "slug": "miel-thym-500g",
+      "score": 0.15
+    },
+    {
+      "page": 59,
+      "name": "Dorade 1000+ - Carton De 5 Kg- Vidée Écaillée",
+      "price": 45.0,
+      "n": "dorade 1000 carton de 5 kg videe ecaillee",
+      "match": "Dorade 1000 g+ — carton 5 kg",
+      "slug": "dorade-1000-plus-5kg",
+      "score": 0.45
+    },
+    {
+      "page": 60,
+      "name": "400/600 Gr- Carton De 5 Kg",
+      "price": 5.0,
+      "n": "400 600 gr carton de 5 kg",
+      "match": "Dorade 400–600 g — carton 5 kg",
+      "slug": "dorade-400-600-5kg",
+      "score": 0.38
+    }
+  ],
+  "matched": [
+    {
+      "page": 10,
+      "name": "Moringa",
+      "price": 5.0,
+      "n": "moringa",
+      "match": "Moringa — 100 g",
+      "slug": "moringa-poudre-labelafrik",
+      "score": 1.0
+    },
+    {
+      "page": 30,
+      "name": "Fufu - Farine De Plantain",
+      "price": 5.0,
+      "n": "fufu farine de plantain",
+      "match": "Fufu plantain — 600 g",
+      "slug": "fufu-farine-plantain",
+      "score": 0.6
+    },
+    {
+      "page": 30,
+      "name": "Pâte D'Arachide 2,5 Kg",
+      "price": 15.0,
+      "n": "pate d arachide 2 5 kg",
+      "match": "Pâte d'arachide — 2,5 kg",
+      "slug": "pate-arachide-25kg",
+      "score": 1.0
+    },
+    {
+      "page": 31,
+      "name": "Poudre De Baobab - Bouye 250 Gr",
+      "price": 3.9,
+      "n": "poudre de baobab bouye 250 gr",
+      "match": "Baobab — 250 g",
+      "slug": "bouye-baobab-250g",
+      "score": 0.65
+    },
+    {
+      "page": 34,
+      "name": "Poudre De Lait Nido - 1,8 Kg",
+      "price": 26.9,
+      "n": "poudre de lait nido 1 8 kg",
+      "match": "Lait en poudre Nido — 1,8 kg",
+      "slug": "poudre-lait-nido-1800g",
+      "score": 0.78
+    },
+    {
+      "page": 41,
+      "name": "Farine De Maïs Blanc",
+      "price": 5.0,
+      "n": "farine de mais blanc",
+      "match": "Farine de maïs blanc — 1 kg",
+      "slug": "farine-mais-blanc",
+      "score": 1.0
+    },
+    {
+      "page": 42,
+      "name": "Haricots Noirs - Tersol",
+      "price": 9.0,
+      "n": "haricots noirs tersol",
+      "match": "Haricots noirs Tersol — 500 g",
+      "slug": "haricots-noirs-tersol",
+      "score": 1.0
+    },
+    {
+      "page": 42,
+      "name": "Arachides Crues Blanches 1 Kg",
+      "price": 5.0,
+      "n": "arachides crues blanches 1 kg",
+      "match": "Arachides crues — 1 kg",
+      "slug": "arachides-crues-blanches-1kg",
+      "score": 0.67
+    },
+    {
+      "page": 43,
+      "name": "Dattes Sèches",
+      "price": 3.9,
+      "n": "dattes seches",
+      "match": "Dattes sèches — 500 g",
+      "slug": "dattes-seches-ud",
+      "score": 1.0
+    },
+    {
+      "page": 45,
+      "name": "Nems Aux Crevettes - Poulet Halal",
+      "price": 25.9,
+      "n": "nems aux crevettes poulet halal",
+      "match": "Nems crevettes & poulet — 50 pièces",
+      "slug": "nems-crevettes-poulet-halal",
+      "score": 0.82
+    },
+    {
+      "page": 57,
+      "name": "Gros Mérou - Thiof Sans Tête - Carton De 5 Kg",
+      "price": 125.0,
+      "n": "gros merou thiof sans tete carton de 5 kg",
+      "match": "Mérou Thiof sans tête — carton 5 kg",
+      "slug": "merou-thiof-sans-tete-5kg",
+      "score": 0.56
+    },
+    {
+      "page": 59,
+      "name": "Dorade 500/800 Gr - Carton De 5 Kg- Vidée Écaillée",
+      "price": 40.0,
+      "n": "dorade 500 800 gr carton de 5 kg videe ecaillee",
+      "match": "Dorade 500–800 g — carton 5 kg",
+      "slug": "dorade-500-800-5kg",
+      "score": 0.55
+    },
+    {
+      "page": 61,
+      "name": "Grosse Sole - Karabot",
+      "price": 2.0,
+      "n": "grosse sole karabot",
+      "match": "Grosse sole Karabot — pièce",
+      "slug": "sole-karabot",
+      "score": 1.0
+    },
+    {
+      "page": 61,
+      "name": "Poisson Fumé",
+      "price": 8.0,
+      "n": "poisson fume",
+      "match": "Poisson fumé — 500 g",
+      "slug": "poisson-fume-ud",
+      "score": 1.0
+    },
+    {
+      "page": 62,
+      "name": "Carton 10 Kg",
+      "price": 5.0,
+      "n": "carton 10 kg",
+      "match": "Mérou Thiof entier — carton 10 kg",
+      "slug": "merou-thiof-entier-10kg",
+      "score": 1.0
+    },
+    {
+      "page": 62,
+      "name": "Gros Machoiron",
+      "price": 8.0,
+      "n": "gros machoiron",
+      "match": "Gros machoiron — pièce",
+      "slug": "gros-machoiron",
+      "score": 1.0
+    }
+  ],
+  "total": 25
+}

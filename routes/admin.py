@@ -89,14 +89,14 @@ def admin_products():
 @admin_bp.route("/produit/nouveau", methods=["GET", "POST"], defaults={"product_id": None})
 @admin_required
 def admin_product_edit(product_id):
-    product = db.session.get(Product, product_id) if product_id else Product(is_active=True, price_cents=0, category="alimentaire", description="")
+    product = db.session.get(Product, product_id) if product_id else Product(is_active=True, price_cents=0, category="cereales", description="")
     producers = Producer.query.filter_by(is_active=True).order_by(Producer.name).all()
     if request.method == "POST":
         product.slug = (request.form.get("slug") or "").strip()
         product.name = (request.form.get("name") or "").strip()
         product.summary = (request.form.get("summary") or "").strip() or None
         product.description = (request.form.get("description") or "").strip()
-        product.category = (request.form.get("category") or "alimentaire").strip()
+        product.category = (request.form.get("category") or "cereales").strip()
         product.origin = (request.form.get("origin") or "").strip() or None
         product.price_cents = max(0, int(float(request.form.get("price_euros") or 0) * 100))
         stock_raw = request.form.get("stock_qty")

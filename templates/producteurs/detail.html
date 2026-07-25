@@ -71,8 +71,8 @@
             {{ product_image(p, 'card') }}
           </div>
           <div class="shop-card-body">
-            <span class="cat-badge {{ 'cat-badge--alim' if p.category == 'alimentaire' else 'cat-badge--cosm' }}">
-              {{ 'Alimentaire' if p.category == 'alimentaire' else 'Cosmétique' }}
+            <span class="cat-badge {{ 'cat-badge--cosm' if p.category == 'cosmetique' else 'cat-badge--alim' }}">
+              {{ (product_categories.get(p.category) or {}).get('label', p.category) }}
             </span>
             <h3 class="shop-card-title">{{ p.name }}</h3>
             <p>{{ p.summary }}</p>

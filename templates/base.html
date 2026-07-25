@@ -54,6 +54,7 @@
           <button
             type="button"
             class="nav-mega-trigger{{ ' active' if nav_shop else '' }}"
+            data-mega="boutique"
             aria-expanded="false"
             aria-controls="mega-boutique"
             aria-haspopup="true"
@@ -74,30 +75,18 @@
           </ul>
         </li>
         {% if not (ep and ep.startswith('admin.')) %}
-        <li class="nav-item nav-item--dropdown nav-item--ecosystem">
-          <button type="button" class="nav-dropdown-trigger{{ ' active' if nav_ecosystem else '' }}" aria-expanded="false" aria-controls="nav-ecosystem-menu" aria-haspopup="true">
-            Univers YOMBAL <span class="nav-chevron" aria-hidden="true">▾</span>
+        <li class="nav-item nav-item--mega">
+          <button
+            type="button"
+            class="nav-mega-trigger{{ ' active' if nav_ecosystem else '' }}"
+            data-mega="univers"
+            aria-expanded="false"
+            aria-controls="mega-univers"
+            aria-haspopup="true"
+          >
+            Univers YOMBAL
+            <svg class="nav-mega-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <ul id="nav-ecosystem-menu" class="nav-dropdown nav-dropdown--ecosystem" role="menu">
-            {% for item in ecosystem_nav %}
-            <li role="none">
-              <a
-                href="{{ item.external_url if item.external_url else url_for('ecosysteme_detail', slug=item.slug) }}"
-                role="menuitem"
-                class="nav-dropdown-link{{ ' active' if not item.external_url and ep == 'ecosysteme_detail' and request.view_args.get('slug') == item.slug else '' }}"
-                {% if item.external_url %}target="_blank" rel="noopener noreferrer"{% endif %}
-                title="{{ item.title }}{% if item.external_url %} (nouvel onglet){% endif %}"
-              >
-                <span class="nav-dropdown-icon" aria-hidden="true">{{ item.icon }}</span>
-                <span class="nav-dropdown-copy">
-                  <strong>{{ item.short_label }}</strong>
-                  <small>{{ item.tagline }}</small>
-                </span>
-                {% if item.external_url %}<span class="nav-dropdown-ext" aria-hidden="true">↗</span>{% endif %}
-              </a>
-            </li>
-            {% endfor %}
-          </ul>
         </li>
         {% endif %}
         <li><a href="{{ url_for('suivi_commande') }}" class="{{ 'active' if ep in ['suivi_commande', 'suivi_commande_detail', 'commande_recommander'] else '' }}">Commandes</a></li>

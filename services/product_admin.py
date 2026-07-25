@@ -37,6 +37,22 @@ def mark_slug_admin_removed(slug: str) -> None:
         db.session.add(SiteSetting(key=ADMIN_REMOVED_KEY, value=payload))
 
 
+def unmark_slug_admin_removed(slug: str) -> None:
+    """Réautorise un slug retiré manuellement (réapparition au sync catalogue)."""
+    if not slug:
+        return
+    slugs = set(admin_removed_slugs())
+    if slug not in slugs:
+        return
+    slugs.discard(slug)
+    row = db.session.get(SiteSetting, ADMIN_REMOVED_KEY)
+    payload = json.dumps(sorted(slugs))
+    if row:
+        row.value = payload
+    else:
+        db.session.add(SiteSetting(key=ADMIN_REMOVED_KEY, value=payload))
+
+
 def delete_product(product, static_folder: str) -> tuple[str, str]:
     """
     Supprime un produit ou le désactive s'il figure dans une commande.

@@ -5,40 +5,109 @@
   <header class="page-hero page-hero--editorial">
     <div class="page-hero-bg" aria-hidden="true"></div>
     <div class="page-hero-content">
-      <p class="section-eyebrow reveal">Contact</p>
+      <p class="section-eyebrow reveal">Contact · Univers Diaspora</p>
       <h1 class="section-title reveal">Nous <em>contacter</em></h1>
       <p class="contact-intro reveal section-sub page-hero-lead">
-        Commande alimentaire ou cosmétique, livraison, tarifs ou boutique en ligne :
-        nos équipes vous répondent rapidement. Utilisez l'<strong>assistant</strong> en bas à droite,
-        consultez la <a href="#faq">FAQ</a> ou les <a href="#modes-paiement" class="payment-intro-link">modes de paiement</a> ci-dessous.
+        Tous vos services réunis en un seul lieu. Retrouvez nos <strong>trois agences</strong>,
+        comment venir, et écrivez-nous pour une commande, une livraison ou un partenariat.
       </p>
     </div>
   </header>
 
-  <section class="section section--flush-top section--compact">
+  <section class="section section--flush-top section--compact" id="agences">
+    <div class="contact-agencies-head reveal">
+      <p class="section-eyebrow">Nos agences</p>
+      <h2 class="payment-heading">Localisation &amp; accès</h2>
+      <p class="payment-lead">Paris 18ᵉ, Paris 17ᵉ et Colombes — carte, transports et coordonnées pour chaque site.</p>
+    </div>
+
+    <div class="contact-agencies">
+      {% for agency in agencies %}
+      <article class="agency-card reveal" id="agence-{{ agency.id }}">
+        <header class="agency-card__head">
+          <span class="agency-card__badge">{{ agency.label }}</span>
+          <h3 class="agency-card__title">{{ agency.title }}</h3>
+          <address class="agency-card__address">
+            {{ agency.address_line1 }}<br>
+            {{ agency.address_line2 }}
+          </address>
+          <div class="agency-card__phones">
+            {% if agency.phone_fixe %}
+            <a href="{{ agency.phone_fixe_href }}" class="agency-phone">
+              <span class="agency-phone__label">Fixe</span>
+              <span class="agency-phone__num">{{ agency.phone_fixe }}</span>
+            </a>
+            {% endif %}
+            {% if agency.phone_mobile %}
+            <a href="{{ agency.phone_mobile_href }}" class="agency-phone agency-phone--mobile">
+              <span class="agency-phone__label">Mobile</span>
+              <span class="agency-phone__num">{{ agency.phone_mobile }}</span>
+            </a>
+            {% endif %}
+          </div>
+        </header>
+
+        <div class="agency-card__map">
+          <iframe
+            title="Carte — {{ agency.title }}"
+            src="{{ agency.maps_embed }}"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+          <a class="agency-card__itinerary" href="{{ agency.maps_link }}" target="_blank" rel="noopener noreferrer">
+            Itinéraire Google Maps →
+          </a>
+        </div>
+
+        <div class="agency-card__transit">
+          <h4>Comment venir&nbsp;?</h4>
+          <ul class="agency-transit-list">
+            {% for t in agency.transit %}
+            <li>
+              <span class="agency-transit__mode">{{ t.mode }}</span>
+              <span class="agency-transit__lines">{{ t.lines }}</span>
+              <span class="agency-transit__stops">{{ t.stops }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="contact-agency-band reveal">
+      <div class="contact-agency-band__pay">
+        <strong>Paiement en plusieurs mensualités disponible</strong>
+        <span>Sur place en agence — renseignez-vous auprès de nos équipes.</span>
+      </div>
+      <a class="email-chip email-chip--featured" href="mailto:{{ agencies_email }}">
+        <span class="email-chip-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        <span class="email-chip-text">{{ agencies_email }}</span>
+        <span class="email-chip-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
     <div class="contact-hero-cards">
       <div class="contact-quick reveal">
         <span class="cq-icon" aria-hidden="true">🕐</span>
-        <h2>Horaires</h2>
+        <h2>Horaires boutique</h2>
         <p>{{ shop_settings.shop_hours_weekday }}</p>
         <p>{{ shop_settings.shop_hours_saturday }}</p>
         <p>{{ shop_settings.shop_hours_sunday }}</p>
       </div>
       <div class="contact-quick reveal">
         <span class="cq-icon" aria-hidden="true">📍</span>
-        <h2>Point de vente</h2>
-        <address>
-          {{ shop_settings.shop_name }}<br>
-          {{ shop_settings.shop_address_line1 }}<br>
-          {{ shop_settings.shop_address_line2 }}
-        </address>
-        {% if shop_settings.shop_phone %}<p>{{ shop_settings.shop_phone }}</p>{% endif %}
-        <p class="text-muted-small">Retrait sur place ou livraison selon zone.</p>
+        <h2>Retrait &amp; livraison</h2>
+        <p>Retrait possible en agence ou livraison selon zone.</p>
+        <p class="text-muted-small"><a href="#agences">Voir les 3 adresses ↑</a></p>
       </div>
       <div class="contact-quick contact-quick--email reveal">
         <span class="cq-icon" aria-hidden="true">✉️</span>
-        <h2>E-mail</h2>
-        <p>Questions commande, disponibilité produit ou partenariat.</p>
+        <h2>E-mail boutique</h2>
+        <p>Commande, disponibilité produit ou partenariat Yombal Marché.</p>
         <a class="email-chip email-chip--featured" href="mailto:{{ shop_contact_email }}">
           <span class="email-chip-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>

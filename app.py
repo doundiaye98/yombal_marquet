@@ -71,6 +71,7 @@ from services import product_groups as product_groups_svc
 from services import shipping as shipping_svc
 from services import assistant as assistant_svc
 from services import ecosystem_nav as ecosystem_nav_svc
+from services import agencies as agencies_svc
 from services import immobilier_programmes as immobilier_programmes_svc
 from services import immo_project_request as immo_request_svc
 from services import ecosystem_service_request as eco_request_svc
@@ -881,19 +882,39 @@ def ecosysteme_detail(slug):
 @app.route("/boutique")
 def boutique():
     cat = request.args.get("categorie")
+    if cat == "fruits_secs":
+        cat = "fruits"
+    if cat == "legumineuses":
+        cat = "cereales"
+    if cat == "alimentaire":
+        cat = "miels"
     shop_type = request.args.get("type")
     if shop_type and shop_type not in (
         ecosystem_nav_svc.SHOP_TYPE_ALIMENTAIRE,
         ecosystem_nav_svc.SHOP_TYPE_NON_ALIMENTAIRE,
     ):
         shop_type = None
+    # Si un rayon est choisi, aligner l'univers (évite 404 / mauvais filtre croisé)
+    if cat and not shop_type:
+        if cat in ecosystem_nav_svc.SHOP_UNIVERSE_ALIMENTAIRE:
+            shop_type = ecosystem_nav_svc.SHOP_TYPE_ALIMENTAIRE
+        elif cat in ecosystem_nav_svc.SHOP_UNIVERSE_NON_ALIMENTAIRE:
+            shop_type = ecosystem_nav_svc.SHOP_TYPE_NON_ALIMENTAIRE
     q = _product_query_active()
     allowed_cats = ecosystem_nav_svc.categories_for_shop_type(shop_type)
     if shop_type:
         q = q.filter(Product.category.in_(allowed_cats))
     if cat:
         if cat not in allowed_cats:
-            abort(404)
+            # Corriger un type d'univers incompatible plutôt qu'un 404
+            if cat in ecosystem_nav_svc.SHOP_UNIVERSE_ALIMENTAIRE:
+                shop_type = ecosystem_nav_svc.SHOP_TYPE_ALIMENTAIRE
+            elif cat in ecosystem_nav_svc.SHOP_UNIVERSE_NON_ALIMENTAIRE:
+                shop_type = ecosystem_nav_svc.SHOP_TYPE_NON_ALIMENTAIRE
+            else:
+                abort(404)
+            allowed_cats = ecosystem_nav_svc.categories_for_shop_type(shop_type)
+            q = _product_query_active().filter(Product.category.in_(allowed_cats))
         q = q.filter_by(category=cat)
     products = q.order_by(Product.category, Product.name).all()
     catalog = product_groups_svc.catalog_entries(products)
@@ -1866,7 +1887,12 @@ def contact():
                 pass
             flash("Message envoyé — nous vous répondrons rapidement.", "success")
             return redirect(url_for("contact"))
-    return render_template("contact.html", faq_items=content_svc.all_faq_items())
+    return render_template(
+        "contact.html",
+        faq_items=content_svc.all_faq_items(),
+        agencies=agencies_svc.agencies_for_contact(),
+        agencies_email=agencies_svc.AGENCIES_EMAIL,
+    )
 
 
 @app.cli.command("bootstrap-admin")

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from models.constants import (
     CATEGORY_ALIMENTAIRE,
+    CATEGORY_MIELS,
     CATEGORY_COSMETIQUE,
     ORDER_STATUSES,
     ORDER_STATUS_AWAITING_PAYPAL,
@@ -51,5 +52,6 @@ __all__ = [
     "PAYMENT_CASH_DELIVERY",
     "PAYMENT_DEMO",
     "CATEGORY_ALIMENTAIRE",
+    "CATEGORY_MIELS",
     "CATEGORY_COSMETIQUE",
 ]

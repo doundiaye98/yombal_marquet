@@ -1,4 +1,4 @@
-{# Méga-menu boutique — intégré au header unifié #}
+{# Méga-menus — Boutique + Univers YOMBAL #}
 {% if not (ep and ep.startswith('admin.')) %}
 <div id="mega-boutique" class="yombal-mega" role="region" aria-label="Boutique Yombal Marché" hidden>
   <div class="yombal-mega__panel">
@@ -56,6 +56,44 @@
       <a href="{{ url_for('panier') }}">Mon panier</a>
       <span class="yombal-mega__foot-sep" aria-hidden="true">·</span>
       <a href="{{ url_for('recettes') }}">Paniers recettes</a>
+    </footer>
+  </div>
+</div>
+
+<div id="mega-univers" class="yombal-mega yombal-mega--univers" role="region" aria-label="Univers YOMBAL" hidden>
+  <div class="yombal-mega__panel">
+    <header class="yombal-mega__head yombal-mega__head--univers">
+      <span class="yombal-mega__badge">✦</span>
+      <div>
+        <h3 class="yombal-mega__title">Univers YOMBAL</h3>
+        <p class="yombal-mega__desc">Les services du Groupe YOMBAL — voyages, immobilier, investissement et plus.</p>
+      </div>
+    </header>
+    <ul class="yombal-mega__links yombal-mega__links--ecosystem">
+      {% for item in ecosystem_nav %}
+      <li>
+        <a
+          href="{{ item.external_url if item.external_url else url_for('ecosysteme_detail', slug=item.slug) }}"
+          class="yombal-mega__eco-link{{ ' is-active' if not item.external_url and ep == 'ecosysteme_detail' and request.view_args.get('slug') == item.slug else '' }}"
+          {% if item.external_url %}target="_blank" rel="noopener noreferrer"{% endif %}
+          title="{{ item.title }}{% if item.external_url %} (nouvel onglet){% endif %}"
+        >
+          <span class="yombal-mega__link-emoji" aria-hidden="true">{{ item.icon }}</span>
+          <span class="yombal-mega__eco-copy">
+            <strong>{{ item.short_label }}</strong>
+            <small>{{ item.tagline }}</small>
+          </span>
+          {% if item.external_url %}<span class="yombal-mega__eco-ext" aria-hidden="true">↗</span>{% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <footer class="yombal-mega__foot">
+      <a href="{{ url_for('contact') }}#agences">Nos agences</a>
+      <span class="yombal-mega__foot-sep" aria-hidden="true">·</span>
+      <a href="{{ url_for('contact') }}">Contact</a>
+      <span class="yombal-mega__foot-sep" aria-hidden="true">·</span>
+      <a href="mailto:{{ shop_contact_email }}">{{ shop_contact_email }}</a>
     </footer>
   </div>
 </div>

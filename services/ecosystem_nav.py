@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from models.constants import (
-    CATEGORY_ALIMENTAIRE,
     CATEGORY_BAGAGERIE,
     CATEGORY_BOISSONS,
     CATEGORY_CEREALES,
@@ -14,9 +13,10 @@ from models.constants import (
     CATEGORY_COSMETIQUE,
     CATEGORY_ELECTROMENAGER,
     CATEGORY_ELECTRONIQUE,
-    CATEGORY_FRUITS_SECS,
+    CATEGORY_FRUITS,
     CATEGORY_HUILES,
-    CATEGORY_LEGUMINEUSES,
+    CATEGORY_LEGUMES,
+    CATEGORY_MIELS,
     CATEGORY_MODE,
     CATEGORY_POISSON,
     CATEGORY_SNACKS,
@@ -28,13 +28,13 @@ SHOP_TYPE_ALIMENTAIRE = "alimentaire"
 SHOP_TYPE_NON_ALIMENTAIRE = "non_alimentaire"
 
 SHOP_UNIVERSE_ALIMENTAIRE = (
-    CATEGORY_ALIMENTAIRE,
+    CATEGORY_MIELS,
     CATEGORY_BOISSONS,
     CATEGORY_CEREALES,
     CATEGORY_HUILES,
     CATEGORY_CONDIMENTS,
-    CATEGORY_LEGUMINEUSES,
-    CATEGORY_FRUITS_SECS,
+    CATEGORY_FRUITS,
+    CATEGORY_LEGUMES,
     CATEGORY_SNACKS,
     CATEGORY_CONSERVES,
     CATEGORY_POISSON,
@@ -54,7 +54,7 @@ SHOP_UNIVERSE_LABELS = {
     SHOP_TYPE_ALIMENTAIRE: {
         "label": "Alimentaires",
         "emoji": "🛒",
-        "description": "Riz, épices, boissons, produits de la mer et épicerie fine.",
+        "description": "Riz, épices, fruits, légumes, produits de la mer et épicerie fine.",
     },
     SHOP_TYPE_NON_ALIMENTAIRE: {
         "label": "Non alimentaires",
