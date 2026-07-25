@@ -884,8 +884,6 @@ def boutique():
     cat = request.args.get("categorie")
     if cat == "fruits_secs":
         cat = "fruits"
-    if cat == "legumineuses":
-        cat = "cereales"
     if cat == "alimentaire":
         cat = "miels"
     shop_type = request.args.get("type")

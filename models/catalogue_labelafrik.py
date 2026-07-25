@@ -9,6 +9,7 @@ from models.constants import (
     CATEGORY_COSMETIQUE,
     CATEGORY_FRUITS,
     CATEGORY_HUILES,
+    CATEGORY_LEGUMINEUSES,
     CATEGORY_MIELS,
     CATEGORY_POISSON,
     CATEGORY_SNACKS,
@@ -106,7 +107,7 @@ LABELAFRIK_UPDATES = {
         "farine-niebe-500g",
         "Niébé",
         "Légumineuse africaine riche en protéines végétales.",
-        CATEGORY_CEREALES,
+        CATEGORY_LEGUMINEUSES,
         "🫘",
         4,
         "500 g",
@@ -332,9 +333,9 @@ LABELAFRIK_SNACKS = [
 ]
 
 LABELAFRIK_LEGUMES = [
-    _lf("UD-CORNILLES", "cornilles-haricots-blancs", "Cornilles", "Haricots blancs — soupes et ragoûts.", CATEGORY_CEREALES, "🫘", 2.5, "500 g"),
-    _lf("UD-HAR-NOIR", "haricots-noirs-tersol", "Haricots noirs", "Tersol — protéines et fibres.", CATEGORY_CEREALES, "🫘", 1.99, "500 g"),
-    _lf("UD-ARACH-CRU", "arachides-crues-blanches-1kg", "Arachides crues", "Blanches — 1 kg.", CATEGORY_CEREALES, "🥜", 4.75, "1 kg"),
+    _lf("UD-CORNILLES", "cornilles-haricots-blancs", "Cornilles", "Haricots blancs — soupes et ragoûts.", CATEGORY_LEGUMINEUSES, "🫘", 2.5, "500 g"),
+    _lf("UD-HAR-NOIR", "haricots-noirs-tersol", "Haricots noirs", "Tersol — protéines et fibres.", CATEGORY_LEGUMINEUSES, "🫘", 1.99, "500 g"),
+    _lf("UD-ARACH-CRU", "arachides-crues-blanches-1kg", "Arachides crues", "Blanches — 1 kg.", CATEGORY_LEGUMINEUSES, "🥜", 4.75, "1 kg"),
 ]
 
 LABELAFRIK_CONDIMENTS = [

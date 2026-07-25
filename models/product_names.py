@@ -25,7 +25,6 @@ PRODUCT_DISPLAY_NAMES = {
     "mil-millet-1kg": "Mil — 1 kg",
     "sorgho-1kg": "Sorgho — 1 kg",
     "fonio-500g": "Fonio — 500 g",
-    "farine-niebe-500g": "Farine de niébé — 500 g",
     "soumbala-100g": "Soumbala — 100 g",
     "netetou-100g": "Nététou — 100 g",
     "yett-coquillages-150g": "Yett — 150 g",
@@ -109,6 +108,7 @@ PRODUCT_DISPLAY_NAMES = {
     "cornilles-haricots-blancs": "Cornilles — 500 g",
     "haricots-noirs-tersol": "Haricots noirs Tersol — 500 g",
     "arachides-crues-blanches-1kg": "Arachides crues — 1 kg",
+    "farine-niebe-500g": "Farine de niébé — 500 g",
     # —— Condiments ——
     "poudre-arachide-ud": "Poudre d'arachide — 500 g",
     "pate-arachide-dakatine": "Pâte d'arachide Dakatine",
