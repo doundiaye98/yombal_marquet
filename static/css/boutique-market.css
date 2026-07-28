@@ -363,6 +363,89 @@
   text-shadow: 0 1px 12px rgba(255, 255, 255, 0.85);
 }
 
+/* Sous-rayons viandes (sidebar) */
+.boutique-page .boutique-subnav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 2px 0 10px 18px;
+  padding: 8px 0 4px 10px;
+  border-left: 2px solid rgba(248, 192, 0, 0.45);
+}
+
+.boutique-page .boutique-subnav__link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--bm-navy);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.boutique-page .boutique-subnav__link:hover {
+  background: rgba(0, 24, 88, 0.05);
+}
+
+.boutique-page .boutique-subnav__link.is-active {
+  background: rgba(248, 192, 0, 0.18);
+  color: var(--bm-navy);
+}
+
+.boutique-page .boutique-subnav__count {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.55;
+}
+
+/* Pills famille viande (toolbar) */
+.boutique-page .boutique-famille-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.boutique-page .boutique-famille-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--bm-line);
+  background: rgba(255, 253, 248, 0.92);
+  color: var(--bm-navy);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.boutique-page .boutique-famille-pill:hover {
+  border-color: rgba(248, 192, 0, 0.55);
+  transform: translateY(-1px);
+}
+
+.boutique-page .boutique-famille-pill.is-active {
+  background: var(--bm-navy);
+  border-color: var(--bm-navy);
+  color: #fff;
+}
+
+.boutique-page .boutique-famille-pill__count {
+  font-size: 11px;
+  font-weight: 800;
+  opacity: 0.7;
+}
+
+.boutique-page .boutique-famille-pill.is-active .boutique-famille-pill__count {
+  opacity: 0.9;
+}
+
 /* Grille — même logique que les catalogues Univers (électronique, etc.) */
 .boutique-page .boutique-grid {
   display: grid;

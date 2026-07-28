@@ -93,6 +93,26 @@
             <span class="boutique-cat-link__text">{{ meta.label }}</span>
             <span class="boutique-cat-link__count">{{ shop_counts[cat_key] }}</span>
           </a>
+          {% if cat_key == 'viandes' and filter_cat == 'viandes' and viande_familles %}
+          <div class="boutique-subnav" aria-label="Sous-rayons viandes">
+            <a
+              href="{{ url_for('boutique', categorie='viandes', type=filter_type) if filter_type else url_for('boutique', categorie='viandes') }}"
+              class="boutique-subnav__link {{ 'is-active' if not filter_viande_famille else '' }}"
+            >
+              <span>Tout</span>
+            </a>
+            {% for fam in viande_familles %}
+            <a
+              href="{{ url_for('boutique', categorie='viandes', type=filter_type, famille=fam.key) if filter_type else url_for('boutique', categorie='viandes', famille=fam.key) }}"
+              class="boutique-subnav__link {{ 'is-active' if filter_viande_famille == fam.key else '' }}"
+            >
+              <span aria-hidden="true">{{ fam.emoji }}</span>
+              <span>{{ fam.label }}</span>
+              <span class="boutique-subnav__count">{{ fam.count }}</span>
+            </a>
+            {% endfor %}
+          </div>
+          {% endif %}
           {% endif %}
           {% endfor %}
         </nav>
@@ -174,6 +194,11 @@
           <h2 class="boutique-toolbar__title">
             {% if filter_cat and product_categories.get(filter_cat) %}
             {{ product_categories[filter_cat].emoji }} {{ product_categories[filter_cat].label }}
+            {% if filter_viande_famille and viande_familles %}
+              {% for fam in viande_familles if fam.key == filter_viande_famille %}
+              · {{ fam.emoji }} {{ fam.label }}
+              {% endfor %}
+            {% endif %}
             {% elif filter_type == shop_type_alimentaire %}
             {{ shop_universe_labels[shop_type_alimentaire].emoji }} {{ shop_universe_labels[shop_type_alimentaire].label }}
             {% elif filter_type == shop_type_non_alimentaire %}
@@ -187,6 +212,23 @@
           </p>
         </div>
       </div>
+      {% if filter_cat == 'viandes' and viande_familles %}
+      <nav class="boutique-famille-pills" aria-label="Filtrer par type de viande">
+        <a
+          href="{{ url_for('boutique', categorie='viandes', type=filter_type) if filter_type else url_for('boutique', categorie='viandes') }}"
+          class="boutique-famille-pill {{ 'is-active' if not filter_viande_famille else '' }}"
+        >Tout</a>
+        {% for fam in viande_familles %}
+        <a
+          href="{{ url_for('boutique', categorie='viandes', type=filter_type, famille=fam.key) if filter_type else url_for('boutique', categorie='viandes', famille=fam.key) }}"
+          class="boutique-famille-pill {{ 'is-active' if filter_viande_famille == fam.key else '' }}"
+        >
+          <span aria-hidden="true">{{ fam.emoji }}</span> {{ fam.label }}
+          <span class="boutique-famille-pill__count">{{ fam.count }}</span>
+        </a>
+        {% endfor %}
+      </nav>
+      {% endif %}
       <div class="boutique-grid">
         {% for entry in catalog %}
         {{ render_entry(entry) }}

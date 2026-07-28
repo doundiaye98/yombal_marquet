@@ -145,10 +145,22 @@ FULL_CATALOGUE = [
     apply_display_name(row)
     for row in (CATALOGUE + EXTENDED_CATALOGUE)
     if row["slug"] in CATALOGUE_SLUGS and row["slug"] not in RETIRED_PRODUCT_SLUGS
-] + [apply_display_name(row) for row in LABELAFRIK_CATALOGUE] + [
-    apply_display_name(row) for row in ELECTRONIQUE_CATALOGUE
-] + [apply_display_name(row) for row in MARKETPLACE_CATALOGUE] + [
-    apply_display_name(row) for row in FRUITS_LEGUMES_CATALOGUE
+] + [
+    apply_display_name(row)
+    for row in LABELAFRIK_CATALOGUE
+    if row["slug"] not in RETIRED_PRODUCT_SLUGS
+] + [
+    apply_display_name(row)
+    for row in ELECTRONIQUE_CATALOGUE
+    if row["slug"] not in RETIRED_PRODUCT_SLUGS
+] + [
+    apply_display_name(row)
+    for row in MARKETPLACE_CATALOGUE
+    if row["slug"] not in RETIRED_PRODUCT_SLUGS
+] + [
+    apply_display_name(row)
+    for row in FRUITS_LEGUMES_CATALOGUE
+    if row["slug"] not in RETIRED_PRODUCT_SLUGS
 ]
 
 

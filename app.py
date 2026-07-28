@@ -75,6 +75,7 @@ from services import agencies as agencies_svc
 from services import immobilier_programmes as immobilier_programmes_svc
 from services import immo_project_request as immo_request_svc
 from services import ecosystem_service_request as eco_request_svc
+from services import viande_familles as viande_familles_svc
 from services.contact_form import parse_person_name
 from shop_auth import admin_required, is_shop_admin
 from models.contact_message import ContactMessage
@@ -915,6 +916,18 @@ def boutique():
             q = _product_query_active().filter(Product.category.in_(allowed_cats))
         q = q.filter_by(category=cat)
     products = q.order_by(Product.category, Product.name).all()
+
+    viande_famille = request.args.get("famille")
+    viande_familles = []
+    if viande_familles_svc.is_viandes_category(cat):
+        viande_familles = viande_familles_svc.familles_nav(products)
+        if viande_famille and viande_famille not in viande_familles_svc.VIANDE_FAMILLES:
+            viande_famille = None
+        if viande_famille:
+            products = viande_familles_svc.filter_products_by_famille(products, viande_famille)
+    else:
+        viande_famille = None
+
     catalog = product_groups_svc.catalog_entries(products)
     catalog_sections = (
         product_groups_svc.catalog_sections(products) if not cat else None
@@ -944,6 +957,8 @@ def boutique():
         shop_rayons=rayons,
         universe_counts=universe_counts,
         total_products=total_products,
+        viande_familles=viande_familles,
+        filter_viande_famille=viande_famille,
     )
 
 

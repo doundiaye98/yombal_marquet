@@ -21,6 +21,16 @@ RETIRED_PRODUCT_SLUGS = frozenset(
         "maad-labelafrik",
         # Retiré à la demande (conserves)
         "lait-concentre-bonnet-rouge",
+        # Sans photo produit (retirés boutique)
+        "roti-selle-agneau",
+        "roti-selle-agneau-francais",
+        "roti-filet-boeuf-francais-800-900",
+        "roti-boeuf-tende-tranche-2-22",
+        "roti-boeuf-tende-tranche-800g-1kg",
+        "carre-box-viande-famille-nombreuse",
+        "carre-box-degustation-plaisir",
+        "filet-boeuf-francais-entier",
+        "huile-speciale-fondue-1l",
     }
 )
 
