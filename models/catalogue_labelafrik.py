@@ -391,6 +391,8 @@ LABELAFRIK_SNACKS_EXTRA = [
     _lf("UD-SAM-MOUT", "samoussas-mouton-halal", "Samoussas mouton halal", "Lot de 20 pièces.", CATEGORY_SNACKS, "🥟", 7.9, "20 pièces"),
     _lf("UD-NEMS-P", "nems-poulet-halal-50", "Nems poulet halal", "Lot de 50 pièces.", CATEGORY_SNACKS, "🥟", 22.5, "50 pièces"),
     _lf("UD-NEMS-CP", "nems-crevettes-poulet-halal", "Nems crevettes & poulet", "Lot de 50 pièces halal.", CATEGORY_SNACKS, "🥟", 25.9, "50 pièces"),
+    _lf("UD-FAT-POISS", "fataya-poisson-10", "Fataya au poisson", "Lot de 10 pièces.", CATEGORY_SNACKS, "🥟", 6.9, "10 pièces"),
+    _lf("UD-FAT-VIAN", "fataya-viande-10", "Fataya à la viande", "Lot de 10 pièces.", CATEGORY_SNACKS, "🥟", 7.5, "10 pièces"),
     _lf("UD-RIZ-C2", "riz-casse-2x-1kg", "Riz cassé 2 fois", "Sac 1 kg — absorption des sauces.", CATEGORY_CEREALES, "🌾", 1.6, "1 kg"),
     _lf(
         "UD-SOMBI",

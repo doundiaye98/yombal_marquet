@@ -107,6 +107,8 @@ _RAW_PRODUCT_IMAGES = {
     "chinchard-600-900-10kg": "img/products/chinchard-600-900-10kg.jpg",
     "dorade-1000-plus-5kg": "img/products/dorade-1000-plus-5kg.jpg",
     "biscuits-gem": "img/products/biscuits-gem.jpg",
+    "fataya-poisson-10": "img/products/fataya-poisson-10.jpg",
+    "fataya-viande-10": "img/products/fataya-viande-10.jpg",
     # Photos produits réelles (épicerie)
     "dakhar-sachet-150g": "img/products/dakhar-sachet-150g.jpg",
     "dakhar-sachet-375g": "img/products/dakhar-sachet-375g.webp",
@@ -355,6 +357,8 @@ IMAGE_SOURCES = {
     "Riz au lait (sombi).jpg": "sombi-riz-au-lait",
     "Thiakhri au lait — 400 g.jpg": "thiakhri-au-lait",
     "Thiakhri pâte d'arachide (ngalakh).jpg": "thiakhri-ngalakh",
+    "Fataya poisson.jpg": "fataya-poisson-10",
+    "Fataya viande.jpg": "fataya-viande-10",
     "Miel de fleurs — 500 g.jpg": "miel-fleurs-500g",
     "Sirop de bissap — 50 cl.jpg": "sirop-bissap-ud",
     "Sirop de gingembre — 50 cl.jpg": "sirop-gingembre-ud",

@@ -102,6 +102,8 @@ PRODUCT_DISPLAY_NAMES = {
     "accras-morue": "Accras de morue",
     "nems-poulet-halal-50": "Nems poulet — 50 pièces",
     "nems-crevettes-poulet-halal": "Nems crevettes & poulet — 50 pièces",
+    "fataya-poisson-10": "Fataya poisson — 10 pièces",
+    "fataya-viande-10": "Fataya viande — 10 pièces",
     # —— Desserts ——
     "thiacry-de-mil": "Thiakhry (préparation) — 400 g",
     # —— Légumineuses ——
