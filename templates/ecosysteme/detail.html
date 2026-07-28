@@ -9,6 +9,24 @@
 {% endblock %}
 {% block content %}
 {% set ecosystem_photo_slideshows = {
+  'restaurant': [
+    'img/yombal-restaurant.jpg',
+    'img/resto-hero.jpg',
+    'img/resto-1.jpg',
+    'img/resto-2.jpg',
+    'img/resto-3.jpg',
+    'img/resto-4.jpg',
+    'img/resto-5.jpg',
+    'img/resto-6.jpg'
+  ],
+  'electronique': [
+    'img/yombal-electronique.jpg',
+    'img/electronics-smartphone-new.jpg',
+    'img/electronics-accessories-new.jpg',
+    'img/electronics-earbuds-new.jpg',
+    'img/electronics-speaker-new.jpg',
+    'img/electronics-smartwatch-new.jpg'
+  ],
   'electromenager': [
     'img/yombal-electromenager.jpg',
     'img/yombal-electronique-hero-v2.jpg',
@@ -47,8 +65,6 @@
 {% set ecosystem_photo_bgs = {
   'investissement': 'img/yombal-investissement-opportunites.jpg',
   'transport': 'img/yombal-transports.jpg',
-  'restaurant': 'img/yombal-restaurant.jpg',
-  'electronique': 'img/yombal-electronique.jpg'
 } %}
 {% set ecosystem_photo_slides = ecosystem_photo_slideshows.get(service.slug) %}
 {% set ecosystem_photo_bg = ecosystem_photo_bgs.get(service.slug) %}
@@ -233,7 +249,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
-{% if service.slug in ('electromenager', 'mode', 'chaussures', 'bagagerie') %}
+{% if service.slug in ('restaurant', 'electronique', 'electromenager', 'mode', 'chaussures', 'bagagerie') %}
 <script>
 (function () {
   var root = document.querySelector("[data-ecosystem-slideshow]");

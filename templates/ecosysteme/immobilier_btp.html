@@ -1,4 +1,14 @@
 {% extends "base.html" %}
+{% set immo_photo_slides = [
+  'img/immobilier-btp.jpg',
+  'img/yombal-immobilier-hero.jpg',
+  'img/gallery-immo-villas.jpg',
+  'img/gallery-immo-appartements.jpg',
+  'img/gallery-immo-terrains.jpg',
+  'img/gallery-immo-btp.jpg',
+  'img/gallery-immo-renovation.jpg',
+  'img/gallery-immo-etudes.jpg'
+] %}
 {% block title %}{{ service.title }} — Groupe YOMBAL{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/immo-page.css') }}">
@@ -27,17 +37,26 @@
         <li><strong>3</strong><span>Sites au Sénégal</span></li>
         <li><strong>150&nbsp;m²</strong><span>Par parcelle</span></li>
         <li><strong>0&nbsp;€</strong><span>Apport initial</span></li>
-        <li><strong>24–48</strong><span>Mois de paiement</span></li>
+        <li><strong>30–48</strong><span>Mois de paiement</span></li>
       </ul>
     </div>
   </header>
 
   <div class="immo-body immo-body--photo">
-    <div
-      class="immo-body__bg"
-      aria-hidden="true"
-      style="background-image: url('{{ url_for('static', filename='img/immobilier-btp.jpg') }}')"
-    ></div>
+    <div class="immo-body__bg immo-body__bg--slideshow" aria-hidden="true" data-immo-slideshow data-interval="5000">
+      <div class="immo-body__track" data-immo-track>
+        {% for slide in immo_photo_slides %}
+        <div
+          class="immo-body__slide"
+          style="background-image: url('{{ url_for('static', filename=slide) }}')"
+        ></div>
+        {% endfor %}
+        <div
+          class="immo-body__slide"
+          style="background-image: url('{{ url_for('static', filename=immo_photo_slides[0]) }}')"
+        ></div>
+      </div>
+    </div>
     <div class="immo-body__content">
 
   <nav class="immo-sites-nav" aria-label="Navigation des terrains">
@@ -213,6 +232,49 @@
 {% block extra_scripts %}
 <script>
 (function () {
+  var slideshow = document.querySelector("[data-immo-slideshow]");
+  if (slideshow) {
+    var track = slideshow.querySelector("[data-immo-track]");
+    var slides = slideshow.querySelectorAll(".immo-body__slide");
+    if (track && slides.length >= 2) {
+      var realCount = slides.length - 1;
+      var interval = parseInt(slideshow.getAttribute("data-interval") || "5000", 10);
+      var index = 0;
+      var moving = false;
+      var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function setX(i, animate) {
+        track.style.transition = !animate || reduced ? "none" : "";
+        track.style.transform = "translate3d(-" + i * 100 + "%, 0, 0)";
+      }
+
+      track.addEventListener("transitionend", function (e) {
+        if (e.target !== track || e.propertyName !== "transform") return;
+        if (index < realCount) {
+          moving = false;
+          return;
+        }
+        setX(0, false);
+        void track.offsetWidth;
+        track.style.transition = "";
+        index = 0;
+        moving = false;
+      });
+
+      setInterval(function () {
+        if (moving && !reduced) return;
+        moving = true;
+        index += 1;
+        setX(index, true);
+        if (reduced && index >= realCount) {
+          index = 0;
+          setX(0, false);
+          moving = false;
+        }
+      }, interval);
+    }
+  }
+
   document.querySelectorAll("[data-immo-dialog]").forEach(function (btn) {
     var id = btn.getAttribute("data-immo-dialog");
     var dialog = document.getElementById(id);
