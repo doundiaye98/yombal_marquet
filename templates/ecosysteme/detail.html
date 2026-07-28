@@ -60,10 +60,17 @@
     'img/bag-weekender.jpg',
     'img/bag-urban.jpg',
     'img/bag-crossbody.jpg'
+  ],
+  'investissement': [
+    'img/yombal-investissement-opportunites.jpg',
+    'img/investissement-desk.jpg',
+    'img/investissement-market.jpg',
+    'img/investissement-team.jpg',
+    'img/investissement-partnership.jpg',
+    'img/investissement-logistics.jpg'
   ]
 } %}
 {% set ecosystem_photo_bgs = {
-  'investissement': 'img/yombal-investissement-opportunites.jpg',
   'transport': 'img/yombal-transports.jpg',
 } %}
 {% set ecosystem_photo_slides = ecosystem_photo_slideshows.get(service.slug) %}
@@ -249,7 +256,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
-{% if service.slug in ('restaurant', 'electronique', 'electromenager', 'mode', 'chaussures', 'bagagerie') %}
+{% if service.slug in ('restaurant', 'electronique', 'electromenager', 'mode', 'chaussures', 'bagagerie', 'investissement') %}
 <script>
 (function () {
   var root = document.querySelector("[data-ecosystem-slideshow]");
