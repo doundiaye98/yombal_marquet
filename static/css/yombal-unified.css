@@ -384,22 +384,29 @@
   font-weight: 700;
   letter-spacing: 0.03em;
   cursor: pointer;
+  text-decoration: none !important;
   box-shadow: 0 8px 20px rgba(248, 192, 0, 0.28);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: rgba(0, 24, 88, 0.15);
+  touch-action: manipulation;
+  position: relative;
+  z-index: 623;
+  pointer-events: auto !important;
+}
+.site-premium .btn-pwa * {
+  pointer-events: none;
 }
 .site-premium .btn-pwa:hover {
   background: #ffd84a;
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(248, 192, 0, 0.36);
+  color: #001858 !important;
 }
 .site-premium .btn-pwa:active {
-  transform: translateY(0);
+  transform: scale(0.96);
 }
 .site-premium .btn-pwa__icon {
   flex-shrink: 0;
-}
-.site-premium .btn-pwa[hidden]:not(.is-visible) {
-  display: none !important;
 }
 .site-premium .btn-pwa.is-visible {
   display: inline-flex !important;
@@ -408,9 +415,6 @@
   width: 100%;
   justify-content: center;
   margin-bottom: 10px;
-}
-.cine-nav__foot .cine-nav__pwa[hidden] {
-  display: none !important;
 }
 .pwa-ios-hint {
   position: fixed;
@@ -424,12 +428,9 @@
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
-.pwa-ios-hint.is-visible,
-.pwa-ios-hint:not([hidden]) {
+/* Ouverture 100% CSS (iPhone) — pas besoin de JS */
+.pwa-ios-hint:target {
   display: flex !important;
-}
-.pwa-ios-hint[hidden]:not(.is-visible) {
-  display: none !important;
 }
 .pwa-ios-hint__card {
   position: relative;
@@ -452,6 +453,10 @@
   cursor: pointer;
   min-width: 44px;
   min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
 }
 .pwa-ios-hint__title {
   margin: 0 36px 10px 0;
@@ -473,14 +478,14 @@
   border: 0;
   border-radius: 999px;
   background: #f8c000;
-  color: #001858;
+  color: #001858 !important;
   font-family: 'Sora', sans-serif;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-}
-.site-premium .btn-pwa.is-pressed {
-  transform: scale(0.94);
+  text-align: center;
+  text-decoration: none !important;
+  box-sizing: border-box;
 }
 .site-premium .btn-nav:hover {
   background: var(--y-green-mid) !important;

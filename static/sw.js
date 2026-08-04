@@ -1,7 +1,6 @@
 /* Service worker Yombal Market — cache léger pour installabilité PWA. */
-const CACHE_NAME = "yombal-pwa-v1";
+const CACHE_NAME = "yombal-pwa-v2";
 const PRECACHE = [
-  "/",
   "/static/manifest.webmanifest",
   "/static/img/icons/icon-192.png",
   "/static/img/icons/icon-512.png",
@@ -29,7 +28,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Navigations : réseau d'abord, fallback cache
+  // Navigations : toujours le réseau (HTML à jour)
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
@@ -43,17 +42,38 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Assets static : cache d'abord
-  if (url.pathname.startsWith("/static/")) {
+  // CSS / JS : réseau d'abord pour éviter un bouton "mort" après déploiement
+  if (
+    url.pathname.startsWith("/static/css/") ||
+    url.pathname.startsWith("/static/js/")
+  ) {
     event.respondWith(
-      caches.match(request).then((cached) => {
-        const network = fetch(request).then((response) => {
+      fetch(request)
+        .then((response) => {
           if (response && response.ok) {
             const copy = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           }
           return response;
-        }).catch(() => cached);
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Autres assets static : cache d'abord
+  if (url.pathname.startsWith("/static/")) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        const network = fetch(request)
+          .then((response) => {
+            if (response && response.ok) {
+              const copy = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+            }
+            return response;
+          })
+          .catch(() => cached);
         return cached || network;
       })
     );

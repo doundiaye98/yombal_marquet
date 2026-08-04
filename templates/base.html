@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/lusion.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/yombal-unified.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/yombal-unified.css') }}?v=4">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/catalog-label.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ecosystem-nav.css') }}">
   {% block extra_css %}{% endblock %}
@@ -106,14 +106,11 @@
       </ul>
 
       <div class="nav-actions">
-        <button
-          type="button"
+        <a
+          href="#pwa-install-sheet"
           id="pwa-install-btn"
-          class="btn-pwa"
-          hidden
-          aria-hidden="true"
+          class="btn-pwa is-visible"
           aria-label="Installer l'application Yombal Market"
-          onclick="window.yombalInstallPwa && window.yombalInstallPwa(event)"
         >
           <svg class="btn-pwa__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -121,7 +118,7 @@
             <path d="M5 19h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
           <span class="btn-pwa__label">Installer l'app</span>
-        </button>
+        </a>
         <a
           href="{{ url_for('panier') }}"
           class="nav-cart{{ ' is-active' if ep in ['panier', 'checkout'] else '' }}"
@@ -169,16 +166,9 @@
         <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">{{ '%02d'|format(ecosystem_nav|length + 10) }}</span><span class="cine-nav__text">Contact</span></a></li>
       </ul>
       <div class="cine-nav__foot">
-        <button
-          type="button"
-          class="btn-pwa cine-nav__pwa"
-          id="pwa-install-btn-mobile"
-          hidden
-          aria-hidden="true"
-          onclick="window.yombalInstallPwa && window.yombalInstallPwa(event)"
-        >
+        <a href="#pwa-install-sheet" class="btn-pwa cine-nav__pwa is-visible" id="pwa-install-btn-mobile">
           Installer l'app
-        </button>
+        </a>
         <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">Commander maintenant</a>
         <a href="mailto:{{ shop_contact_email }}" class="cine-nav__email">{{ shop_contact_email }}</a>
       </div>
@@ -351,18 +341,17 @@
   <script src="{{ url_for('static', filename='js/assistant-widget.js') }}" defer></script>
   {% endif %}
 
-  <div id="pwa-ios-hint" class="pwa-ios-hint" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="pwa-ios-title">
+  <div id="pwa-install-sheet" class="pwa-ios-hint" role="dialog" aria-modal="true" aria-labelledby="pwa-ios-title">
     <div class="pwa-ios-hint__card">
-      <button type="button" id="pwa-ios-close" class="pwa-ios-hint__close" aria-label="Fermer">×</button>
+      <a href="#" class="pwa-ios-hint__close" id="pwa-ios-close" aria-label="Fermer">×</a>
       <p id="pwa-ios-title" class="pwa-ios-hint__title">Installer Yombal Market</p>
       <p id="pwa-ios-text" class="pwa-ios-hint__text">
-        1. Appuyez sur <strong>Partager</strong> en bas de Safari.<br>
+        <strong>Sur iPhone (Safari)</strong><br>
+        1. Appuyez sur <strong>Partager</strong> <span aria-hidden="true">□↑</span> en bas de l'écran.<br>
         2. Choisissez <strong>« Sur l'écran d'accueil »</strong>.<br>
         3. Validez avec <strong>Ajouter</strong>.
       </p>
-      <button type="button" class="pwa-ios-hint__ok" id="pwa-ios-ok" onclick="document.getElementById('pwa-ios-close').click()">
-        J'ai compris
-      </button>
+      <a href="#" class="pwa-ios-hint__ok" id="pwa-ios-ok">J'ai compris</a>
     </div>
   </div>
 
@@ -370,22 +359,7 @@
   <script src="{{ url_for('static', filename='js/site-experience.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/ecosystem-nav.js') }}" defer></script>
-  <script>
-    /* Filet de sécurité iPhone : le guide s'ouvre même si le JS principal est en cache */
-    window.yombalInstallPwa = window.yombalInstallPwa || function (event) {
-      if (event && event.preventDefault) event.preventDefault();
-      var sheet = document.getElementById("pwa-ios-hint");
-      if (!sheet) {
-        window.alert("Safari → Partager → Sur l'écran d'accueil");
-        return;
-      }
-      sheet.hidden = false;
-      sheet.removeAttribute("hidden");
-      sheet.classList.add("is-visible");
-      sheet.setAttribute("aria-hidden", "false");
-    };
-  </script>
-  <script src="{{ url_for('static', filename='js/pwa-install.js') }}?v=3" defer></script>
+  <script src="{{ url_for('static', filename='js/pwa-install.js') }}?v=4" defer></script>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>
