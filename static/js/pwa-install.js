@@ -1,105 +1,138 @@
 /**
- * Bouton d'installation PWA — desktop + mobile.
- * - Chromium : beforeinstallprompt → prompt natif
- * - iOS / fallback : guide d'installation
+ * PWA install — iPhone/Safari = guide manuel (pas d'API native).
+ * Chromium = beforeinstallprompt quand dispo.
  */
 (function () {
-  const btn = document.getElementById("pwa-install-btn");
-  const btnMobile = document.getElementById("pwa-install-btn-mobile");
-  const iosHint = document.getElementById("pwa-ios-hint");
-  const iosClose = document.getElementById("pwa-ios-close");
-  const iosText = document.getElementById("pwa-ios-text");
-  if (!btn && !btnMobile) return;
+  "use strict";
 
-  let deferredPrompt = null;
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  var btn = $("pwa-install-btn");
+  var btnMobile = $("pwa-install-btn-mobile");
+  var sheet = $("pwa-ios-hint");
+  var sheetClose = $("pwa-ios-close");
+  var sheetText = $("pwa-ios-text");
+  var deferredPrompt = null;
 
   function isStandalone() {
-    return (
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone === true
-    );
+    try {
+      return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true
+      );
+    } catch (e) {
+      return false;
+    }
   }
 
   function isIos() {
-    return /iphone|ipad|ipod/i.test(window.navigator.userAgent) ||
+    var ua = window.navigator.userAgent || "";
+    return /iPhone|iPad|iPod/i.test(ua) ||
       (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   }
 
   function isAndroid() {
-    return /android/i.test(window.navigator.userAgent);
+    return /Android/i.test(window.navigator.userAgent || "");
   }
 
-  function show(el) {
+  function showEl(el) {
     if (!el) return;
     el.hidden = false;
     el.removeAttribute("hidden");
+    el.classList.add("is-visible");
     el.setAttribute("aria-hidden", "false");
   }
 
-  function hide(el) {
+  function hideEl(el) {
     if (!el) return;
     el.hidden = true;
-    el.setAttribute("hidden", "");
+    el.setAttribute("hidden", "hidden");
+    el.classList.remove("is-visible");
     el.setAttribute("aria-hidden", "true");
   }
 
-  function setButtonsVisible(visible) {
-    if (visible) {
-      show(btn);
-      show(btnMobile);
-    } else {
-      hide(btn);
-      hide(btnMobile);
-    }
+  function showButtons() {
+    showEl(btn);
+    showEl(btnMobile);
   }
 
-  function showHelp() {
-    if (!iosHint) return;
-    if (iosText) {
+  function hideButtons() {
+    hideEl(btn);
+    hideEl(btnMobile);
+  }
+
+  function openGuide() {
+    if (!sheet) {
+      window.alert(
+        isIos()
+          ? "Pour installer : Partager → Sur l'écran d'accueil"
+          : "Pour installer : menu du navigateur → Ajouter à l'écran d'accueil"
+      );
+      return;
+    }
+    if (sheetText) {
       if (isIos()) {
-        iosText.innerHTML =
-          "Sur iPhone / iPad : appuyez sur <strong>Partager</strong> " +
-          "puis <strong>« Sur l'écran d'accueil »</strong>.";
+        sheetText.innerHTML =
+          "1. Appuyez sur le bouton <strong>Partager</strong> <span aria-hidden=\"true\">□↑</span> en bas de Safari.<br>" +
+          "2. Faites défiler et choisissez <strong>« Sur l'écran d'accueil »</strong>.<br>" +
+          "3. Validez avec <strong>Ajouter</strong>.";
       } else if (isAndroid()) {
-        iosText.innerHTML =
-          "Sur Android : ouvrez le menu <strong>⋮</strong> du navigateur " +
-          "puis choisissez <strong>« Installer l'application »</strong> " +
+        sheetText.innerHTML =
+          "Ouvrez le menu <strong>⋮</strong> puis <strong>« Installer l'application »</strong> " +
           "ou <strong>« Ajouter à l'écran d'accueil »</strong>.";
       } else {
-        iosText.innerHTML =
-          "Dans votre navigateur, ouvrez le menu puis choisissez " +
-          "<strong>« Installer l'application »</strong> " +
-          "ou <strong>« Ajouter à l'écran d'accueil »</strong>.";
+        sheetText.innerHTML =
+          "Menu du navigateur → <strong>Installer l'application</strong> " +
+          "ou <strong>Ajouter à l'écran d'accueil</strong>.";
       }
     }
-    show(iosHint);
+    showEl(sheet);
+    sheet.setAttribute("role", "dialog");
   }
 
-  async function triggerInstall(event) {
+  function closeGuide() {
+    hideEl(sheet);
+  }
+
+  function onInstallTap(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
+    // Feedback visuel immédiat (iOS)
+    var target = (event && event.currentTarget) || btn;
+    if (target && target.classList) {
+      target.classList.add("is-pressed");
+      window.setTimeout(function () {
+        target.classList.remove("is-pressed");
+      }, 180);
+    }
+
     if (deferredPrompt) {
-      try {
-        deferredPrompt.prompt();
-        await deferredPrompt.userChoice;
-      } catch (_err) {
-        showHelp();
-      }
-      deferredPrompt = null;
-      setButtonsVisible(false);
-      hide(iosHint);
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function () {
+        deferredPrompt = null;
+        hideButtons();
+        closeGuide();
+      }).catch(function () {
+        openGuide();
+      });
       return;
     }
 
-    showHelp();
+    // iPhone / Safari / pas d'API → guide
+    openGuide();
   }
 
+  // Exposé pour onclick HTML (filet de sécurité iOS)
+  window.yombalInstallPwa = onInstallTap;
+
   if (isStandalone()) {
-    setButtonsVisible(false);
-    hide(iosHint);
+    hideButtons();
+    closeGuide();
     return;
   }
 
@@ -110,31 +143,36 @@
   window.addEventListener("beforeinstallprompt", function (event) {
     event.preventDefault();
     deferredPrompt = event;
-    setButtonsVisible(true);
+    showButtons();
   });
 
   window.addEventListener("appinstalled", function () {
     deferredPrompt = null;
-    setButtonsVisible(false);
-    hide(iosHint);
+    hideButtons();
+    closeGuide();
   });
 
-  if (btn) {
-    btn.addEventListener("click", triggerInstall);
+  function bind(el) {
+    if (!el) return;
+    el.addEventListener("click", onInstallTap, false);
   }
 
-  if (btnMobile) {
-    btnMobile.addEventListener("click", triggerInstall);
+  bind(btn);
+  bind(btnMobile);
+
+  if (sheetClose) {
+    sheetClose.addEventListener("click", function (e) {
+      e.preventDefault();
+      closeGuide();
+    }, false);
   }
 
-  if (iosClose && iosHint) {
-    iosClose.addEventListener("click", function () {
-      hide(iosHint);
-    });
+  if (sheet) {
+    sheet.addEventListener("click", function (e) {
+      if (e.target === sheet) closeGuide();
+    }, false);
   }
 
-  // Afficher le bouton tout de suite sur mobile (guide si pas encore installable)
-  if (isIos() || isAndroid() || window.matchMedia("(max-width: 900px)").matches) {
-    setButtonsVisible(true);
-  }
+  // Toujours visible hors mode app installée
+  showButtons();
 })();

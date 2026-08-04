@@ -113,6 +113,7 @@
           hidden
           aria-hidden="true"
           aria-label="Installer l'application Yombal Market"
+          onclick="window.yombalInstallPwa && window.yombalInstallPwa(event)"
         >
           <svg class="btn-pwa__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -168,7 +169,14 @@
         <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">{{ '%02d'|format(ecosystem_nav|length + 10) }}</span><span class="cine-nav__text">Contact</span></a></li>
       </ul>
       <div class="cine-nav__foot">
-        <button type="button" class="btn-pwa cine-nav__pwa" id="pwa-install-btn-mobile" hidden aria-hidden="true">
+        <button
+          type="button"
+          class="btn-pwa cine-nav__pwa"
+          id="pwa-install-btn-mobile"
+          hidden
+          aria-hidden="true"
+          onclick="window.yombalInstallPwa && window.yombalInstallPwa(event)"
+        >
           Installer l'app
         </button>
         <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">Commander maintenant</a>
@@ -343,20 +351,41 @@
   <script src="{{ url_for('static', filename='js/assistant-widget.js') }}" defer></script>
   {% endif %}
 
-  <div id="pwa-ios-hint" class="pwa-ios-hint" hidden role="dialog" aria-labelledby="pwa-ios-title">
-    <button type="button" id="pwa-ios-close" class="pwa-ios-hint__close" aria-label="Fermer">×</button>
-    <p id="pwa-ios-title" class="pwa-ios-hint__title">Installer Yombal Market</p>
-    <p id="pwa-ios-text" class="pwa-ios-hint__text">
-      Sur iPhone / iPad : appuyez sur <strong>Partager</strong>
-      puis <strong>« Sur l'écran d'accueil »</strong>.
-    </p>
+  <div id="pwa-ios-hint" class="pwa-ios-hint" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="pwa-ios-title">
+    <div class="pwa-ios-hint__card">
+      <button type="button" id="pwa-ios-close" class="pwa-ios-hint__close" aria-label="Fermer">×</button>
+      <p id="pwa-ios-title" class="pwa-ios-hint__title">Installer Yombal Market</p>
+      <p id="pwa-ios-text" class="pwa-ios-hint__text">
+        1. Appuyez sur <strong>Partager</strong> en bas de Safari.<br>
+        2. Choisissez <strong>« Sur l'écran d'accueil »</strong>.<br>
+        3. Validez avec <strong>Ajouter</strong>.
+      </p>
+      <button type="button" class="pwa-ios-hint__ok" id="pwa-ios-ok" onclick="document.getElementById('pwa-ios-close').click()">
+        J'ai compris
+      </button>
+    </div>
   </div>
 
   <script src="{{ url_for('static', filename='js/cookie-consent.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/site-experience.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/ecosystem-nav.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='js/pwa-install.js') }}" defer></script>
+  <script>
+    /* Filet de sécurité iPhone : le guide s'ouvre même si le JS principal est en cache */
+    window.yombalInstallPwa = window.yombalInstallPwa || function (event) {
+      if (event && event.preventDefault) event.preventDefault();
+      var sheet = document.getElementById("pwa-ios-hint");
+      if (!sheet) {
+        window.alert("Safari → Partager → Sur l'écran d'accueil");
+        return;
+      }
+      sheet.hidden = false;
+      sheet.removeAttribute("hidden");
+      sheet.classList.add("is-visible");
+      sheet.setAttribute("aria-hidden", "false");
+    };
+  </script>
+  <script src="{{ url_for('static', filename='js/pwa-install.js') }}?v=3" defer></script>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>

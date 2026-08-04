@@ -50,10 +50,47 @@
   z-index: 0;
   pointer-events: none;
   background-color: #0a1628;
-  background-image: url("../img/products/background-person-shopping-realistic.png");
   background-size: cover !important;
   background-position: center 42% !important;
   background-repeat: no-repeat !important;
+}
+.home-page__bg--slideshow {
+  overflow: hidden;
+  background-image: none !important;
+}
+.home-page__bg--slideshow .home-page__track {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transform: translate3d(0, 0, 0);
+  transition: transform 1.15s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.home-page__bg--slideshow .home-page__slide {
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  background-color: #0a1628;
+  background-size: cover;
+  background-position: center 42%;
+  background-repeat: no-repeat;
+}
+.home-page__bg--slideshow .home-page__slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 18, 36, 0.45) 0%,
+    rgba(8, 18, 36, 0.35) 45%,
+    rgba(8, 18, 36, 0.55) 100%
+  );
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-page__bg--slideshow .home-page__track {
+    transition: none;
+  }
 }
 .home-page__content {
   position: relative;
