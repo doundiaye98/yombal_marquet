@@ -101,9 +101,21 @@
 @media (max-width: 900px) {
   .home-page__bg--desktop { display: none !important; }
   .home-page__bg--mobile { display: block !important; }
-  .home-page__bg {
-    height: 100svh;
-    margin-bottom: -100svh;
+
+  /* Fond photo FIXE sur mobile (sticky iOS trop fragile) */
+  .home-page__bg,
+  .home-page__bg--mobile {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    z-index: 0 !important;
     background-position: center 28% !important;
   }
   .home-page__bg--slideshow .home-page__slide {
@@ -113,10 +125,55 @@
   .home-page__bg--slideshow .home-page__slide::after {
     background: linear-gradient(
       180deg,
-      rgba(0, 16, 40, 0.62) 0%,
-      rgba(0, 16, 40, 0.42) 42%,
-      rgba(0, 16, 40, 0.72) 100%
+      rgba(0, 16, 40, 0.55) 0%,
+      rgba(0, 16, 40, 0.4) 42%,
+      rgba(0, 16, 40, 0.7) 100%
     );
+  }
+  .home-page__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Rayons : lisible même si la photo est sombre / claire */
+  .home-rayons {
+    background: transparent;
+    padding-top: 28px;
+    padding-bottom: 40px;
+  }
+  .home-rayons__head {
+    padding: 18px 16px;
+    border-radius: 16px;
+    background: rgba(0, 16, 40, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    margin-bottom: 18px;
+  }
+  .home-rayons__title,
+  .home-rayons__lead,
+  .home-rayons__kicker {
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Incontournables / CTA : couvrent le fond fixe */
+  .home-page .xd-highlights--home,
+  .home-page .ud-cta,
+  .home-page .ud-panel--green {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Marquee : plus de débordement horizontal */
+  .home-page .xd-marquee {
+    position: relative;
+    z-index: 2;
+    overflow: hidden !important;
+    max-width: 100%;
+    width: 100%;
+    background: #001040 !important;
+  }
+  .home-page .xd-marquee__track {
+    max-width: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
