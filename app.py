@@ -1245,12 +1245,46 @@ def panier_modifier():
 
 @app.route("/auth/inscription", methods=["GET", "POST"])
 def register():
-    abort(404)
+    if current_user.is_authenticated:
+        return redirect(url_for("compte"))
+    if request.method == "POST":
+        email = (request.form.get("email") or "").strip().lower()
+        password = request.form.get("password") or ""
+        name = (request.form.get("name") or "").strip()
+        if not email or "@" not in email:
+            flash("Adresse e-mail invalide.", "danger")
+        elif len(password) < 6:
+            flash("Mot de passe : au moins 6 caractères.", "danger")
+        elif User.query.filter_by(email=email).first():
+            flash("Un compte existe déjà avec cet e-mail.", "danger")
+        else:
+            u = User(email=email, name=name or None)
+            u.set_password(password)
+            db.session.add(u)
+            db.session.commit()
+            login_user(u)
+            flash("Compte créé. Bienvenue dans votre espace client.", "success")
+            return redirect(url_for("compte"))
+    return render_template("auth/register.html")
 
 
 @app.route("/auth/connexion", methods=["GET", "POST"])
 def login():
-    abort(404)
+    if current_user.is_authenticated:
+        return redirect(url_for("compte"))
+    if request.method == "POST":
+        email = (request.form.get("email") or "").strip().lower()
+        password = request.form.get("password") or ""
+        u = User.query.filter_by(email=email).first()
+        if u and u.is_active and u.check_password(password):
+            login_user(u, remember=bool(request.form.get("remember")))
+            flash("Bon retour parmi nous.", "success")
+            nxt = request.form.get("next") or request.args.get("next") or ""
+            if nxt.startswith("/") and not nxt.startswith("//"):
+                return redirect(nxt)
+            return redirect(url_for("compte"))
+        flash("E-mail ou mot de passe incorrect.", "danger")
+    return render_template("auth/login.html")
 
 
 @app.route("/auth/deconnexion")
@@ -1259,6 +1293,28 @@ def logout():
     logout_user()
     flash("Vous êtes déconnecté.", "info")
     return redirect(url_for("index"))
+
+
+@app.route("/compte")
+@login_required
+def compte():
+    recent_orders = (
+        Order.query.filter_by(user_id=current_user.id)
+        .order_by(Order.created_at.desc())
+        .limit(8)
+        .all()
+    )
+    order_rows = []
+    for o in recent_orders:
+        pill = order_ui_svc.order_status_pill(o.status)
+        order_rows.append(
+            {
+                "order": o,
+                "pill_label": pill[0],
+                "pill_class": pill[1],
+            }
+        )
+    return render_template("auth/compte.html", order_rows=order_rows)
 
 
 @app.route("/checkout", methods=["GET", "POST"])

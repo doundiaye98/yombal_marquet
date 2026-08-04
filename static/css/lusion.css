@@ -2610,30 +2610,13 @@ body.site-premium.page-leave {
     backdrop-filter: blur(16px);
   }
 
-  .site-premium .nav-logo {
-    position: fixed !important;
-    top: 0;
-    left: 16px;
-    z-index: 902 !important;
-    height: var(--nav-h);
-    display: flex !important;
-    align-items: center;
-  }
-  .site-premium .nav-logo-img {
-    filter: none !important;
-    opacity: 1 !important;
-  }
-  .site-premium.is-home-immersive .nav-logo-img {
-    filter: none !important;
-    opacity: 1 !important;
-  }
-
+  /* Shell app : menu | logo | panier */
   .site-premium .nav-toggle {
     display: inline-flex !important;
     position: fixed !important;
     top: calc((var(--nav-h) - 44px) / 2) !important;
-    right: 16px !important;
-    left: auto !important;
+    left: 14px !important;
+    right: auto !important;
     z-index: 902 !important;
     width: 44px !important;
     height: 44px !important;
@@ -2674,6 +2657,28 @@ body.site-premium.page-leave {
     display: none !important;
   }
 
+  .site-premium .nav-logo {
+    position: fixed !important;
+    top: 0;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%);
+    z-index: 902 !important;
+    height: var(--nav-h);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    max-width: calc(100vw - 140px);
+  }
+  .site-premium .nav-logo-img {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+  .site-premium.is-home-immersive .nav-logo-img {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
   .site-premium .cine-nav {
     z-index: 950;
   }
@@ -2692,7 +2697,8 @@ body.site-premium.page-leave {
     animation: none !important;
   }
   .site-premium .header-shell .nav-logo,
-  .site-premium .header-shell .nav-toggle {
+  .site-premium .header-shell .nav-toggle,
+  .site-premium .header-shell .nav-actions {
     pointer-events: auto;
   }
 }

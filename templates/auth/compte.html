@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Mon compte — Yombal Market{% endblock %}
+{% block content %}
+<div class="page-wrapper auth-shell">
+  <div class="auth-card reveal compte-card">
+    <p class="section-eyebrow" style="margin-bottom:8px;">Espace client</p>
+    <h1>Bonjour{% if current_user.name %}, {{ current_user.name }}{% endif %}</h1>
+    <p class="auth-lead">{{ current_user.email }}</p>
+
+    <div class="compte-actions">
+      <a href="{{ url_for('suivi_commande') }}" class="btn-primary" style="width:100%;justify-content:center;">Mes commandes</a>
+      <a href="{{ url_for('boutique') }}" class="btn-outline" style="width:100%;justify-content:center;margin-top:10px;">Continuer mes achats</a>
+      <a href="{{ url_for('panier') }}" class="btn-outline" style="width:100%;justify-content:center;margin-top:10px;">Voir mon panier{% if cart_count %} ({{ cart_count }}){% endif %}</a>
+    </div>
+
+    {% if order_rows %}
+    <div class="compte-orders">
+      <h2 class="compte-orders__title">Dernières commandes</h2>
+      <ul class="compte-orders__list">
+        {% for row in order_rows %}
+        {% set o = row.order %}
+        <li>
+          <a href="{{ url_for('suivi_commande_detail', order_id=o.id) }}">
+            <span class="compte-orders__ref">{{ o.public_ref }}</span>
+            <span class="compte-orders__meta">
+              {{ o.created_at.strftime('%d/%m/%Y') if o.created_at else '' }}
+              <em class="{{ row.pill_class }}">{{ row.pill_label }}</em>
+            </span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% else %}
+    <p class="form-panel-hint" style="margin-top:22px;text-align:center;">
+      Aucune commande liée à ce compte pour le moment.
+    </p>
+    {% endif %}
+
+    <p class="auth-alt" style="margin-top:28px;font-size:14px;text-align:center;">
+      <a href="{{ url_for('logout') }}">Se déconnecter</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

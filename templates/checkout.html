@@ -57,7 +57,11 @@
       {% if not current_user.is_authenticated %}
       <div class="form-panel">
         <h2 class="form-panel-title">Coordonnées (sans compte)</h2>
-        <p class="form-panel-hint">Pas besoin de créer un compte : indiquez simplement vos coordonnées pour la livraison.</p>
+        <p class="form-panel-hint">
+          Pas besoin de créer un compte : indiquez simplement vos coordonnées pour la livraison.
+          Ou <a href="{{ url_for('login', next=url_for('checkout')) }}">connectez-vous</a>
+          / <a href="{{ url_for('register') }}">créez un compte</a> pour retrouver vos commandes plus facilement.
+        </p>
         <div class="field-group">
           <label class="field-label" for="guest_name">Nom complet</label>
           <input id="guest_name" class="field-input" type="text" name="guest_name" required autocomplete="name"
