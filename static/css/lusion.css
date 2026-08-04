@@ -87,6 +87,29 @@
     rgba(8, 18, 36, 0.55) 100%
   );
 }
+.home-page__bg--desktop { display: block; }
+.home-page__bg--mobile { display: none; }
+@media (max-width: 900px) {
+  .home-page__bg--desktop { display: none !important; }
+  .home-page__bg--mobile { display: block !important; }
+  .home-page__bg {
+    height: 100svh;
+    margin-bottom: -100svh;
+    background-position: center 28% !important;
+  }
+  .home-page__bg--slideshow .home-page__slide {
+    background-position: center 28%;
+    background-size: cover;
+  }
+  .home-page__bg--slideshow .home-page__slide::after {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 16, 40, 0.62) 0%,
+      rgba(0, 16, 40, 0.42) 42%,
+      rgba(0, 16, 40, 0.72) 100%
+    );
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .home-page__bg--slideshow .home-page__track {
     transition: none;

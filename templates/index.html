@@ -4,17 +4,21 @@
 {% block main_class %}site-main--home site-main--xd{% endblock %}
 {% block content %}
 
-{# Même principe que boutique / écosystème : fond sticky en diaporama #}
+{# Fond sticky : photos réelles d'abord (lisibles sur mobile), mockups ensuite #}
 {% set home_photo_slides = [
-  'img/yombal-mobile-hero.jpg',
-  'img/yombal-mobile-hero-2.jpg',
-  'img/yombal-mobile-univers.jpg',
+  'img/yombal-mobile-livraison.jpg',
   'img/yombal-mobile-commande.jpg',
-  'img/yombal-mobile-livraison.jpg'
+  'img/yombal-mobile-univers.jpg',
+  'img/yombal-mobile-hero-2.jpg',
+  'img/yombal-mobile-hero.jpg'
+] %}
+{% set home_photo_slides_mobile = [
+  'img/yombal-mobile-livraison.jpg',
+  'img/yombal-mobile-commande.jpg'
 ] %}
 <div class="home-page">
   <div
-    class="home-page__bg home-page__bg--slideshow"
+    class="home-page__bg home-page__bg--slideshow home-page__bg--desktop"
     aria-hidden="true"
     data-home-slideshow
     data-interval="5000"
@@ -29,6 +33,25 @@
       <div
         class="home-page__slide"
         style="background-image: url('{{ url_for('static', filename=home_photo_slides[0]) }}')"
+      ></div>
+    </div>
+  </div>
+  <div
+    class="home-page__bg home-page__bg--slideshow home-page__bg--mobile"
+    aria-hidden="true"
+    data-home-slideshow
+    data-interval="5500"
+  >
+    <div class="home-page__track" data-home-track>
+      {% for slide in home_photo_slides_mobile %}
+      <div
+        class="home-page__slide"
+        style="background-image: url('{{ url_for('static', filename=slide) }}')"
+      ></div>
+      {% endfor %}
+      <div
+        class="home-page__slide"
+        style="background-image: url('{{ url_for('static', filename=home_photo_slides_mobile[0]) }}')"
       ></div>
     </div>
   </div>
@@ -211,51 +234,52 @@
 <script src="{{ url_for('static', filename='js/home-experience.js') }}" defer></script>
 <script>
 (function () {
-  var root = document.querySelector("[data-home-slideshow]");
-  if (!root) return;
-  var track = root.querySelector("[data-home-track]");
-  var slides = root.querySelectorAll(".home-page__slide");
-  if (!track || slides.length < 2) return;
+  document.querySelectorAll("[data-home-slideshow]").forEach(function (root) {
+    var track = root.querySelector("[data-home-track]");
+    var slides = root.querySelectorAll(".home-page__slide");
+    if (!track || slides.length < 2) return;
 
-  var realCount = slides.length - 1;
-  var interval = parseInt(root.getAttribute("data-interval") || "5000", 10);
-  var index = 0;
-  var moving = false;
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var realCount = slides.length - 1;
+    var interval = parseInt(root.getAttribute("data-interval") || "5000", 10);
+    var index = 0;
+    var moving = false;
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function setX(i, animate) {
-    if (!animate || reduced) {
-      track.style.transition = "none";
-    } else {
-      track.style.transition = "";
+    function setX(i, animate) {
+      if (!animate || reduced) {
+        track.style.transition = "none";
+      } else {
+        track.style.transition = "";
+      }
+      track.style.transform = "translate3d(-" + i * 100 + "%, 0, 0)";
     }
-    track.style.transform = "translate3d(-" + i * 100 + "%, 0, 0)";
-  }
 
-  track.addEventListener("transitionend", function (e) {
-    if (e.target !== track || e.propertyName !== "transform") return;
-    if (index < realCount) {
-      moving = false;
-      return;
-    }
-    setX(0, false);
-    void track.offsetWidth;
-    track.style.transition = "";
-    index = 0;
-    moving = false;
-  });
-
-  setInterval(function () {
-    if (moving && !reduced) return;
-    moving = true;
-    index += 1;
-    setX(index, true);
-    if (reduced && index >= realCount) {
-      index = 0;
+    track.addEventListener("transitionend", function (e) {
+      if (e.target !== track || e.propertyName !== "transform") return;
+      if (index < realCount) {
+        moving = false;
+        return;
+      }
       setX(0, false);
+      void track.offsetWidth;
+      track.style.transition = "";
+      index = 0;
       moving = false;
-    }
-  }, interval);
+    });
+
+    setInterval(function () {
+      if (root.offsetParent === null && getComputedStyle(root).display === "none") return;
+      if (moving && !reduced) return;
+      moving = true;
+      index += 1;
+      setX(index, true);
+      if (reduced && index >= realCount) {
+        index = 0;
+        setX(0, false);
+        moving = false;
+      }
+    }, interval);
+  });
 })();
 </script>
 {% endblock %}

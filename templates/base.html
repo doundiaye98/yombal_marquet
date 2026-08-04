@@ -19,8 +19,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/lusion.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/yombal-unified.css') }}?v=6">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/lusion.css') }}?v=2">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/yombal-unified.css') }}?v=7">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/catalog-label.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ecosystem-nav.css') }}">
   {% block extra_css %}{% endblock %}
@@ -44,12 +44,13 @@
     <div class="header-shell">
       <a href="{{ url_for('index') }}" class="nav-logo" aria-label="Yombal Market — accueil">
         <img
-          src="{{ url_for('static', filename='img/yombal-logo.png') }}"
+          src="{{ url_for('static', filename='img/yombal-logo-nav.png') }}"
           alt="Yombal Market — Le goût du vrai, la fierté du local"
           class="nav-logo-img"
-          width="240"
-          height="72"
+          width="180"
+          height="60"
           decoding="async"
+          onerror="this.onerror=null;this.src='{{ url_for('static', filename='img/icons/icon-180.png') }}';"
         >
       </a>
 
