@@ -20,14 +20,21 @@ document.addEventListener("DOMContentLoaded", () => {
     navToggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
     document.body.classList.toggle("cine-nav-open", open);
     document.body.style.overflow = open ? "hidden" : "";
+    document.documentElement.style.overflow = open ? "hidden" : "";
+    if (open) {
+      document.body.style.position = "fixed";
+      document.body.style.inset = "0";
+      document.body.style.width = "100%";
+    } else {
+      document.body.style.position = "";
+      document.body.style.inset = "";
+      document.body.style.width = "";
+    }
 
     if (open) {
       cineNav.querySelectorAll(".cine-nav__link").forEach((link, i) => {
         link.style.setProperty("--i", i);
-        link.classList.remove("is-shown");
-        requestAnimationFrame(() => {
-          setTimeout(() => link.classList.add("is-shown"), 60 + i * 45);
-        });
+        link.classList.add("is-shown");
       });
     }
   }

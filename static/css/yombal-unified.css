@@ -27,8 +27,39 @@
 .site-premium {
   background: var(--y-cream);
   color: var(--y-ink);
+  overflow-x: hidden;
 }
 .site-premium #grain { opacity: 0.03; }
+
+@media (max-width: 900px) {
+  html {
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none;
+  }
+  body.site-premium {
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+  }
+  body.site-premium .site-header-unified,
+  body.site-premium .m-tabbar {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    touch-action: manipulation;
+  }
+  body.site-premium .site-main,
+  body.site-premium .home-page,
+  body.site-premium .page-wrapper {
+    overflow-x: hidden !important;
+    max-width: 100%;
+  }
+}
 
 /* Header unifié */
 .site-premium .site-header-unified {
