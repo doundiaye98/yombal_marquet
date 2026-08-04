@@ -401,6 +401,14 @@
 .site-premium .btn-pwa[hidden] {
   display: none !important;
 }
+.cine-nav__foot .cine-nav__pwa {
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.cine-nav__foot .cine-nav__pwa[hidden] {
+  display: none !important;
+}
 .pwa-ios-hint {
   position: fixed;
   left: 16px;
@@ -440,14 +448,6 @@
   font-size: 13px;
   line-height: 1.5;
   opacity: 0.92;
-}
-.cine-nav__foot .cine-nav__pwa {
-  width: 100%;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-.cine-nav__foot .cine-nav__pwa[hidden] {
-  display: none !important;
 }
 .site-premium .btn-nav:hover {
   background: var(--y-green-mid) !important;
@@ -843,18 +843,32 @@ body.site-premium.page-leave { animation: none !important; }
   }
   .site-premium .nav-actions {
     display: flex !important;
-    margin-left: auto;
-    margin-right: 4px;
+    position: fixed !important;
+    top: calc((var(--nav-h) - 44px) / 2);
+    right: 64px;
+    z-index: 622;
+    margin: 0 !important;
+    gap: 8px;
+    align-items: center;
   }
   .site-premium .btn-nav {
     padding: 10px 14px;
     font-size: 11px;
   }
+  .site-premium .btn-pwa {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 12px;
+    touch-action: manipulation;
+  }
 }
 @media (max-width: 480px) {
   .site-premium .nav-actions .btn-nav { display: none !important; }
   .site-premium .btn-pwa {
-    padding: 9px 12px;
+    padding: 10px;
+    width: 44px;
+    height: 44px;
+    justify-content: center;
   }
   .site-premium .btn-pwa__label {
     display: none;

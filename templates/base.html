@@ -168,7 +168,7 @@
         <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">{{ '%02d'|format(ecosystem_nav|length + 10) }}</span><span class="cine-nav__text">Contact</span></a></li>
       </ul>
       <div class="cine-nav__foot">
-        <button type="button" class="btn-pwa cine-nav__pwa" id="pwa-install-btn-mobile" hidden onclick="document.getElementById('pwa-install-btn')?.click()">
+        <button type="button" class="btn-pwa cine-nav__pwa" id="pwa-install-btn-mobile" hidden aria-hidden="true">
           Installer l'app
         </button>
         <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">Commander maintenant</a>
@@ -346,7 +346,7 @@
   <div id="pwa-ios-hint" class="pwa-ios-hint" hidden role="dialog" aria-labelledby="pwa-ios-title">
     <button type="button" id="pwa-ios-close" class="pwa-ios-hint__close" aria-label="Fermer">×</button>
     <p id="pwa-ios-title" class="pwa-ios-hint__title">Installer Yombal Market</p>
-    <p class="pwa-ios-hint__text">
+    <p id="pwa-ios-text" class="pwa-ios-hint__text">
       Sur iPhone / iPad : appuyez sur <strong>Partager</strong>
       puis <strong>« Sur l'écran d'accueil »</strong>.
     </p>
