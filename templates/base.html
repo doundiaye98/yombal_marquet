@@ -5,8 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Yombal Marché — épicerie fine, cosmétiques, électronique et livraison à domicile. Boutique en ligne du Groupe YOMBAL.">
   <meta name="theme-color" content="#001858">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Yombal Market">
   <title>{% block title %}Yombal Market{% endblock %}</title>
+  <link rel="manifest" href="{{ url_for('web_manifest') }}">
   <link rel="icon" href="{{ url_for('static', filename='img/yombal-logo.png') }}" type="image/png">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/icons/icon-180.png') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;0,7..72,800;1,7..72,400;1,7..72,600&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -100,6 +106,21 @@
       </ul>
 
       <div class="nav-actions">
+        <button
+          type="button"
+          id="pwa-install-btn"
+          class="btn-pwa"
+          hidden
+          aria-hidden="true"
+          aria-label="Installer l'application Yombal Market"
+        >
+          <svg class="btn-pwa__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="m8 11 4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 19h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span class="btn-pwa__label">Installer l'app</span>
+        </button>
         <a
           href="{{ url_for('panier') }}"
           class="nav-cart{{ ' is-active' if ep in ['panier', 'checkout'] else '' }}"
@@ -147,6 +168,9 @@
         <li><a href="{{ url_for('contact') }}" class="cine-nav__link{{ ' is-active' if ep == 'contact' else '' }}"><span class="cine-nav__num">{{ '%02d'|format(ecosystem_nav|length + 10) }}</span><span class="cine-nav__text">Contact</span></a></li>
       </ul>
       <div class="cine-nav__foot">
+        <button type="button" class="btn-pwa cine-nav__pwa" id="pwa-install-btn-mobile" hidden onclick="document.getElementById('pwa-install-btn')?.click()">
+          Installer l'app
+        </button>
         <a href="{{ url_for('boutique') }}" class="xd-btn xd-btn--light">Commander maintenant</a>
         <a href="mailto:{{ shop_contact_email }}" class="cine-nav__email">{{ shop_contact_email }}</a>
       </div>
@@ -319,10 +343,20 @@
   <script src="{{ url_for('static', filename='js/assistant-widget.js') }}" defer></script>
   {% endif %}
 
+  <div id="pwa-ios-hint" class="pwa-ios-hint" hidden role="dialog" aria-labelledby="pwa-ios-title">
+    <button type="button" id="pwa-ios-close" class="pwa-ios-hint__close" aria-label="Fermer">×</button>
+    <p id="pwa-ios-title" class="pwa-ios-hint__title">Installer Yombal Market</p>
+    <p class="pwa-ios-hint__text">
+      Sur iPhone / iPad : appuyez sur <strong>Partager</strong>
+      puis <strong>« Sur l'écran d'accueil »</strong>.
+    </p>
+  </div>
+
   <script src="{{ url_for('static', filename='js/cookie-consent.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/site-experience.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/ecosystem-nav.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/pwa-install.js') }}" defer></script>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>

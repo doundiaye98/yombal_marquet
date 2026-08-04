@@ -16,6 +16,7 @@ from flask import (
     render_template,
     request,
     Response,
+    send_from_directory,
     session,
     url_for,
 )
@@ -416,6 +417,29 @@ def ensure_session_cart():
 def healthz():
     """Réponse minimale pour les health checks Render (sans accès DB)."""
     return "ok", 200, {"Cache-Control": "no-store"}
+
+
+@app.route("/manifest.webmanifest")
+def web_manifest():
+    """Manifest PWA (MIME type correct pour Chromium)."""
+    return send_from_directory(
+        app.static_folder,
+        "manifest.webmanifest",
+        mimetype="application/manifest+json",
+    )
+
+
+@app.route("/sw.js")
+def service_worker():
+    """Service worker à la racine pour scope = /."""
+    response = send_from_directory(
+        app.static_folder,
+        "sw.js",
+        mimetype="application/javascript",
+    )
+    response.headers["Service-Worker-Allowed"] = "/"
+    response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 @app.route("/robots.txt")

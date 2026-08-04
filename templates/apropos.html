@@ -19,6 +19,15 @@
     </div>
   </header>
 
+  {# ═══ Fond photo sticky (à partir de la 2e section) ═══ #}
+  <div class="apropos-body apropos-body--photo">
+    <div
+      class="apropos-body__bg"
+      aria-hidden="true"
+      style="background-image: url('{{ url_for('static', filename='img/fond-a-propos-groupe-action.jpg') }}')"
+    ></div>
+    <div class="apropos-body__content">
+
   {# ─── Notre histoire ─── #}
   <section class="section section--flush-top apropos-story reveal" aria-labelledby="apropos-histoire">
     <div class="apropos-story__inner">
@@ -285,5 +294,8 @@
       <a href="{{ url_for('boutique') }}" class="btn-gold">Ouvrir la boutique</a>
     </div>
   </section>
+
+    </div>{# /.apropos-body__content #}
+  </div>{# /.apropos-body--photo #}
 </div>
 {% endblock %}
