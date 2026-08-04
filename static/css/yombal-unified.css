@@ -54,11 +54,10 @@
     touch-action: manipulation;
   }
   body.site-premium .site-main,
-  body.site-premium .home-page,
   body.site-premium .page-wrapper {
-    overflow-x: hidden !important;
     max-width: 100%;
   }
+  /* Pas d'overflow sur .site-main / .home-page : sinon le fond sticky ne tient plus */
 }
 
 /* Header unifié */

@@ -38,8 +38,8 @@
   animation: none !important;
   opacity: 1 !important;
   transform: none !important;
-  overflow-x: hidden !important;
-  overflow-y: visible !important;
+  /* Pas d'overflow ici : ça casse position:sticky du fond photo */
+  overflow: visible !important;
   width: 100%;
   max-width: 100%;
 }
