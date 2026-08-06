@@ -1,0 +1,302 @@
+<div class="page-wrapper apropos-page">
+  <header class="page-hero page-hero--editorial">
+    <div class="page-hero-bg" aria-hidden="true"></div>
+    <div class="page-hero-content">
+      <p class="section-eyebrow reveal">Groupe YOMBAL · Épicerie, cosmétiques &amp; électronique</p>
+      <h1 class="section-title reveal">Yombal <em>Marché</em></h1>
+      <p class="section-sub reveal page-hero-lead">
+        Enseigne e-commerce du <strong>Groupe YOMBAL</strong>, spécialisée dans la distribution
+        d’alimentaire fin, de cosmétiques naturels et d’électronique, avec livraison à domicile.
+      </p>
+      <ul class="apropos-hero-points reveal" aria-label="En bref">
+        <li><span aria-hidden="true">🛒</span> Commande avec ou sans compte</li>
+        <li><span aria-hidden="true">🌿</span> Alimentaire, cosmétique &amp; électronique</li>
+        <li><span aria-hidden="true">🚚</span> Livraison à domicile</li>
+      </ul>
+    </div>
+  </header>
+
+  <?php
+  $apropos_slides = [
+    'img/groupe-yombal-ecosystem.jpg',
+    'img/groupe-yombal-equipe.jpg',
+    'img/groupe-yombal-voyages-immo.jpg',
+    'img/groupe-yombal-livraison.jpg',
+    'img/groupe-yombal-confiance.jpg',
+  ];
+  ?>
+  <div class="apropos-body apropos-body--photo">
+    <div class="apropos-body__bg apropos-body__bg--slideshow" aria-hidden="true" data-apropos-slideshow data-interval="5000">
+      <div class="apropos-body__track" data-apropos-track>
+        <?php foreach ($apropos_slides as $slide): ?>
+        <div class="apropos-body__slide" style="background-image: url('<?= e(asset($slide)) ?>')"></div>
+        <?php endforeach; ?>
+        <div class="apropos-body__slide" style="background-image: url('<?= e(asset($apropos_slides[0])) ?>')"></div>
+      </div>
+    </div>
+    <div class="apropos-body__content">
+
+  <section class="section section--flush-top apropos-story reveal" aria-labelledby="apropos-histoire">
+    <div class="apropos-story__inner">
+      <p class="section-eyebrow">Notre histoire</p>
+      <h2 id="apropos-histoire" class="section-title">Une enseigne au service <em>de la proximité</em></h2>
+      <div class="apropos-story__grid">
+        <div class="apropos-story__main">
+          <p class="apropos-p apropos-p--lead">
+            Yombal Marché s’inscrit dans la stratégie commerciale du Groupe YOMBAL&nbsp;: proposer
+            une expérience d’achat en ligne fondée sur la confiance, la qualité de conseil et
+            les standards d’un commerce de proximité, dans un environnement digital maîtrisé.
+          </p>
+          <p class="apropos-p">
+            Notre catalogue couvre les besoins essentiels du foyer&nbsp;: céréales et riz, épices,
+            boissons, produits de la mer, huiles, cosmétiques naturels, électronique et coffrets cadeaux.
+            Chaque référence est retenue selon des critères définis de qualité, d’authenticité
+            et de pertinence pour un usage quotidien, en France comme en diaspora.
+          </p>
+          <p class="apropos-p">
+            Les fiches produits présentent une information structurée et exhaustive&nbsp;: origine,
+            composition, allergènes, conseils d’utilisation et prix TTC. Cette transparence permet
+            à chaque client de formuler sa décision d’achat en toute connaissance des faits.
+          </p>
+        </div>
+        <blockquote class="apropos-pullquote">
+          <p>«&nbsp;Qualité, clarté et service&nbsp;: les fondements de notre relation client.&nbsp;»</p>
+          <cite>Yombal Marché · Groupe YOMBAL</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--compact section--alt" aria-labelledby="apropos-mission">
+    <div class="apropos-section-head reveal">
+      <p class="section-eyebrow">Notre mission</p>
+      <h2 id="apropos-mission" class="section-title">Trois engagements <em>au quotidien</em></h2>
+      <p class="section-sub section-sub--tight">
+        Mettre à disposition une offre exigeante et un parcours client fiable, transparent et accessible.
+      </p>
+    </div>
+    <div class="apropos-pillars reveal" aria-label="Nos engagements">
+      <article class="apropos-pillar">
+        <span class="apropos-pillar__icon" aria-hidden="true">🌿</span>
+        <h3>Sélection rigoureuse</h3>
+        <p>
+          Une gamme structurée autour du terroir africain et de l’épicerie fine,
+          conforme à une charte qualitative définie par l’enseigne.
+        </p>
+      </article>
+      <article class="apropos-pillar">
+        <span class="apropos-pillar__icon" aria-hidden="true">🧾</span>
+        <h3>Information normalisée</h3>
+        <p>
+          Des fiches produits homogènes&nbsp;: origine, ingrédients, allergènes et conservation,
+          pour un choix d’achat documenté et sécurisé.
+        </p>
+      </article>
+      <article class="apropos-pillar">
+        <span class="apropos-pillar__icon" aria-hidden="true">🤝</span>
+        <h3>Service client réactif</h3>
+        <p>
+          Commande avec ou sans compte, paiement sécurisé, suivi de commande par e-mail
+          et prise en charge des demandes sous 24&nbsp;h ouvrées.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section--compact" aria-labelledby="apropos-offre">
+    <div class="apropos-grid">
+      <div class="reveal">
+        <p class="section-eyebrow apropos-block-eyebrow">Ce que nous proposons</p>
+        <h2 id="apropos-offre" class="section-title">Plusieurs univers, <em>une seule exigence</em></h2>
+        <p class="apropos-p">
+          <strong>L’alimentaire</strong> couvre l’épicerie du quotidien et du plaisir&nbsp;:
+          céréales et riz, huiles, condiments, boissons, fruits secs, conserves,
+          produits de la mer et viandes sélectionnées.
+        </p>
+        <p class="apropos-p">
+          <strong>Le cosmétique</strong> regroupe soins naturels, karité, huiles végétales
+          et produits de bien-être inspirés des traditions africaines.
+        </p>
+        <p class="apropos-p">
+          <strong>L’électronique, l’électroménager, l’habillement, les chaussures et la bagagerie</strong>
+          complètent la boutique en ligne — le high-tech et le quotidien, au même endroit.
+        </p>
+        <p class="apropos-p">
+          Au-delà du catalogue&nbsp;: <strong>voyages</strong>, <strong>immobilier &amp; BTP</strong>,
+          <strong>transports</strong>, <strong>restaurant</strong>, <strong>coiffure</strong> et
+          <strong>investissement</strong> — tout l’écosystème du Groupe YOMBAL.
+        </p>
+        <p class="apropos-p">
+          Et parce qu’un bon marché ne s’arrête pas au comptoir, vous trouverez aussi sur le site
+          des <a href="<?= e(url('/recettes')) ?>">recettes avec panier intelligent</a>,
+          une <a href="<?= e(url('/saveurs')) ?>">carte des saveurs</a> et des
+          <a href="<?= e(url('/coffrets')) ?>">coffrets cadeaux</a> prêts à offrir.
+        </p>
+
+        <div class="apropos-yombal-band reveal">
+          <p class="apropos-yombal-band__label">Le Groupe YOMBAL</p>
+          <p class="apropos-yombal-band__text">
+            Yombal Marché s’inscrit dans un écosystème plus large&nbsp;: voyages, immobilier &amp; BTP,
+            transport, électronique, restauration, coiffure et autres services portés par le <strong>Groupe YOMBAL</strong>.
+            Une même exigence de qualité, au service de vos projets du quotidien comme de vos envies d’ailleurs.
+          </p>
+        </div>
+      </div>
+
+      <aside class="aside-box reveal" aria-label="Résumé de l'offre">
+        <h2 class="aside-title">En pratique</h2>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">🛒</span> Épicerie fine &amp; produits du terroir</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">✨</span> Cosmétiques &amp; soins naturels</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">📱</span> Électronique &amp; électroménager</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">👗</span> Habillement, chaussures &amp; sacs</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">✈️</span> Voyages &amp; séjours</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">🏗️</span> Immobilier &amp; BTP</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">🚗</span> Transports &amp; colis</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">🚚</span> Livraison à domicile (selon zone)</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">📦</span> Sans création de compte</div>
+        <div class="aside-item"><span class="aside-ico" aria-hidden="true">🔒</span> Paiement sécurisé</div>
+        <a href="<?= e(url('/boutique')) ?>" class="btn-primary aside-cta">Parcourir la boutique</a>
+        <p class="apropos-p note aside-note">
+          Horaires, adresse et modes de paiement sur la page <a href="<?= e(url('/contact')) ?>">Contact</a>.
+        </p>
+      </aside>
+    </div>
+
+    <div class="apropos-stats reveal" aria-label="Chiffres clés">
+      <div class="apropos-stat">
+        <strong>7+</strong>
+        <span>Services</span>
+        <p>Boutique, voyages, immobilier, transports&hellip;</p>
+      </div>
+      <div class="apropos-stat">
+        <strong><?= (int) ($stats['products'] ?? 0) ?>+</strong>
+        <span>Références</span>
+        <p>Catalogue en ligne</p>
+      </div>
+      <div class="apropos-stat">
+        <strong><?= (int) ($stats['rayons'] ?? 0) ?></strong>
+        <span>Rayons</span>
+        <p>Pour tout le foyer</p>
+      </div>
+      <div class="apropos-stat">
+        <strong>24h</strong>
+        <span>Réponse</span>
+        <p>Support en semaine</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--compact section--alt" aria-labelledby="apropos-confiance">
+    <div class="apropos-section-head reveal">
+      <p class="section-eyebrow">Confiance</p>
+      <h2 id="apropos-confiance" class="section-title">Commander <em>en toute sérénité</em></h2>
+      <p class="section-sub section-sub--tight">
+        Parce qu’acheter en ligne doit rester simple, lisible et rassurant.
+      </p>
+    </div>
+    <div class="trust-grid reveal" aria-label="Nos garanties">
+      <div class="trust-card">
+        <span class="trust-ico" aria-hidden="true">🔒</span>
+        <h3>Paiement sécurisé</h3>
+        <p>Carte bancaire, PayPal, virement ou espèces à la livraison — selon le mode choisi à l’étape commande.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-ico" aria-hidden="true">🧾</span>
+        <h3>Fiches détaillées</h3>
+        <p>Origine, ingrédients, allergènes et conseils d’utilisation&nbsp;: l’information utile, pas le superflu.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-ico" aria-hidden="true">📦</span>
+        <h3>Suivi de commande</h3>
+        <p>Confirmation par e-mail dès la validation, avec un suivi clair jusqu’à la livraison.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-ico" aria-hidden="true">💬</span>
+        <h3>Une équipe joignable</h3>
+        <p>Une question sur un produit ou une commande&nbsp;? Écrivez-nous — nous répondons rapidement.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--compact" aria-labelledby="apropos-commander">
+    <div class="apropos-section-head reveal">
+      <p class="section-eyebrow">Simple &amp; rapide</p>
+      <h2 id="apropos-commander" class="section-title">Comment <em>commander</em></h2>
+      <p class="section-sub section-sub--tight">Trois étapes pour recevoir vos courses, cosmétiques et produits high-tech chez vous.</p>
+    </div>
+    <ol class="apropos-steps reveal">
+      <li class="apropos-step">
+        <span class="apropos-step-num" aria-hidden="true">1</span>
+        <div>
+          <h3>Choisissez vos produits</h3>
+          <p>Parcourez le catalogue par rayon, consultez les fiches et ajoutez au panier ce dont vous avez besoin.</p>
+          <a href="<?= e(url('/boutique')) ?>">Ouvrir la boutique →</a>
+        </div>
+      </li>
+      <li class="apropos-step">
+        <span class="apropos-step-num" aria-hidden="true">2</span>
+        <div>
+          <h3>Validez votre commande</h3>
+          <p>Indiquez vos coordonnées et votre adresse de livraison — aucune inscription obligatoire.</p>
+          <a href="<?= e(url('/panier')) ?>">Voir mon panier →</a>
+        </div>
+      </li>
+      <li class="apropos-step">
+        <span class="apropos-step-num" aria-hidden="true">3</span>
+        <div>
+          <h3>Payez et suivez</h3>
+          <p>Réglez en ligne ou à la livraison, puis suivez l’avancement de votre commande par e-mail.</p>
+          <a href="<?= e(url('/contact')) ?>#modes-paiement">Modes de paiement →</a>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section section--compact section--flush-bottom">
+    <div class="boutique-band reveal">
+      <div class="bb-left">
+        <h3 class="bb-title">Envie de découvrir le catalogue&nbsp;?</h3>
+        <p class="bb-sub">
+          Riz, épices, cosmétiques, électronique et coffrets gourmands — tout est à portée de clic.
+          Commandez quand vous voulez, avec ou sans compte.
+        </p>
+        <div class="bb-tags">
+          <span class="bb-tag">Livraison</span>
+          <span class="bb-tag">Sans compte</span>
+          <span class="bb-tag">Paiement sécurisé</span>
+        </div>
+      </div>
+      <a href="<?= e(url('/boutique')) ?>" class="btn-gold">Ouvrir la boutique</a>
+    </div>
+  </section>
+
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var root = document.querySelector("[data-apropos-slideshow]");
+  if (!root) return;
+  var track = root.querySelector("[data-apropos-track]");
+  var slides = root.querySelectorAll(".apropos-body__slide");
+  if (!track || slides.length < 2) return;
+  var realCount = slides.length - 1;
+  var interval = parseInt(root.getAttribute("data-interval") || "5000", 10);
+  var index = 0, moving = false;
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function setX(i, animate) {
+    track.style.transition = !animate || reduced ? "none" : "";
+    track.style.transform = "translate3d(-" + i * 100 + "%, 0, 0)";
+  }
+  track.addEventListener("transitionend", function (e) {
+    if (e.target !== track || e.propertyName !== "transform") return;
+    if (index < realCount) { moving = false; return; }
+    setX(0, false); void track.offsetWidth; track.style.transition = ""; index = 0; moving = false;
+  });
+  setInterval(function () {
+    if (moving && !reduced) return;
+    moving = true; index += 1; setX(index, true);
+    if (reduced && index >= realCount) { index = 0; setX(0, false); moving = false; }
+  }, interval);
+})();
+</script>
