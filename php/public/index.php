@@ -1,7 +1,21 @@
 <?php
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/app/bootstrap.php';
+try {
+    require dirname(__DIR__) . '/app/bootstrap.php';
+} catch (Throwable $e) {
+    http_response_code(500);
+    header('Content-Type: text/plain; charset=utf-8');
+    $debug = (($_ENV['APP_DEBUG'] ?? getenv('APP_DEBUG')) === '1')
+        || (isset($_GET['diag']) && $_GET['diag'] === '1');
+    echo "Erreur serveur Yombal Market.\n";
+    if ($debug) {
+        echo $e->getMessage() . "\n" . $e->getFile() . ':' . $e->getLine() . "\n";
+    } else {
+        echo "Ajoutez ?diag=1 à l'URL ou ouvrez /diag.php pour le détail.\n";
+    }
+    exit;
+}
 
 $router = new Router();
 
@@ -62,4 +76,14 @@ $router->any('/admin/commande/{id}', [AdminController::class, 'orderDetail']);
 $router->get('/admin/messages', [AdminController::class, 'messages']);
 $router->post('/admin/message/{id}', [AdminController::class, 'messageRead']);
 
-$router->dispatch(request_method(), $_SERVER['REQUEST_URI'] ?? '/');
+try {
+    $router->dispatch(request_method(), $_SERVER['REQUEST_URI'] ?? '/');
+} catch (Throwable $e) {
+    http_response_code(500);
+    header('Content-Type: text/plain; charset=utf-8');
+    echo "Erreur serveur Yombal Market.\n\n";
+    echo $e->getMessage() . "\n";
+    echo $e->getFile() . ':' . $e->getLine() . "\n\n";
+    echo "Si Access denied MySQL : uploadez fix.php à la racine et ouvrez /fix.php\n";
+    exit;
+}

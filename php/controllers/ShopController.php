@@ -75,7 +75,7 @@ final class ShopController
             'shop_rayons' => $shopRayons,
             'universe_counts' => $universeCounts,
             'shop_universe_labels' => $shopUniverseLabels,
-            'extra_css' => '<link rel="stylesheet" href="' . e(asset('css/boutique-market.css')) . '">',
+            'extra_css' => '<link rel="stylesheet" href="' . e(asset('css/boutique-market.css')) . '?v=3">',
         ]);
     }
 

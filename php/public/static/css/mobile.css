@@ -242,7 +242,8 @@
   .boutique-page {
     width: 100%;
     max-width: 100%;
-    overflow-x: clip;
+    /* clip casse position:sticky du slideshow boutique */
+    overflow-x: visible;
   }
 
   .boutique-hero {
@@ -279,7 +280,7 @@
     padding-right: 16px;
     gap: 14px;
     box-sizing: border-box;
-    overflow-x: clip;
+    overflow-x: visible;
   }
 
   .boutique-sidebar,
@@ -348,6 +349,12 @@
     grid-template-columns: 1fr;
     gap: 14px;
     width: 100%;
+  }
+
+  /* Boutique : 2 colonnes pour laisser voir le slideshow (détail dans boutique-market.css) */
+  .boutique-page .boutique-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 10px;
   }
 
   .boutique-card__body {

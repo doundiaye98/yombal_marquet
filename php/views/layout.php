@@ -11,7 +11,14 @@ $tab_contact = $ep === 'contact';
 $tab_profile = in_array($ep, ['login', 'register', 'compte'], true);
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<?php
+$appUrl = rtrim((string) config('app_url', ''), '/');
+$appBasePath = parse_url($appUrl, PHP_URL_PATH) ?: '';
+if ($appBasePath === '/') {
+    $appBasePath = '';
+}
+?>
+<html lang="fr" data-app-base="<?= e($appBasePath) ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,6 +28,7 @@ $tab_profile = in_array($ep, ['login', 'register', 'compte'], true);
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Yombal Market">
+  <script>window.YOMBAL_BASE = <?= json_encode($appBasePath, JSON_UNESCAPED_SLASHES) ?>;</script>
   <title><?= e($page_title) ?></title>
   <link rel="manifest" href="<?= e(url('/manifest.webmanifest')) ?>">
   <link rel="icon" href="<?= e(asset('img/yombal-logo.png')) ?>" type="image/png">
@@ -29,12 +37,12 @@ $tab_profile = in_array($ep, ['login', 'register', 'compte'], true);
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;0,7..72,800;1,7..72,400;1,7..72,600&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>">
-  <link rel="stylesheet" href="<?= e(asset('css/modern.css')) ?>?v=22">
-  <link rel="stylesheet" href="<?= e(asset('css/mobile.css')) ?>">
+  <link rel="stylesheet" href="<?= e(asset('css/modern.css')) ?>?v=23">
+  <link rel="stylesheet" href="<?= e(asset('css/mobile.css')) ?>?v=2">
   <link rel="stylesheet" href="<?= e(asset('css/lusion.css')) ?>?v=13">
   <link rel="stylesheet" href="<?= e(asset('css/yombal-unified.css')) ?>?v=18">
   <link rel="stylesheet" href="<?= e(asset('css/catalog-label.css')) ?>?v=4">
-  <link rel="stylesheet" href="<?= e(asset('css/ecosystem-nav.css')) ?>">
+  <link rel="stylesheet" href="<?= e(asset('css/ecosystem-nav.css')) ?>?v=5">
   <?= $extra_css ?>
 </head>
 <body class="<?= !$isAdminEp ? ' site-premium site-catalog-ud' : '' ?>">
@@ -54,9 +62,31 @@ $tab_profile = in_array($ep, ['login', 'register', 'compte'], true);
       <ul id="primary-nav" class="nav-links" aria-label="Navigation principale">
         <li><a href="<?= e(url('/')) ?>" class="<?= $ep === 'index' ? 'active' : '' ?>">Accueil</a></li>
         <li><a href="<?= e(url('/apropos')) ?>" class="<?= $ep === 'apropos' ? 'active' : '' ?>">À propos</a></li>
-        <li><a href="<?= e(url('/boutique')) ?>" class="<?= $nav_shop ? 'active' : '' ?>">Boutique</a></li>
-        <li><a href="<?= e(url('/decouvrir')) ?>" class="<?= $nav_discover ? 'active' : '' ?>">Découvrir</a></li>
-        <?php if (!$isAdminEp): ?><li><a href="<?= e(url('/ecosysteme')) ?>" class="<?= $nav_ecosystem ? 'active' : '' ?>">Univers YOMBAL</a></li><?php endif; ?>
+        <li class="nav-item nav-item--mega">
+          <button type="button" class="nav-mega-trigger<?= $nav_shop ? ' active' : '' ?>" data-mega="boutique" aria-expanded="false" aria-controls="mega-boutique" aria-haspopup="true">
+            Boutique
+            <svg class="nav-mega-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </li>
+        <li class="nav-item nav-item--dropdown">
+          <button type="button" class="nav-dropdown-trigger<?= $nav_discover ? ' active' : '' ?>" aria-expanded="false" aria-controls="nav-discover-menu" aria-haspopup="true">
+            Découvrir <span class="nav-chevron" aria-hidden="true">▾</span>
+          </button>
+          <ul id="nav-discover-menu" class="nav-dropdown" role="menu">
+            <li role="none"><a href="<?= e(url('/decouvrir')) ?>" role="menuitem" class="nav-dropdown-link<?= $ep === 'decouvrir' ? ' active' : '' ?>"><span class="nav-dropdown-icon" aria-hidden="true">✦</span> Vue d'ensemble</a></li>
+            <li role="none"><a href="<?= e(url('/saveurs')) ?>" role="menuitem" class="nav-dropdown-link<?= $ep === 'saveurs' ? ' active' : '' ?>"><span class="nav-dropdown-icon" aria-hidden="true">🗺️</span> Carte des saveurs</a></li>
+            <li role="none"><a href="<?= e(url('/recettes')) ?>" role="menuitem" class="nav-dropdown-link<?= in_array($ep, ['recettes', 'recette_detail'], true) ? ' active' : '' ?>"><span class="nav-dropdown-icon" aria-hidden="true">🍲</span> Recettes &amp; paniers</a></li>
+            <li role="none"><a href="<?= e(url('/coffrets')) ?>" role="menuitem" class="nav-dropdown-link<?= in_array($ep, ['coffrets', 'coffret_detail'], true) ? ' active' : '' ?>"><span class="nav-dropdown-icon" aria-hidden="true">🎁</span> Coffrets cadeaux</a></li>
+          </ul>
+        </li>
+        <?php if (!$isAdminEp): ?>
+        <li class="nav-item nav-item--mega">
+          <button type="button" class="nav-mega-trigger<?= $nav_ecosystem ? ' active' : '' ?>" data-mega="univers" aria-expanded="false" aria-controls="mega-univers" aria-haspopup="true">
+            Univers YOMBAL
+            <svg class="nav-mega-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </li>
+        <?php endif; ?>
         <li><a href="<?= e(url('/suivi-commande')) ?>" class="<?= $tab_orders ? 'active' : '' ?>">Commandes</a></li>
         <li><a href="<?= e(url('/contact')) ?>" class="<?= $tab_contact ? 'active' : '' ?>">Contact</a></li>
         <?php if ($user): ?>
@@ -77,6 +107,7 @@ $tab_profile = in_array($ep, ['login', 'register', 'compte'], true);
       </div>
       <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="cine-nav" aria-label="Ouvrir le menu"><span class="nav-toggle__icon" aria-hidden="true"></span><span class="nav-toggle__label">Menu</span></button>
     </div>
+    <?php require __DIR__ . '/partials/mega_menus.php'; ?>
   </header>
 
   <nav id="cine-nav" class="cine-nav" aria-label="Navigation principale" aria-hidden="true">
@@ -196,7 +227,7 @@ $tab_profile = in_array($ep, ['login', 'register', 'compte'], true);
   <script src="<?= e(asset('js/site-experience.js')) ?>?v=2" defer></script>
   <script src="<?= e(asset('js/animations.js')) ?>" defer></script>
   <script src="<?= e(asset('js/ecosystem-nav.js')) ?>" defer></script>
-  <script src="<?= e(asset('js/pwa-install.js')) ?>?v=4" defer></script>
+  <script src="<?= e(asset('js/pwa-install.js')) ?>?v=5" defer></script>
   <?= $extra_scripts ?>
 </body>
 </html>

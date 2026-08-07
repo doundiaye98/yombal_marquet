@@ -34,7 +34,14 @@
   }
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(function () {});
+    var base =
+      (typeof window.YOMBAL_BASE === "string" && window.YOMBAL_BASE) ||
+      document.documentElement.getAttribute("data-app-base") ||
+      "";
+    base = String(base).replace(/\/$/, "");
+    var swUrl = base + "/sw.js";
+    var scope = base === "" ? "/" : base + "/";
+    navigator.serviceWorker.register(swUrl, { scope: scope }).catch(function () {});
   }
 
   window.addEventListener("beforeinstallprompt", function (event) {

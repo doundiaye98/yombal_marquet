@@ -19,9 +19,20 @@ require PHP_ROOT . '/app/ImmobilierData.php';
 require PHP_ROOT . '/app/EcosystemData.php';
 require PHP_ROOT . '/app/Assistant.php';
 
-// Charge .env
-$envFile = PHP_ROOT . '/.env';
-if (is_file($envFile)) {
+// Charge .env (plusieurs emplacements possibles selon le déploiement Hostinger)
+$envCandidates = [
+    PHP_ROOT . '/.env',
+    PHP_ROOT . '/.env.hostinger',
+    dirname(PHP_ROOT) . '/.env',
+];
+$envFile = null;
+foreach ($envCandidates as $candidate) {
+    if (is_file($candidate)) {
+        $envFile = $candidate;
+        break;
+    }
+}
+if ($envFile !== null) {
     foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
         $line = trim($line);
         if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {

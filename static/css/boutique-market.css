@@ -74,6 +74,16 @@
   background-repeat: no-repeat;
 }
 
+.boutique-page .boutique-catalog__bg--slideshow .boutique-catalog__slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 16, 48, 0.28) 0%, rgba(0, 24, 88, 0.42) 55%, rgba(0, 16, 40, 0.55) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 20%, rgba(248, 192, 0, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .boutique-page .boutique-catalog__bg--slideshow .boutique-catalog__track {
     transition: none;
@@ -733,41 +743,151 @@
   }
 }
 
-/* Mobile — cartes verticales comme les catalogues Univers (électronique, etc.) */
+/* Mobile — fond FIXED (comme l’accueil) + cartes verre pour voir le slideshow */
 @media (max-width: 640px) {
+  .site-catalog-ud .boutique-page,
+  .boutique-page {
+    background: transparent !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+    transform: none !important;
+    z-index: auto !important;
+  }
+
   .site-catalog-ud .boutique-hero--catalog,
   .boutique-page .boutique-hero--catalog {
+    position: relative;
+    z-index: 1;
     padding: calc(var(--nav-h, 72px) + 24px) 16px 28px;
+  }
+
+  .boutique-page .boutique-catalog,
+  .site-catalog-ud .boutique-page .boutique-catalog {
+    background: transparent !important;
+    isolation: auto;
+  }
+
+  /* Fond photo plein écran — fiable sur iPhone */
+  .boutique-page .boutique-catalog__bg,
+  .site-catalog-ud .boutique-page .boutique-catalog__bg {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    margin-bottom: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none;
   }
 
   .boutique-page .boutique-universe-nav {
     grid-template-columns: 1fr;
   }
 
-  .boutique-page .boutique-shell {
+  .boutique-page .boutique-shell,
+  .boutique-page .boutique-catalog .boutique-shell {
+    position: relative;
+    z-index: 1;
     max-width: 100%;
-    padding-left: 16px;
-    padding-right: 16px;
-    gap: 14px;
+    padding-left: 12px;
+    padding-right: 12px;
+    gap: 16px;
+    background: transparent !important;
   }
 
-  .boutique-page .boutique-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
+  .boutique-page .boutique-main {
+    background: transparent !important;
+  }
+
+  .site-catalog-ud .boutique-sidebar__panel,
+  .boutique-page .boutique-sidebar__panel {
+    background: rgba(255, 252, 247, 0.55) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    box-shadow: 0 8px 28px rgba(0, 16, 48, 0.12);
+  }
+
+  .boutique-page .catalog-rayon {
+    margin-bottom: 28px;
+    background: transparent !important;
+  }
+
+  .boutique-page .catalog-rayon__head,
+  .boutique-page .boutique-toolbar {
+    margin-bottom: 14px;
+    padding: 10px 12px;
+    border-bottom: none;
+    border-radius: 14px;
+    background: rgba(0, 24, 88, 0.48) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 18px rgba(0, 16, 48, 0.12);
+  }
+
+  .boutique-page .catalog-rayon__title,
+  .boutique-page .boutique-toolbar__title {
+    color: #fff !important;
+    text-shadow: 0 1px 8px rgba(0, 16, 48, 0.35);
+    font-size: 1.05rem !important;
+  }
+
+  .boutique-page .catalog-rayon__count,
+  .boutique-page .boutique-toolbar__meta,
+  .boutique-page .boutique-toolbar__meta strong {
+    color: rgba(255, 255, 255, 0.88) !important;
+    text-shadow: none;
+  }
+
+  .boutique-page .boutique-grid,
+  .site-catalog-ud .boutique-page .boutique-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px 12px !important;
+    background: transparent !important;
+  }
+
+  .site-catalog-ud .boutique-page .boutique-card,
+  .site-catalog-ud .boutique-card,
+  .boutique-page .boutique-card {
+    background: rgba(255, 252, 247, 0.42) !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(14px) saturate(1.15);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15);
+    box-shadow: 0 10px 28px rgba(0, 16, 48, 0.16) !important;
+  }
+
+  .boutique-page .boutique-grid > .boutique-card:nth-child(even) {
+    transform: translateY(12px);
+  }
+
+  .boutique-page .boutique-grid > .boutique-card:nth-child(even):active {
+    transform: translateY(6px);
   }
 
   .site-catalog-ud .boutique-page .boutique-card__media,
+  .site-catalog-ud .boutique-card__media,
   .boutique-page .boutique-card__media {
-    padding: 14px;
+    padding: 10px;
+    aspect-ratio: 1 / 1;
+    background: rgba(244, 241, 234, 0.35) !important;
   }
 
   .boutique-page .boutique-card__body {
-    padding: 14px;
+    padding: 10px 10px 12px;
+    background: transparent !important;
   }
 
   .site-catalog-ud .boutique-page .boutique-card__title a,
   .boutique-page .boutique-card__title a {
-    font-size: 0.98rem !important;
+    font-size: 0.82rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .boutique-page .boutique-card__meta {
+    font-size: 0.72rem;
   }
 
   .boutique-page .boutique-card__summary {
@@ -777,7 +897,7 @@
   .boutique-page .boutique-card__footer {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 8px;
   }
 
   .site-catalog-ud .boutique-page .boutique-card__cta,
@@ -792,12 +912,36 @@
     justify-content: space-between;
   }
 
-  .boutique-page .catalog-rayon__head {
-    margin-bottom: 12px;
+  .site-catalog-ud .boutique-page .boutique-card__cart,
+  .boutique-page .boutique-card__cart {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 18px;
   }
 
-  .boutique-page .catalog-rayon__title {
-    font-size: 1.15rem;
+  /* Footer au-dessus du fond fixe */
+  body:has(.boutique-page) .site-footer {
+    position: relative;
+    z-index: 1;
+    background: #001858;
+  }
+
+  body.site-premium:has(.boutique-page),
+  body.site-premium:has(.boutique-page) .site-main,
+  body.site-catalog-ud:has(.boutique-page) {
+    background: transparent !important;
+  }
+
+  body.site-premium:has(.boutique-page) .site-header-unified,
+  body.site-premium:has(.boutique-page) .m-tabbar {
+    z-index: 40;
+  }
+}
+
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  .boutique-page .boutique-grid > .boutique-card:nth-child(even) {
+    transform: none;
   }
 }
 
@@ -810,3 +954,4 @@
     transform: none;
   }
 }
+

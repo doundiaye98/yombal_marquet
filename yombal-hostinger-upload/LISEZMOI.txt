@@ -1,0 +1,9 @@
+﻿UPLOAD HOSTINGER — ne pas uploader le README
+
+1. hPanel → Fichiers → allez dans domains/yombalmarket.com/ (ou public_html parent)
+2. Sauvegardez / supprimez l'ancien WordPress dans public_html
+3. Uploadez ce ZIP, extrayez-le
+4. Renommez .env.example en .env et mettez DB_PASS + APP_SECRET
+5. phpMyAdmin : importer sql/schema.sql puis sql/products_seed.sql
+6. Test : https://yombalmarket.com/diag.php
+7. Supprimez public_html/diag.php apres OK

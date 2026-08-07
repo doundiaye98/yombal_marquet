@@ -8,7 +8,7 @@ final class PageController
         $products = (int) (Database::fetch('SELECT COUNT(*) AS c FROM products WHERE is_active = 1')['c'] ?? 0);
         view('apropos', [
             'ep' => 'apropos',
-            'page_title' => 'À propos — Yombal Marché',
+            'page_title' => 'À propos — Yombal Marché · Groupe YOMBAL',
             'stats' => ['products' => $products, 'rayons' => count(category_labels())],
         ]);
     }
@@ -466,26 +466,158 @@ final class PageController
 
     public static function manifest(): void
     {
-        $file = PHP_ROOT . '/public/static/manifest.webmanifest';
-        if (is_file($file)) {
-            header('Content-Type: application/manifest+json');
-            readfile($file);
-            exit;
+        $base = rtrim((string) config('app_url', ''), '/');
+        $basePath = parse_url($base, PHP_URL_PATH) ?: '';
+        if ($basePath === '/') {
+            $basePath = '';
         }
-        http_response_code(404);
+        $start = ($basePath === '' ? '/' : $basePath . '/');
+        $payload = [
+            'name' => 'Yombal Market',
+            'short_name' => 'Yombal',
+            'description' => 'Boutique en ligne du Groupe YOMBAL — épicerie, cosmétiques, électronique et livraison.',
+            'start_url' => $start,
+            'scope' => $start,
+            'id' => $start,
+            'display' => 'standalone',
+            'orientation' => 'portrait-primary',
+            'background_color' => '#001858',
+            'theme_color' => '#001858',
+            'lang' => 'fr',
+            'dir' => 'ltr',
+            'categories' => ['shopping', 'food', 'lifestyle'],
+            'icons' => [
+                [
+                    'src' => asset('img/icons/icon-192.png'),
+                    'sizes' => '192x192',
+                    'type' => 'image/png',
+                    'purpose' => 'any',
+                ],
+                [
+                    'src' => asset('img/icons/icon-512.png'),
+                    'sizes' => '512x512',
+                    'type' => 'image/png',
+                    'purpose' => 'any',
+                ],
+                [
+                    'src' => asset('img/icons/icon-192.png'),
+                    'sizes' => '192x192',
+                    'type' => 'image/png',
+                    'purpose' => 'maskable',
+                ],
+                [
+                    'src' => asset('img/icons/icon-512.png'),
+                    'sizes' => '512x512',
+                    'type' => 'image/png',
+                    'purpose' => 'maskable',
+                ],
+            ],
+        ];
+        header('Content-Type: application/manifest+json; charset=utf-8');
+        header('Cache-Control: no-cache');
+        echo json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         exit;
     }
 
     public static function sw(): void
     {
-        $file = PHP_ROOT . '/public/static/sw.js';
-        if (is_file($file)) {
-            header('Content-Type: application/javascript');
-            header('Service-Worker-Allowed: /');
-            readfile($file);
-            exit;
+        $base = rtrim((string) config('app_url', ''), '/');
+        $basePath = parse_url($base, PHP_URL_PATH) ?: '';
+        if ($basePath === '/') {
+            $basePath = '';
         }
-        http_response_code(404);
+        $static = $basePath . '/static';
+        $home = $basePath === '' ? '/' : $basePath . '/';
+        $manifest = $basePath . '/manifest.webmanifest';
+
+        header('Content-Type: application/javascript; charset=utf-8');
+        header('Service-Worker-Allowed: ' . $home);
+        header('Cache-Control: no-cache');
+
+        echo "/* Service worker Yombal Market — chemins adaptés à APP_URL */\n";
+        echo 'const CACHE_NAME = "yombal-pwa-v3";' . "\n";
+        echo 'const BASE = ' . json_encode($basePath) . ";\n";
+        echo 'const PRECACHE = ' . json_encode([
+            $manifest,
+            $static . '/img/icons/icon-192.png',
+            $static . '/img/icons/icon-512.png',
+            $static . '/img/yombal-logo.png',
+            $home,
+        ], JSON_UNESCAPED_SLASHES) . ";\n";
+        echo <<<'JS'
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+    ).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  const staticPrefix = BASE + "/static/";
+  const cssPrefix = BASE + "/static/css/";
+  const jsPrefix = BASE + "/static/js/";
+  const home = BASE === "" ? "/" : BASE + "/";
+
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match(home)))
+    );
+    return;
+  }
+
+  if (url.pathname.startsWith(cssPrefix) || url.pathname.startsWith(jsPrefix)) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  if (url.pathname.startsWith(staticPrefix)) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        const network = fetch(request)
+          .then((response) => {
+            if (response && response.ok) {
+              const copy = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+            }
+            return response;
+          })
+          .catch(() => cached);
+        return cached || network;
+      })
+    );
+  }
+});
+JS;
         exit;
     }
 }
